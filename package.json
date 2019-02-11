@@ -1,0 +1,47 @@
+{
+  "name": "gatsby-source-google-docs",
+  "version": "0.1.0",
+  "description": "Gatsby plugin to use google-docs as a data source",
+  "repository": "https://github.com/xuopled/gatsby-source-google-docs",
+  "author": "Cédric Delpoux",
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "gatsby-source",
+    "google",
+    "google-docs",
+    "docs",
+    "drive"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "googleapis": "27",
+    "json2md": "^1.6.2",
+    "readline-sync": "^1.4.9"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "cross-env": "^5.1.5",
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^3.0.1",
+    "husky": "^1.0.0",
+    "lint-staged": "^7.2.2",
+    "prettier": "1.14.2"
+  },
+  "peerDependencies": {
+    "gatsby": "^2.0.0"
+  },
+  "scripts": {
+    "build": "cross-env BABEL_ENV=production babel src --out-dir .",
+    "lint": "eslint --ext .js src",
+    "prepublishOnly": "yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
