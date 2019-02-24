@@ -1,4 +1,3 @@
-const crypto = require("crypto")
 const fs = require("fs")
 const {google} = require("googleapis")
 const json2md = require("json2md")
@@ -7,7 +6,10 @@ const readline = require("readline-sync")
 const DEFAULT_CONFIG = {
   access_type: "offline",
   redirect_uris: ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"],
-  scope: ["https://www.googleapis.com/auth/documents.readonly"],
+  scope: [
+    "https://www.googleapis.com/auth/documents.readonly",
+    "https://www.googleapis.com/auth/drive.metadata.readonly",
+  ],
   token_path: "google-docs-token.json",
 }
 
@@ -87,14 +89,15 @@ function getTableCellContent(content) {
     .join("")
 }
 
-function documentJsonToMarkdown(title, sections) {
+function documentContentToMarkdown({content, ...metadata}) {
   return `---
-title: ${title}
+${Object.keys(metadata).map(key => `${key}: ${metadata[key]}`).join(`
+`)}
 ---
-${json2md(sections)}`
+${json2md(content)}`
 }
 
-async function getGoogleDoc({apiKey, documentId, auth}) {
+async function getGoogleDocContent({apiKey, id, auth}) {
   return new Promise((resolve, reject) => {
     try {
       google.options({auth})
@@ -105,7 +108,7 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
         .then(function(docs) {
           docs.documents.get(
             {
-              documentId,
+              documentId: id,
             },
             (err, res) => {
               if (err) {
@@ -116,8 +119,8 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
                 reject("empty data")
               }
 
-              const {body, inlineObjects, title} = res.data
-              const sections = []
+              const {body, inlineObjects} = res.data
+              const content = []
 
               body.content.forEach(({paragraph, table}) => {
                 // Paragraphs
@@ -126,7 +129,7 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
 
                   // Lists
                   if (paragraph.bullet) {
-                    sections.push({
+                    content.push({
                       ul: paragraph.elements.map(el =>
                         cleanText(el.textRun.content)
                       ),
@@ -144,7 +147,7 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
 
                         // Images
                         if (embeddedObject.imageProperties) {
-                          sections.push({
+                          content.push({
                             img: embeddedObject.imageProperties.contentUri,
                           })
                         }
@@ -152,7 +155,7 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
 
                       // Headings, Texts
                       else if (el.textRun && el.textRun.content !== "\n") {
-                        sections.push({
+                        content.push({
                           [tag]: cleanText(el.textRun.content),
                         })
                       }
@@ -163,9 +166,9 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
                 // Table
                 else if (table && table.tableRows.length > 0) {
                   const [thead, ...tbody] = table.tableRows
-                  sections.push({
+                  content.push({
                     table: {
-                      headers: thead.tableCells.map(({content}) =>
+                      metadata: thead.tableCells.map(({content}) =>
                         getTableCellContent(content)
                       ),
                       rows: tbody.map(row =>
@@ -178,7 +181,7 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
                 }
               })
 
-              resolve({title, sections})
+              resolve(content)
             }
           )
         })
@@ -188,9 +191,79 @@ async function getGoogleDoc({apiKey, documentId, auth}) {
   })
 }
 
+async function getDocumentsMetadata({auth, foldersIds, fields, fieldsMapper}) {
+  return new Promise((resolve, reject) => {
+    try {
+      const drive = google.drive({version: "v3", auth})
+      drive.files.list(
+        {
+          q: `${foldersIds
+            .map(id => `'${id}' in parents`)
+            .join(" or ")} and mimeType='application/vnd.google-apps.document'`,
+          fields: `files(id, name, ${fields.join(", ")})`,
+        },
+        (err, res) => {
+          if (err) {
+            return reject(err)
+          }
+
+          const documentsMetadata = res.data.files.map(documentMetadata => {
+            // Fields transformation
+            if (fieldsMapper) {
+              Object.keys(fieldsMapper).forEach(oldKey => {
+                const newKey = fieldsMapper[oldKey]
+                Object.assign(documentMetadata, {
+                  [newKey]: documentMetadata[oldKey],
+                })
+                delete documentMetadata[oldKey]
+              })
+            }
+
+            return documentMetadata
+          })
+
+          resolve(documentsMetadata)
+        }
+      )
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+async function getDocuments({auth, apiKey, metadata}) {
+  const requests = await metadata.map(
+    async metadata =>
+      new Promise(async (resolve, reject) => {
+        try {
+          const content = await getGoogleDocContent({
+            apiKey,
+            auth,
+            id: metadata.id,
+          })
+
+          const markdown = documentContentToMarkdown({...metadata, content})
+
+          const document = {
+            ...metadata,
+            content,
+            markdown,
+          }
+
+          resolve(document)
+        } catch (e) {
+          reject(e)
+        }
+      })
+  )
+
+  return await Promise.all(requests)
+}
+
 exports.sourceNodes = async (
-  {actions: {createNode}, createNodeId},
-  {config, documents = []}
+  {actions: {createNode}, createNodeId, createContentDigest},
+  {config, ...options},
+  done
 ) => {
   if (!config.api_key) {
     throw new Error("source-google-docs: Missing API key")
@@ -204,39 +277,40 @@ exports.sourceNodes = async (
     throw new Error("source-google-docs: Missing client_secret")
   }
 
+  if (!options.foldersIds) {
+    throw new Error("source-google-docs: Missing foldersIds")
+  }
+
   try {
     const auth = await getAuth({...DEFAULT_CONFIG, ...config})
 
-    documents.forEach(async documentId => {
-      const {title, sections} = await getGoogleDoc({
-        apiKey: config.api_key,
-        auth,
-        documentId,
-      })
-      const markdown = documentJsonToMarkdown(title, sections)
-      const document = {
-        title,
-        sections,
-        markdown,
-      }
+    const documentsMetadata = await getDocumentsMetadata({
+      auth,
+      foldersIds: options.foldersIds,
+      fields: options.fields,
+      fieldsMapper: options.fieldsMapper,
+    })
 
+    const documents = await getDocuments({
+      auth,
+      apiKey: config.api_key,
+      metadata: documentsMetadata,
+    })
+
+    documents.forEach(document => {
       createNode({
         document,
-        id: createNodeId(`GoogleDocs-${documentId}`),
-        parent: "__SOURCE__",
-        children: [],
+        id: createNodeId(`GoogleDocs-${document.id}`),
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",
-          content: markdown,
-          contentDigest: crypto
-            .createHash("md5")
-            .update(JSON.stringify(markdown))
-            .digest("hex"),
+          content: document.markdown,
+          contentDigest: createContentDigest(document.markdown),
         },
       })
     })
+    done()
   } catch (e) {
-    throw new Error(`source-google-docs: ${e.message}`)
+    done(new Error(`source-google-docs: ${e.message}`))
   }
 }

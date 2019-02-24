@@ -2,7 +2,13 @@
 
 [![npm package][npm-badge]][npm]
 
-Gatsby plugin to use Google Docs as a data source
+`gatsby-source-google-docs` is a [Gatsby](https://www.gatsbyjs.org/) plugin to use Google Docs as a data source.
+
+🔥 No need for a CMS anymore.
+🖋 Write your blog posts on Google Docs.
+🗂 Organize your documents in one or multiple folder in Google Drive
+
+It's that simple
 
 ## Getting started
 
@@ -20,7 +26,8 @@ npm install gatsby-source-google-docs --save
 
 ### Turn on the Google Docs API and set configuration
 
--   Follow the [Step 1: Turn on the Google Docs API](https://developers.google.com/docs/api/quickstart/js)
+-   Follow the [Step 1: Turn ON the Google Docs API](https://developers.google.com/docs/api/quickstart/js)
+-   Turn ON the [Google Drive API](https://developers.google.com/drive/api/v3/quickstart/nodejs)
 -   Get a `client_id` and a `client_secret` from the Google console. If you downloaded `credential.json` file, you can extract them from it
 -   Get an `api_key` from the Google console
 -   Fill the `gatsby-source-google-docs` gatsby config object.
@@ -33,31 +40,11 @@ Run `yarn dev` to generate a token file.
 
 > `token_path` can be customized in the configuration object.
 
-### Generate slug field
-
-Modify your `onCreateNode` function in your `gatsby-node.js` to generate a `slug` field:
-
-```js
-const _ = require("lodash") // Optional
-
-exports.onCreateNode = ({node, actions: {createNodeField}}) => {
-    if (node.internal.type === `MarkdownRemark`) {
-        if (node.frontmatter && node.frontmatter.title) {
-            createNodeField({
-                name: `slug`,
-                node,
-                value: `/${_.kebabCase(node.frontmatter.title)}`,
-            })
-        }
-    }
-}
-```
-
-> `node.frontmatter.title` contains the title of the Google Doc
-
 ## Usage
 
-Add the plugin in your `gatsby-config.js` file:
+### Add the plugin to your configuration:
+
+In your `gatsby-node.js` file:
 
 ```js
 module.exports = {
@@ -65,10 +52,10 @@ module.exports = {
         {
             resolve: "gatsby-source-google-docs",
             options: {
-                documents: ["GOOGLE_DOCUMENT_ID_1", "GOOGLE_DOCUMENT_ID_2"], // Documents IDs can be found in Google Docs URLs
+                // Mandatory
+                // --------
+                foldersIds: ["FOLDER_ID_1", "FOLDER_ID_2"], // folders Ids can be found in Google Drive URLs
                 config: {
-                    // Mandatory
-                    // --------
                     api_key: "YOUR_API_KEY",
                     client_id: "YOUR_CLIENT_ID",
                     client_secret: "YOUR_CLIENT_SECRET",
@@ -80,18 +67,15 @@ module.exports = {
                         "http://localhost",
                     ],
                     scope: [
-                        "https://www.googleapis.com/auth/documents.readonly",
+                        "https://www.googleapis.com/auth/documents.readonly", // GoogleDocs API read access
+                        "https://www.googleapis.com/auth/drive.metadata.readonly", // GoogleDrive API read access
                     ],
                     token_path: "google-docs-token.json",
                 },
-            },
-        },
-        // Add gatsby-source-filesystem to have the `MarkdownRemark` type
-        {
-            resolve: "gatsby-source-filesystem",
-            options: {
-                name: "posts",
-                path: `${__dirname}/content/`,
+                // Optional
+                // --------
+                fields: ["createdTime"], // https://developers.google.com/drive/api/v3/reference/files#resource
+                fieldsMapper: {createdTime: "date"}, // To rename fields
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown
@@ -103,6 +87,89 @@ module.exports = {
         },
     ],
 }
+```
+
+### Add the a slug field to documents nodes:
+
+Modify your `onCreateNode` function in your `gatsby-node.js` to generate a `slug` field:
+
+```js
+const _ = require("lodash") // Optional, you can use the lib you want or generate slug manually
+
+exports.onCreateNode = ({node, actions}) => {
+    if (node.internal.type === `MarkdownRemark` && node.frontmatter.name) {
+        actions.createNodeField({
+            name: `slug`,
+            node,
+            value: `/${_.kebabCase(node.frontmatter.name)}`,
+        })
+    }
+}
+```
+
+> `node.frontmatter.name` contains the title of the Google Doc
+
+### Create a post template
+
+Create a `src/templates/post.js` file where you will define your post template:
+
+```js
+const PostTemplate = ({data: {post}}) => (
+    <>
+        <h1>{post.frontmatter.name}</h1>
+        <p>{post.frontmatter.createdTime}</p>
+        <div dangerouslySetInnerHTML={{__html: post.html}} />
+    </>
+)
+
+export default PostTemplate
+
+export const pageQuery = graphql`
+    query BlogPostBySlug($slug: String!) {
+        post: markdownRemark(fields: {slug: {eq: $slug}}) {
+            html
+            frontmatter {
+                name
+                createdTime(formatString: "DD MMMM YYYY", locale: "fr")
+            }
+        }
+    }
+`
+```
+
+### Create a page for each post
+
+Use the `createPages` API from gatsby in your `gatsby-node.js` to create a page for each post.
+
+```js
+exports.createPages = async ({graphql, actions}) =>
+    graphql(
+        `
+            {
+                allMarkdownRemark(
+                    sort: {fields: [frontmatter___createdTime], order: DESC}
+                ) {
+                    edges {
+                        node {
+                            fields {
+                                slug
+                            }
+                        }
+                    }
+                }
+            }
+        `
+    ).then(result => {
+        result.data.allMarkdownRemark.edges.forEach((post, index) => {
+            actions.createPage({
+                path: post.node.fields.slug,
+                component: path.resolve(`./src/templates/post.js`),
+                context: {
+                    slug: post.node.fields.slug,
+                },
+            })
+        })
+    })
 ```
 
 ## Contributing
