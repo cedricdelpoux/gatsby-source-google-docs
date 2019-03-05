@@ -107,6 +107,13 @@ function getTableCellContent(content) {
     .join("")
 }
 
+function getText(element) {
+  const text = cleanText(element.textRun.content)
+  const {link} = element.textRun.textStyle
+
+  return link ? `[${text}](${link.url})` : text
+}
+
 function documentContentToMarkdown({content, ...metadata}) {
   return `---
 ${Object.keys(metadata).map(key => `${key}: ${metadata[key]}`).join(`
@@ -150,7 +157,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
                     const listId = paragraph.bullet.listId
                     const listTag = getListTag(lists[listId])
                     const bulletContent = paragraph.elements
-                      .map(el => cleanText(el.textRun.content))
+                      .map(getText)
                       .join(" ")
 
                     const prev = body.content[i - 1]
@@ -199,7 +206,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
                       // Headings, Texts
                       else if (el.textRun && el.textRun.content !== "\n") {
                         tagContent.push({
-                          [tag]: cleanText(el.textRun.content),
+                          [tag]: getText(el),
                         })
                       }
                     })
