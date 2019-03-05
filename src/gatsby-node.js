@@ -76,6 +76,21 @@ function getParagraphTag(p) {
   return tags[p.paragraphStyle.namedStyleType]
 }
 
+function getListTag(list) {
+  const glyphType = _get(list, [
+    "listProperties",
+    "nestingLevels",
+    0,
+    "glyphType",
+  ])
+  return glyphType !== undefined ? "ol" : "ul"
+}
+
+function getNestedListIndent(level, listTag) {
+  const indentType = listTag === "ol" ? "1." : "-"
+  return `${_repeat("  ", level)}${indentType} `
+}
+
 function getTextFromParagraph(p) {
   return p.elements
     ? p.elements
@@ -122,7 +137,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
                 return reject("empty data")
               }
 
-              const {body, inlineObjects} = res.data
+              const {body, inlineObjects, lists} = res.data
               const content = []
 
               body.content.forEach(({paragraph, table}, i) => {
@@ -132,30 +147,33 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                   // Lists
                   if (paragraph.bullet) {
+                    const listId = paragraph.bullet.listId
+                    const listTag = getListTag(lists[listId])
                     const bulletContent = paragraph.elements
                       .map(el => cleanText(el.textRun.content))
                       .join(" ")
-                    const prevParagraph = body.content[i - 1]
-                    const prevParagraphListId = _get(
-                      prevParagraph,
-                      "paragraph.bullet.listId"
-                    )
 
-                    if (prevParagraphListId === paragraph.bullet.listId) {
-                      const list = _last(content)
+                    const prev = body.content[i - 1]
+                    const prevListId = _get(prev, "paragraph.bullet.listId")
+
+                    if (prevListId === listId) {
+                      const list = _last(content)[listTag]
                       const {nestingLevel} = paragraph.bullet
 
                       if (nestingLevel !== undefined) {
                         // mimic nested lists
-                        const lastIndex = list.ul.length - 1
-                        const indent = `${_repeat("  ", nestingLevel)}- `
+                        const lastIndex = list.length - 1
+                        const indent = getNestedListIndent(
+                          nestingLevel,
+                          listTag
+                        )
 
-                        list.ul[lastIndex] += `\n${indent} ${bulletContent}`
+                        list[lastIndex] += `\n${indent} ${bulletContent}`
                       } else {
-                        list.ul.push(bulletContent)
+                        list.push(bulletContent)
                       }
                     } else {
-                      content.push({ul: [bulletContent]})
+                      content.push({[listTag]: [bulletContent]})
                     }
                   }
 
