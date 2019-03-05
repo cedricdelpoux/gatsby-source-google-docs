@@ -179,6 +179,8 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                   // Headings, Images, Texts
                   else if (tag) {
+                    let tagContent = []
+
                     paragraph.elements.forEach(el => {
                       // EmbeddedObject
                       if (el.inlineObjectElement) {
@@ -188,7 +190,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                         // Images
                         if (embeddedObject.imageProperties) {
-                          content.push({
+                          tagContent.push({
                             img: embeddedObject.imageProperties.contentUri,
                           })
                         }
@@ -196,11 +198,19 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                       // Headings, Texts
                       else if (el.textRun && el.textRun.content !== "\n") {
-                        content.push({
+                        tagContent.push({
                           [tag]: cleanText(el.textRun.content),
                         })
                       }
                     })
+
+                    if (tagContent.every(el => el[tag] !== undefined)) {
+                      content.push({
+                        [tag]: tagContent.map(el => el[tag]).join(" "),
+                      })
+                    } else {
+                      content.push(...tagContent)
+                    }
                   }
                 }
 
