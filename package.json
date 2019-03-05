@@ -22,6 +22,7 @@
   "dependencies": {
     "googleapis": "27",
     "json2md": "^1.6.2",
+    "lodash": "^4.17.11",
     "readline-sync": "^1.4.9"
   },
   "devDependencies": {

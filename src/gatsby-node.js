@@ -2,6 +2,8 @@ const fs = require("fs")
 const {google} = require("googleapis")
 const json2md = require("json2md")
 const readline = require("readline-sync")
+const _get = require("lodash/get")
+const _last = require("lodash/last")
 
 const DEFAULT_CONFIG = {
   access_type: "offline",
@@ -112,7 +114,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
             },
             (err, res) => {
               if (err) {
-                reject(err)
+                return reject(err)
               }
 
               if (!res.data) {
@@ -122,7 +124,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
               const {body, inlineObjects} = res.data
               const content = []
 
-              body.content.forEach(({paragraph, table}) => {
+              body.content.forEach(({paragraph, table}, i) => {
                 // Paragraphs
                 if (paragraph) {
                   const tag = getParagraphTag(paragraph)
@@ -132,10 +134,19 @@ async function getGoogleDocContent({apiKey, id, auth}) {
                     const bulletContent = paragraph.elements
                       .map(el => cleanText(el.textRun.content))
                       .join(" ")
+                    const prevParagraph = body.content[i - 1]
+                    const prevParagraphListId = _get(
+                      prevParagraph,
+                      "paragraph.bullet.listId"
+                    )
 
-                    content.push({
-                      ul: [bulletContent],
-                    })
+                    if (prevParagraphListId === paragraph.bullet.listId) {
+                      const list = _last(content)
+
+                      list.ul.push(bulletContent)
+                    } else {
+                      content.push({ul: [bulletContent]})
+                    }
                   }
 
                   // Headings, Images, Texts
