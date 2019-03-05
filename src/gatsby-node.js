@@ -4,6 +4,7 @@ const json2md = require("json2md")
 const readline = require("readline-sync")
 const _get = require("lodash/get")
 const _last = require("lodash/last")
+const _repeat = require("lodash/repeat")
 
 const DEFAULT_CONFIG = {
   access_type: "offline",
@@ -118,7 +119,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
               }
 
               if (!res.data) {
-                reject("empty data")
+                return reject("empty data")
               }
 
               const {body, inlineObjects} = res.data
@@ -142,8 +143,17 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                     if (prevParagraphListId === paragraph.bullet.listId) {
                       const list = _last(content)
+                      const {nestingLevel} = paragraph.bullet
 
-                      list.ul.push(bulletContent)
+                      if (nestingLevel !== undefined) {
+                        // mimic nested lists
+                        const lastIndex = list.ul.length - 1
+                        const indent = `${_repeat("  ", nestingLevel)}- `
+
+                        list.ul[lastIndex] += `\n${indent} ${bulletContent}`
+                      } else {
+                        list.ul.push(bulletContent)
+                      }
                     } else {
                       content.push({ul: [bulletContent]})
                     }
