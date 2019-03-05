@@ -129,10 +129,12 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                   // Lists
                   if (paragraph.bullet) {
+                    const bulletContent = paragraph.elements
+                      .map(el => cleanText(el.textRun.content))
+                      .join(" ")
+
                     content.push({
-                      ul: paragraph.elements.map(el =>
-                        cleanText(el.textRun.content)
-                      ),
+                      ul: [bulletContent],
                     })
                   }
 
