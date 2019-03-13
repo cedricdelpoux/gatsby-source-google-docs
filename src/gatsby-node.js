@@ -200,7 +200,7 @@ async function getDocumentsMetadata({auth, foldersIds, fields, fieldsMapper}) {
           q: `${foldersIds
             .map(id => `'${id}' in parents`)
             .join(" or ")} and mimeType='application/vnd.google-apps.document'`,
-          fields: `files(id, name, ${fields.join(", ")})`,
+          fields: `files(id, name${fields ? `, ${fields.join(", ")}` : ""})`,
         },
         (err, res) => {
           if (err) {
