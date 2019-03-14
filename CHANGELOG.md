@@ -1,3 +1,7 @@
+# 1.0.1 (2019-03-14)
+
+-   Fixed: Ensure `fields` config is optional by @davidhartsough
+
 # 1.0.0 (2019-02-24)
 
 -   Added: `foldersIds` option
