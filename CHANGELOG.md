@@ -1,3 +1,11 @@
+# 1.1.0 (2019-03-15)
+
+-   Added: Support for nested lists by @horaklukas
+-   Added: Support for ordered lists by @horaklukas
+-   Added: Support for inlined hypertext links by @horaklukas
+-   Fixed: Putting list items into the list they belong to by @horaklukas
+-   Fixed: Splitting one line headings or texts into more lines by @horaklukas
+
 # 1.0.1 (2019-03-14)
 
 -   Fixed: Ensure `fields` config is optional by @davidhartsough

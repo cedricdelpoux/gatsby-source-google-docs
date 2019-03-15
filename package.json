@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": "https://github.com/xuopled/gatsby-source-google-docs",
   "author": {
