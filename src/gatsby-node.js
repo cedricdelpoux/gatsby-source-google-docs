@@ -2,6 +2,9 @@ const fs = require("fs")
 const {google} = require("googleapis")
 const json2md = require("json2md")
 const readline = require("readline-sync")
+const _get = require("lodash/get")
+const _last = require("lodash/last")
+const _repeat = require("lodash/repeat")
 
 const DEFAULT_CONFIG = {
   access_type: "offline",
@@ -73,6 +76,21 @@ function getParagraphTag(p) {
   return tags[p.paragraphStyle.namedStyleType]
 }
 
+function getListTag(list) {
+  const glyphType = _get(list, [
+    "listProperties",
+    "nestingLevels",
+    0,
+    "glyphType",
+  ])
+  return glyphType !== undefined ? "ol" : "ul"
+}
+
+function getNestedListIndent(level, listTag) {
+  const indentType = listTag === "ol" ? "1." : "-"
+  return `${_repeat("  ", level)}${indentType} `
+}
+
 function getTextFromParagraph(p) {
   return p.elements
     ? p.elements
@@ -87,6 +105,13 @@ function getTableCellContent(content) {
   return content
     .map(({paragraph}) => cleanText(getTextFromParagraph(paragraph)))
     .join("")
+}
+
+function getText(element) {
+  const text = cleanText(element.textRun.content)
+  const {link} = element.textRun.textStyle
+
+  return link ? `[${text}](${link.url})` : text
 }
 
 function documentContentToMarkdown({content, ...metadata}) {
@@ -112,32 +137,57 @@ async function getGoogleDocContent({apiKey, id, auth}) {
             },
             (err, res) => {
               if (err) {
-                reject(err)
+                return reject(err)
               }
 
               if (!res.data) {
-                reject("empty data")
+                return reject("empty data")
               }
 
-              const {body, inlineObjects} = res.data
+              const {body, inlineObjects, lists} = res.data
               const content = []
 
-              body.content.forEach(({paragraph, table}) => {
+              body.content.forEach(({paragraph, table}, i) => {
                 // Paragraphs
                 if (paragraph) {
                   const tag = getParagraphTag(paragraph)
 
                   // Lists
                   if (paragraph.bullet) {
-                    content.push({
-                      ul: paragraph.elements.map(el =>
-                        cleanText(el.textRun.content)
-                      ),
-                    })
+                    const listId = paragraph.bullet.listId
+                    const listTag = getListTag(lists[listId])
+                    const bulletContent = paragraph.elements
+                      .map(getText)
+                      .join(" ")
+
+                    const prev = body.content[i - 1]
+                    const prevListId = _get(prev, "paragraph.bullet.listId")
+
+                    if (prevListId === listId) {
+                      const list = _last(content)[listTag]
+                      const {nestingLevel} = paragraph.bullet
+
+                      if (nestingLevel !== undefined) {
+                        // mimic nested lists
+                        const lastIndex = list.length - 1
+                        const indent = getNestedListIndent(
+                          nestingLevel,
+                          listTag
+                        )
+
+                        list[lastIndex] += `\n${indent} ${bulletContent}`
+                      } else {
+                        list.push(bulletContent)
+                      }
+                    } else {
+                      content.push({[listTag]: [bulletContent]})
+                    }
                   }
 
                   // Headings, Images, Texts
                   else if (tag) {
+                    let tagContent = []
+
                     paragraph.elements.forEach(el => {
                       // EmbeddedObject
                       if (el.inlineObjectElement) {
@@ -147,7 +197,7 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                         // Images
                         if (embeddedObject.imageProperties) {
-                          content.push({
+                          tagContent.push({
                             img: embeddedObject.imageProperties.contentUri,
                           })
                         }
@@ -155,11 +205,19 @@ async function getGoogleDocContent({apiKey, id, auth}) {
 
                       // Headings, Texts
                       else if (el.textRun && el.textRun.content !== "\n") {
-                        content.push({
-                          [tag]: cleanText(el.textRun.content),
+                        tagContent.push({
+                          [tag]: getText(el),
                         })
                       }
                     })
+
+                    if (tagContent.every(el => el[tag] !== undefined)) {
+                      content.push({
+                        [tag]: tagContent.map(el => el[tag]).join(" "),
+                      })
+                    } else {
+                      content.push(...tagContent)
+                    }
                   }
                 }
 
