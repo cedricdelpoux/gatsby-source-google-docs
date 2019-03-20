@@ -1,3 +1,7 @@
+# 1.2.0 (2019-03-20)
+
+-   Added: Support for documents extra data using `Google Drive` description field
+
 # 1.1.0 (2019-03-15)
 
 -   Added: Support for nested lists by @horaklukas

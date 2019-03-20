@@ -1,10 +1,11 @@
 const fs = require("fs")
 const {google} = require("googleapis")
 const json2md = require("json2md")
-const readline = require("readline-sync")
 const _get = require("lodash/get")
 const _last = require("lodash/last")
 const _repeat = require("lodash/repeat")
+const readline = require("readline-sync")
+const YAML = require("yamljs")
 
 const DEFAULT_CONFIG = {
   access_type: "offline",
@@ -116,8 +117,7 @@ function getText(element) {
 
 function documentContentToMarkdown({content, ...metadata}) {
   return `---
-${Object.keys(metadata).map(key => `${key}: ${metadata[key]}`).join(`
-`)}
+${YAML.stringify(metadata)}
 ---
 ${json2md(content)}`
 }
@@ -258,7 +258,9 @@ async function getDocumentsMetadata({auth, foldersIds, fields, fieldsMapper}) {
           q: `${foldersIds
             .map(id => `'${id}' in parents`)
             .join(" or ")} and mimeType='application/vnd.google-apps.document'`,
-          fields: `files(id, name${fields ? `, ${fields.join(", ")}` : ""})`,
+          fields: `files(id, name, description${
+            fields ? `, ${fields.join(", ")}` : ""
+          })`,
         },
         (err, res) => {
           if (err) {
@@ -275,6 +277,20 @@ async function getDocumentsMetadata({auth, foldersIds, fields, fieldsMapper}) {
                 })
                 delete documentMetadata[oldKey]
               })
+            }
+
+            // Transform description into metadata if description is JSON object
+            if (documentMetadata.description) {
+              try {
+                documentMetadata = {
+                  ...documentMetadata,
+                  ...JSON.parse(documentMetadata.description),
+                }
+                delete documentMetadata.description
+              } catch (e) {
+                // Description field is not a JSON
+                // Do not throw an error if JSON.parse fail
+              }
             }
 
             return documentMetadata

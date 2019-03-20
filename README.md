@@ -7,6 +7,7 @@
 🔥 No need for a CMS anymore.
 🖋 Write your blog posts on Google Docs.
 🗂 Organize your documents in one or multiple folder in Google Drive
+🤡 Add custom metadata fields to yours documents
 
 It's that simple
 
@@ -44,7 +45,7 @@ Run `yarn dev` to generate a token file.
 
 ### Add the plugin to your configuration:
 
-In your `gatsby-node.js` file:
+In your `gatsby-node.js` file, configure the `gatsby-source-google-docs` and the `gatsby-transformer-remark` plugins:
 
 ```js
 module.exports = {
@@ -75,10 +76,11 @@ module.exports = {
                 // Optional
                 // --------
                 fields: ["createdTime"], // https://developers.google.com/drive/api/v3/reference/files#resource
-                fieldsMapper: {createdTime: "date"}, // To rename fields
+                fieldsMapper: {createdTime: "date", name: "title"}, // To rename fields
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown
+        // Not mandatary, but recommanded to be compliant with gatsby remark ecosystem
         {
             resolve: "gatsby-transformer-remark",
             options: {
@@ -89,19 +91,20 @@ module.exports = {
 }
 ```
 
-### Add the a slug field to documents nodes:
+### Add an automatic slug generation
 
 Modify your `onCreateNode` function in your `gatsby-node.js` to generate a `slug` field:
 
 ```js
-const _ = require("lodash") // Optional, you can use the lib you want or generate slug manually
+const _kebabCase = require("lodash/kebabCase") // Optional, you can use the lib you want or generate slug manually
 
 exports.onCreateNode = ({node, actions}) => {
+    // You need to enable `gatsby-transformer-remark` to transform `GoogleDocs` type to `MarkdownRemark` type.
     if (node.internal.type === `MarkdownRemark` && node.frontmatter.name) {
         actions.createNodeField({
             name: `slug`,
             node,
-            value: `/${_.kebabCase(node.frontmatter.name)}`,
+            value: `/${_kebabCase(node.frontmatter.name)}`,
         })
     }
 }
@@ -124,6 +127,8 @@ const PostTemplate = ({data: {post}}) => (
 
 export default PostTemplate
 
+// You need to enable `gatsby-transformer-remark` to query `markdownRemark`.
+// If you don't use it, query `googleDocs`
 export const pageQuery = graphql`
     query BlogPostBySlug($slug: String!) {
         post: markdownRemark(fields: {slug: {eq: $slug}}) {
@@ -142,6 +147,8 @@ export const pageQuery = graphql`
 Use the `createPages` API from gatsby in your `gatsby-node.js` to create a page for each post.
 
 ```js
+// You need to enable `gatsby-transformer-remark` to query `allMarkdownRemark`.
+// If you don't use it, query `allGoogleDocs`
 exports.createPages = async ({graphql, actions}) =>
     graphql(
         `
@@ -171,6 +178,23 @@ exports.createPages = async ({graphql, actions}) =>
         })
     })
 ```
+
+### Add extra data
+
+If you need more data attached to your documents, fill the description field in `Google Drive` with a JSON object:
+
+```JSON
+{
+    "date": "2019-01-01",
+    "author": "Yourself",
+    "category": "yourCageory",
+    "tags": ["tag1", "tag2"]
+}
+```
+
+JSON will be transformed to YAML and added to your markdown frontmatter and ovveride the existing ones.
+
+> /!\ Do not use `id`, `name`, `description` or any `Google Docs` field you add to the config `fields` option
 
 ## Contributing
 
