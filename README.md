@@ -37,7 +37,7 @@ npm install gatsby-source-google-docs --save
 
 ### Generate a token file
 
-Run `yarn dev` to generate a token file.
+Run `gatsby develop` to generate a token file.
 
 > `token_path` can be customized in the configuration object.
 
