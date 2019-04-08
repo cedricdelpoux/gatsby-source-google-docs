@@ -116,7 +116,9 @@ exports.onCreateNode = ({node, actions}) => {
 
 Create a `src/templates/post.js` file where you will define your post template:
 
-```js
+```jsx
+import React from "react"
+
 const PostTemplate = ({data: {post}}) => (
     <>
         <h1>{post.frontmatter.name}</h1>
