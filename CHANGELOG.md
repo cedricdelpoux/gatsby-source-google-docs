@@ -1,3 +1,7 @@
+# 1.3.0 (2019-04-09)
+
+-   Added: Snapshot test by @KyleAMathews
+
 # 1.2.0 (2019-03-20)
 
 -   Added: Support for documents extra data using `Google Drive` description field

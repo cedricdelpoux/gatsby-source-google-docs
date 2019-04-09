@@ -4,10 +4,10 @@
 
 `gatsby-source-google-docs` is a [Gatsby](https://www.gatsbyjs.org/) plugin to use Google Docs as a data source.
 
-🔥 No need for a CMS anymore.
-🖋 Write your blog posts on Google Docs.
-🗂 Organize your documents in one or multiple folder in Google Drive
-🤡 Add custom metadata fields to yours documents
+-   🔥 No need for a CMS anymore.
+-   🖋 Write your blog posts on Google Docs.
+-   🗂 Organize your documents in one or multiple folder in Google Drive
+-   🤡 Add custom metadata fields to yours documents
 
 It's that simple
 
