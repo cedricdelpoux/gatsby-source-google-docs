@@ -58,12 +58,6 @@ function getText(element) {
 }
 
 module.exports = data => {
-  // console.log(`${process.cwd()}data.json`)
-  // require("fs").writeFileSync(
-  // `${process.cwd()}data.json`,
-  // JSON.stringify(data, null, 4),
-  // `utf-8`
-  // )
   const {body, inlineObjects, lists} = data
   const content = []
 
