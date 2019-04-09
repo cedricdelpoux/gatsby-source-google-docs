@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`converts document 1`] = `
+"---
+id: hi
+metadatIsCool: yeah
+---
+
+## headers
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+## Indented text
+
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
+
+
+
+
+## Code
+
+
+Markdown.generate();
+
+## Lists
+
+
+ 1. Red
+ 2. Green
+ 3. Blue
+
+
+
+
+
+ 1. Buy flour and salt
+ 2. Mix together with water
+ 3. Bake 
+
+## Links
+
+
+This is [an example](http://example.com/) link.
+
+## Inline formatting
+
+
+Italics and bold and bold italics and some underlined text and striked out 
+
+
+This paragraph has some code in it.
+
+## Images
+
+![](https://lh3.googleusercontent.com/Z4q7bVeLnbi4CpZYOCMAOU4_H0uovwNvElapqBEC1DVp93TXFVpyFtCZG6xj_j3l85XsTsj7zDxpoiqWDZj0-DmIUeBAazlC2a59Z7uJqPWrwDegGxBt_pKp5Qj2yeYgVSxGz-61sBmuP7kfxw)
+
+
+
+"
+`;

@@ -27,6 +27,8 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "eslint-plugin-jest": "^22.4.1",
+    "jest": "^24.7.1",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "cross-env": "^5.1.5",
@@ -40,8 +42,9 @@
     "gatsby": "^2.0.0"
   },
   "scripts": {
-    "build": "cross-env BABEL_ENV=production babel src --out-dir .",
+    "build": "cross-env BABEL_ENV=production babel src --out-dir . --ignore 'src/__tests__/*'",
     "lint": "eslint --ext .js src",
+    "test": "jest",
     "prepublishOnly": "yarn build"
   },
   "husky": {
