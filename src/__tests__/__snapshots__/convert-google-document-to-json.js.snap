@@ -49,12 +49,12 @@ Markdown.generate();
 ## Links
 
 
-This is [an example](http://example.com/) link.
+This is [_an example_](http://example.com/) link.
 
 ## Inline formatting
 
 
-Italics and bold and bold italics and some underlined text and striked out 
+_Italics_ and **bold** and **_bold italics_** and some _underlined text_ and ~~striked out~~ 
 
 
 This paragraph has some code in it.
