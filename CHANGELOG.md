@@ -1,3 +1,7 @@
+# 1.4.0 (2019-04-12)
+
+-   Added: Add support for font styles bold, italic, strikethrough by @KyleAMathews
+
 # 1.3.0 (2019-04-09)
 
 -   Added: Snapshot test by @KyleAMathews
