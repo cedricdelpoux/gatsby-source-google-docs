@@ -163,7 +163,7 @@ module.exports = data => {
       const [thead, ...tbody] = table.tableRows
       content.push({
         table: {
-          metadata: thead.tableCells.map(({content}) =>
+          headers: thead.tableCells.map(({content}) =>
             getTableCellContent(content)
           ),
           rows: tbody.map(row =>
