@@ -1,3 +1,9 @@
+# 1.5.0 (2019-04-16)
+
+-   Added: Support for images titles by @dmouse
+-   Fixed: Table headers by @dmouse
+-   Updated: Jest Snapshot
+
 # 1.4.0 (2019-04-12)
 
 -   Added: Add support for font styles bold, italic, strikethrough by @KyleAMathews
