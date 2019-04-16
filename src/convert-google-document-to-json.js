@@ -135,7 +135,10 @@ module.exports = data => {
             // Images
             if (embeddedObject.imageProperties) {
               tagContent.push({
-                img: embeddedObject.imageProperties.contentUri,
+                img: {
+                  source: embeddedObject.imageProperties.contentUri,
+                  title: embeddedObject.title
+                }
               })
             }
           }
