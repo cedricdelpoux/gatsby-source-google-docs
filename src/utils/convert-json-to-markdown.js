@@ -1,9 +1,9 @@
 const json2md = require("json2md")
 const YAML = require("yamljs")
 
-module.exports = ({content, metadata}) => {
+module.exports = ({content, file}) => {
   return `---
-${YAML.stringify(metadata)}---
+${YAML.stringify(file)}---
 
 ${json2md(content)}`
 }

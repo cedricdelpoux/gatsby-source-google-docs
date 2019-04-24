@@ -1,4 +1,3 @@
 node_modules
 /gatsby-node.js
-/convert-google-document-to-json.js
-/convert-json-to-markdown.js
+/utils

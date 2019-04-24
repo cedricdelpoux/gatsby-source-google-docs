@@ -6,7 +6,7 @@
 
 -   🔥 No need for a CMS anymore.
 -   🖋 Write your blog posts on Google Docs.
--   🗂 Organize your documents in one or multiple folder in Google Drive
+-   🗂 Organize your documents in one or multiple folder in Google Drive (trees allowed)
 -   🤡 Add custom metadata fields to yours documents
 
 It's that simple
@@ -39,7 +39,7 @@ npm install gatsby-source-google-docs --save
 
 Run `gatsby develop` to generate a token file.
 
-> `token_path` can be customized in the configuration object.
+> `token_path` can be customized in the configuration object (`config/token_path`).
 
 ## Usage
 
@@ -62,15 +62,6 @@ module.exports = {
                     client_secret: "YOUR_CLIENT_SECRET",
                     // Optional
                     // --------
-                    access_type: "offline",
-                    redirect_uris: [
-                        "urn:ietf:wg:oauth:2.0:oob",
-                        "http://localhost",
-                    ],
-                    scope: [
-                        "https://www.googleapis.com/auth/documents.readonly", // GoogleDocs API read access
-                        "https://www.googleapis.com/auth/drive.metadata.readonly", // GoogleDrive API read access
-                    ],
                     token_path: "google-docs-token.json",
                 },
                 // Optional
@@ -91,27 +82,6 @@ module.exports = {
 }
 ```
 
-### Add an automatic slug generation
-
-Modify your `onCreateNode` function in your `gatsby-node.js` to generate a `slug` field:
-
-```js
-const _kebabCase = require("lodash/kebabCase") // Optional, you can use the lib you want or generate slug manually
-
-exports.onCreateNode = ({node, actions}) => {
-    // You need to enable `gatsby-transformer-remark` to transform `GoogleDocs` type to `MarkdownRemark` type.
-    if (node.internal.type === `MarkdownRemark` && node.frontmatter.title) {
-        actions.createNodeField({
-            name: `slug`,
-            node,
-            value: `/${_kebabCase(node.frontmatter.title)}`,
-        })
-    }
-}
-```
-
-> `node.frontmatter.name` contains the title of the Google Doc
-
 ### Create a post template
 
 Create a `src/templates/post.js` file where you will define your post template:
@@ -122,7 +92,7 @@ import React from "react"
 const PostTemplate = ({data: {post}}) => (
     <>
         <h1>{post.frontmatter.name}</h1>
-        <p>{post.frontmatter.createdTime}</p>
+        <p>{post.frontmatter.date}</p>
         <div dangerouslySetInnerHTML={{__html: post.html}} />
     </>
 )
@@ -137,7 +107,7 @@ export const pageQuery = graphql`
             html
             frontmatter {
                 name
-                createdTime(formatString: "DD MMMM YYYY", locale: "fr")
+                date(formatString: "DD MMMM YYYY", locale: "fr")
             }
         }
     }
@@ -192,6 +162,7 @@ If you need more data attached to your documents, fill the description field in 
 
 ```JSON
 {
+    "slug": "custom-url",
     "date": "2019-01-01",
     "author": "Yourself",
     "category": "yourCageory",

@@ -1,10 +1,10 @@
 const data = require(`./data.json`)
 
-const convertGoogleDocumentToJson = require("../convert-google-document-to-json")
-const convertJsonToMarkdown = require("../convert-json-to-markdown")
+const convertGoogleDocumentToJson = require("../utils/convert-google-document-to-json")
+const convertJsonToMarkdown = require("../utils/convert-json-to-markdown")
 
 test("converts document", () => {
+  const file = {id: `hi`, metadatIsCool: `yeah`}
   const content = convertGoogleDocumentToJson(data)
-  const metadata = {id: `hi`, metadatIsCool: `yeah`}
-  expect(convertJsonToMarkdown({content, metadata})).toMatchSnapshot()
+  expect(convertJsonToMarkdown({file, content})).toMatchSnapshot()
 })

@@ -137,8 +137,8 @@ module.exports = data => {
               tagContent.push({
                 img: {
                   source: embeddedObject.imageProperties.contentUri,
-                  title: embeddedObject.title
-                }
+                  title: embeddedObject.title,
+                },
               })
             }
           }

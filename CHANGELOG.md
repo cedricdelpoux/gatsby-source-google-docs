@@ -1,3 +1,10 @@
+# 1.6.0 (2019-04-24)
+
+-   Added: Support for Google Drive trees
+-   Added: `path` frontmatter with Google Drive tree
+-   Added: `slug` field from custom slug or Google Drive path
+-   Updated: files structure
+
 # 1.5.0 (2019-04-16)
 
 -   Added: Support for images titles by @dmouse
