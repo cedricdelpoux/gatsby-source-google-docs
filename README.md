@@ -82,6 +82,26 @@ module.exports = {
 }
 ```
 
+### Add an automatic slug generation
+
+Modify your `onCreateNode` function in your `gatsby-node.js` to generate a `slug` field:
+
+```js
+exports.onCreateNode = ({node, actions}) => {
+    // You need to enable `gatsby-transformer-remark` to transform `GoogleDocs` type to `MarkdownRemark` type.
+    if (node.internal.type === `MarkdownRemark`) {
+        const customSlug = node.frontmatter.slug // If you add extra data `slug` with description field
+        actions.createNodeField({
+            name: `slug`,
+            node,
+            value: customSlug || node.frontmatter.path,
+        })
+    }
+}
+```
+
+> `node.frontmatter.name` contains the title of the Google Doc
+
 ### Create a post template
 
 Create a `src/templates/post.js` file where you will define your post template:

@@ -66,16 +66,3 @@ exports.sourceNodes = async (
     done(new Error(`source-google-docs: ${e.message}`))
   }
 }
-
-exports.onCreateNode = ({node, actions}) => {
-  if (
-    node.internal.type === `MarkdownRemark` &&
-    (node.frontmatter.path || node.frontmatter.slug)
-  ) {
-    actions.createNodeField({
-      name: `slug`,
-      node,
-      value: node.frontmatter.slug || node.frontmatter.path,
-    })
-  }
-}

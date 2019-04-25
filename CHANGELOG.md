@@ -1,3 +1,7 @@
+# 1.6.1 (2019-04-25)
+
+-   Removed: Automatic `slug` field generation
+
 # 1.6.0 (2019-04-24)
 
 -   Added: Support for Google Drive trees
