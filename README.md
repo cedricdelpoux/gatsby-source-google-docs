@@ -68,6 +68,7 @@ module.exports = {
                 // --------
                 fields: ["createdTime"], // https://developers.google.com/drive/api/v3/reference/files#resource
                 fieldsMapper: {createdTime: "date", name: "title"}, // To rename fields
+                fieldsDefault: {draft: false}, // To add default fields values
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown

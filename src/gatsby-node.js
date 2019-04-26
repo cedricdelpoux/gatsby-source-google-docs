@@ -41,6 +41,7 @@ exports.sourceNodes = async (
       rootFolderIds: options.foldersIds,
       fields: options.fields,
       fieldsMapper: options.fieldsMapper,
+      fieldsDefault: options.fieldsDefault,
     })
 
     const googleDocsDocuments = await fetchGoogleDocsDocuments({

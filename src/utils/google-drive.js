@@ -1,67 +1,65 @@
 const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
+const _cloneDeep = require("lodash/cloneDeep")
 
-async function fetchFilesInFolder({auth, folderId, fields, fieldsMapper}) {
-  return new Promise((resolve, reject) => {
+const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
+const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
+
+const enhanceDocument = ({document, fieldsDefault, fieldsMapper}) => {
+  const enhancedDocument = _cloneDeep(document)
+
+  // Default values
+  if (fieldsDefault) {
+    Object.keys(fieldsDefault).forEach(key => {
+      Object.assign(enhancedDocument, {
+        [key]: fieldsDefault[key],
+      })
+    })
+  }
+
+  // Fields transformation
+  if (fieldsMapper) {
+    Object.keys(fieldsMapper).forEach(oldKey => {
+      const newKey = fieldsMapper[oldKey]
+
+      Object.assign(enhancedDocument, {
+        [newKey]: document[oldKey],
+      })
+
+      delete enhancedDocument[oldKey]
+    })
+  }
+
+  // Transform description into metadata if description is JSON object
+  if (document.description) {
     try {
-      const drive = google.drive({version: "v3", auth})
-      drive.files.list(
-        {
-          q: `'${folderId}' in parents and mimeType='application/vnd.google-apps.document' and trashed = false`,
-          fields: `files(id, mimeType, name, description${
-            fields ? `, ${fields.join(", ")}` : ""
-          })`,
-        },
-        (err, res) => {
-          if (err) {
-            return reject(err)
-          }
+      const description = JSON.parse(document.description)
 
-          const files = res.data.files.map(file => {
-            // Fields transformation
-            if (fieldsMapper) {
-              Object.keys(fieldsMapper).forEach(oldKey => {
-                const newKey = fieldsMapper[oldKey]
-                Object.assign(file, {
-                  [newKey]: file[oldKey],
-                })
-                delete file[oldKey]
-              })
-            }
+      Object.assign(document, description)
 
-            // Transform description into metadata if description is JSON object
-            if (file.description) {
-              try {
-                file = {
-                  ...file,
-                  ...JSON.parse(file.description),
-                }
-                delete file.description
-              } catch (e) {
-                // Description field is not a JSON
-                // Do not throw an error if JSON.parse fail
-              }
-            }
-
-            return file
-          })
-
-          resolve(files)
-        }
-      )
+      delete document.description
     } catch (e) {
-      reject(e)
+      // Description field is not a JSON
+      // Do not throw an error if JSON.parse fail
     }
-  })
+  }
+
+  return enhancedDocument
 }
 
-async function fetchTree({auth, folderId, fields, fieldsMapper}) {
+async function fetchTree({
+  auth,
+  folderId,
+  fields,
+  fieldsDefault,
+  fieldsMapper,
+}) {
   return new Promise((resolve, reject) => {
     try {
       const drive = google.drive({version: "v3", auth})
       drive.files.list(
         {
-          q: `'${folderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false`,
+          q: `'${folderId}' in parents and (mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
           fields: `files(id, mimeType, name, description${
             fields ? `, ${fields.join(", ")}` : ""
           })`,
@@ -71,40 +69,33 @@ async function fetchTree({auth, folderId, fields, fieldsMapper}) {
             return reject(err)
           }
 
-          const files = await fetchFilesInFolder({
-            auth,
-            folderId,
-            fields,
-            fieldsMapper,
-          })
+          const documents = res.data.files
+            .filter(file => file.mimeType === MIME_TYPE_DOCUMENT)
+            .map(document =>
+              enhanceDocument({document, fieldsDefault, fieldsMapper})
+            )
 
           const folders = await Promise.all(
-            res.data.files.map(async folder => {
-              const files = await fetchFilesInFolder({
-                auth,
-                folderId: folder.id,
-                fields,
-                fieldsMapper,
-              })
+            res.data.files
+              .filter(file => file.mimeType === MIME_TYPE_FOLDER)
+              .map(async folder => {
+                const files = await fetchTree({
+                  auth,
+                  folderId: folder.id,
+                  fields,
+                  fieldsMapper,
+                })
 
-              const subfolders = await fetchTree({
-                auth,
-                folderId: folder.id,
-                fields,
-                fieldsMapper,
+                return {
+                  id: folder.id,
+                  name: folder.name,
+                  mimeType: folder.mimeType,
+                  files,
+                }
               })
-
-              return {
-                id: folder.id,
-                name: folder.name,
-                mimeType: folder.mimeType,
-                files,
-                folders: subfolders,
-              }
-            })
           )
 
-          resolve([...files, ...folders])
+          resolve([...documents, ...folders])
         }
       )
     } catch (e) {
@@ -117,6 +108,7 @@ async function fetchGoogleDriveFiles({
   auth,
   rootFolderIds,
   fields,
+  fieldsDefault,
   fieldsMapper,
 }) {
   const googleDriveFiles = []
@@ -129,10 +121,15 @@ async function fetchGoogleDriveFiles({
             auth,
             folderId,
             fields,
+            fieldsDefault,
             fieldsMapper,
           })
 
-          const flattenGoogleDriveFiles = flattenTree("", googleDriveTree)
+          const flattenGoogleDriveFiles = flattenTree({
+            path: "",
+            files: googleDriveTree,
+            fieldsMapper,
+          })
 
           googleDriveFiles.push(...flattenGoogleDriveFiles)
 
@@ -148,25 +145,32 @@ async function fetchGoogleDriveFiles({
   return googleDriveFiles
 }
 
-function flattenTree(path, googleDriveFiles) {
-  const files = googleDriveFiles
-    .filter(file => file.mimeType === "application/vnd.google-apps.document")
-    .map(file => ({...file, path: `${path}/${_kebabCase(file.name)}`}))
+function flattenTree({path, files, fieldsMapper}) {
+  const documents = files
+    .filter(file => file.mimeType === MIME_TYPE_DOCUMENT)
+    .map(file => {
+      const fileName = fieldsMapper["name"]
+        ? file[fieldsMapper["name"]]
+        : file.name
 
-  const filesInFolders = googleDriveFiles
-    .filter(file => file.mimeType === "application/vnd.google-apps.folder")
+      return {...file, path: `${path}/${_kebabCase(fileName)}`}
+    })
+
+  const documentsInFolders = files
+    .filter(file => file.mimeType === MIME_TYPE_FOLDER)
     .reduce((acc, folder) => {
-      const folderFiles = flattenTree(
-        `${path}/${_kebabCase(folder.name)}`,
-        folder.folders
-      )
+      const folderFiles = flattenTree({
+        path: `${path}/${_kebabCase(folder.name)}`,
+        files: folder.files,
+        fieldsMapper,
+      })
 
       acc.push(...folderFiles)
 
       return acc
     }, [])
 
-  return [...files, ...filesInFolders]
+  return [...documents, ...documentsInFolders]
 }
 
 module.exports = {

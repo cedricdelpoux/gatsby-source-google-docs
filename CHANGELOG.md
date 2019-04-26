@@ -1,3 +1,9 @@
+# 1.7.0 (2019-04-26)
+
+-   Added: `fieldsDefault` option
+-   Updated: Improve Google drive API calls number
+-   Updated: Dependencies
+
 # 1.6.1 (2019-04-25)
 
 -   Removed: Automatic `slug` field generation
