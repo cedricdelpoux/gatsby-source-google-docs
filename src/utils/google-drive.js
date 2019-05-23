@@ -59,6 +59,8 @@ async function fetchTree({
       const drive = google.drive({version: "v3", auth})
       drive.files.list(
         {
+          includeTeamDriveItems: true,
+          supportsAllDrives: true,
           q: `'${folderId}' in parents and (mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
           fields: `files(id, mimeType, name, description${
             fields ? `, ${fields.join(", ")}` : ""
