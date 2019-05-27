@@ -2,6 +2,8 @@ const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
 const _cloneDeep = require("lodash/cloneDeep")
 
+const sleep = require("./sleep")
+
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
 
@@ -35,9 +37,9 @@ const enhanceDocument = ({document, fieldsDefault, fieldsMapper}) => {
     try {
       const description = JSON.parse(document.description)
 
-      Object.assign(document, description)
+      Object.assign(enhancedDocument, description)
 
-      delete document.description
+      delete enhancedDocument.description
     } catch (e) {
       // Description field is not a JSON
       // Do not throw an error if JSON.parse fail
@@ -81,6 +83,9 @@ async function fetchTree({
             res.data.files
               .filter(file => file.mimeType === MIME_TYPE_FOLDER)
               .map(async folder => {
+                // Wait to avoid to reach Google Drive API limit
+                await sleep(500)
+
                 const files = await fetchTree({
                   auth,
                   folderId: folder.id,
