@@ -1,3 +1,7 @@
+# 1.8.0 (2019-05-27)
+
+-   Added: Enable team drives by @victsant
+
 # 1.7.0 (2019-04-26)
 
 -   Added: `fieldsDefault` option
