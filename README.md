@@ -159,11 +159,7 @@ export const pageQuery = graphql`
         }
     }
 `
-````
-### If convertImgToNode is enabled. You will need to search the id in the HTML file and replace it with Gatsby image tag
-
 ```
-
 ### Create a page for each post
 
 Use the `createPages` API from gatsby in your `gatsby-node.js` to create a page for each post.
@@ -223,6 +219,9 @@ If you need more data attached to your documents, fill the description field in 
 JSON will be transformed to YAML and added to your markdown frontmatter and ovveride the existing ones.
 
 > /!\ Do not use `id`, `name`, `description` or any `Google Docs` field you add to the config `fields` option
+
+### If convertImgToNode is enabled. You will need to search the id in the HTML file and replace it with Gatsby image tag
+
 
 ## Contributing
 
