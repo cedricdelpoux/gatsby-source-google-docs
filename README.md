@@ -69,6 +69,7 @@ module.exports = {
                 fields: ["createdTime"], // https://developers.google.com/drive/api/v3/reference/files#resource
                 fieldsMapper: {createdTime: "date", name: "title"}, // To rename fields
                 fieldsDefault: {draft: false}, // To add default fields values
+                convertImgToNode: true, // To convert images to remote node files
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown
@@ -122,6 +123,7 @@ export default PostTemplate
 
 // You need to enable `gatsby-transformer-remark` to query `markdownRemark`.
 // If you don't use it, query `googleDocs`
+// If you use convertImgToNode then add googleDocImages query
 export const pageQuery = graphql`
     query BlogPostBySlug($slug: String!) {
         post: markdownRemark(fields: {slug: {eq: $slug}}) {
@@ -131,8 +133,35 @@ export const pageQuery = graphql`
                 date(formatString: "DD MMMM YYYY", locale: "fr")
             }
         }
+        googleDocImages: allFile(filter: {name: {glob: "google-doc-image-**"}}) {
+            edges {
+                node {
+                    id
+                    name
+                    childImageSharp {
+                        fluid {
+                            base64
+                            tracedSVG
+                            aspectRatio
+                            src
+                            srcSet
+                            srcWebp
+                            srcSetWebp
+                            sizes
+                            originalImg
+                            originalName
+                            presentationWidth
+                            presentationHeight
+                        }
+                    }
+                }
+            }
+        }
     }
 `
+````
+### If convertImgToNode is enabled. You will need to search the id in the HTML file and replace it with Gatsby image tag
+
 ```
 
 ### Create a page for each post

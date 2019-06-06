@@ -21,6 +21,7 @@
   ],
   "main": "index.js",
   "dependencies": {
+    "gatsby-source-filesystem": "^2.0.38",
     "googleapis": "39.2.0",
     "json2md": "^1.6.2",
     "lodash": "^4.17.11",
