@@ -222,6 +222,95 @@ JSON will be transformed to YAML and added to your markdown frontmatter and ovve
 
 ### If convertImgToNode is enabled. You will need to search the id in the HTML file and replace it with Gatsby image tag
 
+### Create a post template
+
+Create a `src/templates/post.js` file where you will define your post template:
+
+```jsx
+import React from "react";
+import Img from 'gatsby-image';
+import parse from 'html-react-parser';
+
+const PostTemplate = ({data: {post, googleDocImages}}) => {
+    //This is needed if convertImgToNode is enabled
+    const options = {
+        replace: (domNode) => {
+            const {
+                children,
+            } = domNode;
+            if (!children) return;
+            const hasImgTag = children.find(img => img.name === 'img');
+            if (hasImgTag) {
+                const {
+                    attribs,
+                } = hasImgTag;
+                const {
+                    src,
+                    alt,
+                } = attribs;
+                return (
+                    <Img
+                       fluid={googleDocImages.edges.find(({ node }) => node.id === src).node.childImageSharp.fluid}
+                       alt={alt}
+                       className="ui fluid image"
+                   />
+                );
+            }
+        }
+    };
+    const htmlContent = parse(post.html, options);
+    return (
+        <>
+            <h1>{post.frontmatter.name}</h1>
+            <p>{post.frontmatter.date}</p>
+            <React.Fragment>
+                {htmlContent}
+            </React.Fragment>
+        </>
+    );
+}
+
+export default PostTemplate
+
+// You need to enable `gatsby-transformer-remark` to query `markdownRemark`.
+// If you don't use it, query `googleDocs`
+// If you use convertImgToNode then add googleDocImages query
+export const pageQuery = graphql`
+    query BlogPostBySlug($slug: String!) {
+        post: markdownRemark(fields: {slug: {eq: $slug}}) {
+            html
+            frontmatter {
+                name
+                date(formatString: "DD MMMM YYYY", locale: "fr")
+            }
+        }
+        googleDocImages: allFile(filter: {name: {glob: "google-doc-image-**"}}) {
+            edges {
+                node {
+                    id
+                    name
+                    childImageSharp {
+                        fluid {
+                            base64
+                            tracedSVG
+                            aspectRatio
+                            src
+                            srcSet
+                            srcWebp
+                            srcSetWebp
+                            sizes
+                            originalImg
+                            originalName
+                            presentationWidth
+                            presentationHeight
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
+```
 
 ## Contributing
 
