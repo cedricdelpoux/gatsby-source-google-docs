@@ -3,7 +3,10 @@ const {google} = require("googleapis")
 const readline = require("readline-sync")
 
 async function getToken({access_type, client, scope, token_path}) {
-  if (fs.existsSync(token_path)) {
+  if (process.env.GDOCS_TOKEN) {
+    const token = JSON.parse(process.env.GDOCS_TOKEN)
+    return token
+  } else if (fs.existsSync(token_path)) {
     const token = JSON.parse(fs.readFileSync(token_path, "utf-8"))
     return token
   } else {
