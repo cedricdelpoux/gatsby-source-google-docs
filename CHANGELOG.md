@@ -1,3 +1,7 @@
+# 1.10.0 (2019-07-01)
+
+-   Added: Allow for google doc token env variable by @justinsunho
+
 # 1.9.0 (2019-06-10)
 
 -   Added: `convertImgToNode` config option by @victsant
