@@ -1,3 +1,8 @@
+# 1.11.0 (2019-07-01)
+
+-   Added: Transform subtitles to blockquotes
+-   Fixed: Remove unwanted spaces before punctuation
+
 # 1.10.0 (2019-07-01)
 
 -   Added: Allow for google doc token env variable by @justinsunho
