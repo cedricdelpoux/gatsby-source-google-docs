@@ -5,6 +5,7 @@ const _repeat = require("lodash/repeat")
 function getParagraphTag(p) {
   const tags = {
     NORMAL_TEXT: "p",
+    SUBTITLE: "blockquote",
     HEADING_1: "h1",
     HEADING_2: "h2",
     HEADING_3: "h3",
