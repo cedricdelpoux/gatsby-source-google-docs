@@ -98,7 +98,11 @@ module.exports = data => {
       if (paragraph.bullet) {
         const listId = paragraph.bullet.listId
         const listTag = getListTag(lists[listId])
-        const bulletContent = paragraph.elements.map(getText).join(" ")
+        const bulletContent = paragraph.elements
+          .map(getText)
+          .join(" ")
+          .replace(" .", ".")
+          .replace(" ,", ",")
 
         const prev = body.content[i - 1]
         const prevListId = _get(prev, "paragraph.bullet.listId")
@@ -153,7 +157,11 @@ module.exports = data => {
 
         if (tagContent.every(el => el[tag] !== undefined)) {
           content.push({
-            [tag]: tagContent.map(el => el[tag]).join(" "),
+            [tag]: tagContent
+              .map(el => el[tag])
+              .join(" ")
+              .replace(" .", ".")
+              .replace(" ,", ","),
           })
         } else {
           content.push(...tagContent)
