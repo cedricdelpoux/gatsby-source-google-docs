@@ -66,8 +66,8 @@ exports.sourceNodes = async (
       googleDriveFiles,
     })
     const convertImgToNode = options.convertImgToNode
-    let image = []
-    for (document of googleDocsDocuments) {
+    let images = []
+    for (const document of googleDocsDocuments) {
       const id = createNodeId(`GoogleDocs-${document.id}`)
       let markdownNode = {
         document,
@@ -79,7 +79,7 @@ exports.sourceNodes = async (
       }
       if (convertImgToNode) {
         images = await getGoogleImages(document, convertImgToNode, id)
-        for (imgObj of images) {
+        for (const imgObj of images) {
           const imageToken = Math.random()
             .toString(36)
             .substr(2, 9)
@@ -101,7 +101,7 @@ exports.sourceNodes = async (
               return
             }
           } catch (e) {
-            console.log(e)
+            console.log(e) /* eslint-disable-line no-console */
           }
         }
       }
