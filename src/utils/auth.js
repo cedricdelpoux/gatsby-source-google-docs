@@ -2,8 +2,17 @@ const fs = require("fs")
 const {google} = require("googleapis")
 const readline = require("readline-sync")
 
-async function getToken({access_type, client, scope, token_path}) {
-  if (fs.existsSync(token_path)) {
+async function getToken({
+  access_type,
+  client,
+  scope,
+  token_path,
+  token_env_variable,
+}) {
+  if (process.env[token_env_variable]) {
+    const token = JSON.parse(process.env[token_env_variable])
+    return token
+  } else if (fs.existsSync(token_path)) {
     const token = JSON.parse(fs.readFileSync(token_path, "utf-8"))
     return token
   } else {
@@ -20,6 +29,7 @@ async function getAuth({
   redirect_uris,
   scope,
   token_path,
+  token_env_variable,
 }) {
   const client = new google.auth.OAuth2(
     client_id,
@@ -27,7 +37,13 @@ async function getAuth({
     redirect_uris[0]
   )
 
-  const token = await getToken({access_type, client, scope, token_path})
+  const token = await getToken({
+    access_type,
+    client,
+    scope,
+    token_path,
+    token_env_variable,
+  })
   client.setCredentials(token)
   return client
 }
