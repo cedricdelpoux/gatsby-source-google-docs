@@ -54,10 +54,12 @@ exports.sourceNodes = async (
 
     const googleDriveFiles = await fetchGoogleDriveFiles({
       auth,
-      rootFolderIds: options.foldersIds,
+      debug: options.debug,
       fields: options.fields,
-      fieldsMapper: options.fieldsMapper,
       fieldsDefault: options.fieldsDefault,
+      fieldsMapper: options.fieldsMapper,
+      rootFolderIds: options.foldersIds,
+      timeBetweenCalls: options.timeBetweenCalls,
     })
 
     const googleDocsDocuments = await fetchGoogleDocsDocuments({

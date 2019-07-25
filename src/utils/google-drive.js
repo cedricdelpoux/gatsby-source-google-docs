@@ -51,10 +51,12 @@ const enhanceDocument = ({document, fieldsDefault, fieldsMapper}) => {
 
 async function fetchTree({
   auth,
+  debug,
   folderId,
   fields,
   fieldsDefault,
   fieldsMapper,
+  timeBetweenCalls,
 }) {
   return new Promise((resolve, reject) => {
     try {
@@ -73,34 +75,42 @@ async function fetchTree({
             return reject(err)
           }
 
-          const documents = res.data.files
-            .filter(file => file.mimeType === MIME_TYPE_DOCUMENT)
-            .map(document =>
-              enhanceDocument({document, fieldsDefault, fieldsMapper})
-            )
-
-          const folders = await Promise.all(
-            res.data.files
-              .filter(file => file.mimeType === MIME_TYPE_FOLDER)
-              .map(async folder => {
-                // Wait to avoid to reach Google Drive API limit
-                await sleep(500)
-
-                const files = await fetchTree({
-                  auth,
-                  folderId: folder.id,
-                  fields,
-                  fieldsMapper,
-                })
-
-                return {
-                  id: folder.id,
-                  name: folder.name,
-                  mimeType: folder.mimeType,
-                  files,
-                }
-              })
+          const rawDocuments = res.data.files.filter(
+            file => file.mimeType === MIME_TYPE_DOCUMENT
           )
+          const rawFolders = res.data.files.filter(
+            file => file.mimeType === MIME_TYPE_FOLDER
+          )
+
+          const documents = rawDocuments.map(document =>
+            enhanceDocument({document, fieldsDefault, fieldsMapper})
+          )
+
+          let folders = []
+          for (const folder of rawFolders) {
+            await sleep(timeBetweenCalls)
+
+            if (debug) {
+              // eslint-disable-next-line
+              console.info(`source-google-docs: Fetching ${folder.name}`)
+            }
+
+            const files = await fetchTree({
+              auth,
+              debug,
+              folderId: folder.id,
+              fields,
+              fieldsMapper,
+              timeBetweenCalls,
+            })
+
+            folders.push({
+              id: folder.id,
+              name: folder.name,
+              mimeType: folder.mimeType,
+              files,
+            })
+          }
 
           resolve([...documents, ...folders])
         }
@@ -113,10 +123,12 @@ async function fetchTree({
 
 async function fetchGoogleDriveFiles({
   auth,
-  rootFolderIds,
+  debug,
   fields,
   fieldsDefault,
   fieldsMapper,
+  rootFolderIds,
+  timeBetweenCalls,
 }) {
   const googleDriveFiles = []
 
@@ -126,10 +138,12 @@ async function fetchGoogleDriveFiles({
         try {
           const googleDriveTree = await fetchTree({
             auth,
+            debug,
             folderId,
             fields,
             fieldsDefault,
             fieldsMapper,
+            timeBetweenCalls,
           })
 
           const flattenGoogleDriveFiles = flattenTree({

@@ -1,3 +1,8 @@
+# 1.12.0 (2019-07-01)
+
+-   Added: `timeBetweenCalls` option
+-   Added: `debug` option
+
 # 1.11.0 (2019-07-01)
 
 -   Added: Transform subtitles to blockquotes

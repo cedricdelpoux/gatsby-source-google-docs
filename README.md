@@ -70,6 +70,8 @@ module.exports = {
                 fieldsMapper: {createdTime: "date", name: "title"}, // To rename fields
                 fieldsDefault: {draft: false}, // To add default fields values
                 convertImgToNode: true, // To convert images to remote node files
+                debug: true, // To display folders names
+                timeBetweenCalls: 2000, // To prevent reaching Google api short limits
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown
@@ -133,7 +135,9 @@ export const pageQuery = graphql`
                 date(formatString: "DD MMMM YYYY", locale: "fr")
             }
         }
-        googleDocImages: allFile(filter: {name: {glob: "google-doc-image-**"}}) {
+        googleDocImages: allFile(
+            filter: {name: {glob: "google-doc-image-**"}}
+        ) {
             edges {
                 node {
                     id
@@ -160,6 +164,7 @@ export const pageQuery = graphql`
     }
 `
 ```
+
 ### Create a page for each post
 
 Use the `createPages` API from gatsby in your `gatsby-node.js` to create a page for each post.
@@ -227,47 +232,42 @@ JSON will be transformed to YAML and added to your markdown frontmatter and ovve
 Create a `src/templates/post.js` file where you will define your post template:
 
 ```jsx
-import React from "react";
-import Img from 'gatsby-image';
-import parse from 'html-react-parser';
+import React from "react"
+import Img from "gatsby-image"
+import parse from "html-react-parser"
 
 const PostTemplate = ({data: {post, googleDocImages}}) => {
     //This is needed if convertImgToNode is enabled
     const options = {
-        replace: (domNode) => {
-            const {
-                children,
-            } = domNode;
-            if (!children) return;
-            const hasImgTag = children.find(img => img.name === 'img');
+        replace: domNode => {
+            const {children} = domNode
+            if (!children) return
+            const hasImgTag = children.find(img => img.name === "img")
             if (hasImgTag) {
-                const {
-                    attribs,
-                } = hasImgTag;
-                const {
-                    src,
-                    alt,
-                } = attribs;
+                const {attribs} = hasImgTag
+                const {src, alt} = attribs
                 return (
                     <Img
-                       fluid={googleDocImages.edges.find(({ node }) => node.id === src).node.childImageSharp.fluid}
-                       alt={alt}
-                       className="ui fluid image"
-                   />
-                );
+                        fluid={
+                            googleDocImages.edges.find(
+                                ({node}) => node.id === src
+                            ).node.childImageSharp.fluid
+                        }
+                        alt={alt}
+                        className="ui fluid image"
+                    />
+                )
             }
-        }
-    };
-    const htmlContent = parse(post.html, options);
+        },
+    }
+    const htmlContent = parse(post.html, options)
     return (
         <>
             <h1>{post.frontmatter.name}</h1>
             <p>{post.frontmatter.date}</p>
-            <React.Fragment>
-                {htmlContent}
-            </React.Fragment>
+            <React.Fragment>{htmlContent}</React.Fragment>
         </>
-    );
+    )
 }
 
 export default PostTemplate
@@ -284,7 +284,9 @@ export const pageQuery = graphql`
                 date(formatString: "DD MMMM YYYY", locale: "fr")
             }
         }
-        googleDocImages: allFile(filter: {name: {glob: "google-doc-image-**"}}) {
+        googleDocImages: allFile(
+            filter: {name: {glob: "google-doc-image-**"}}
+        ) {
             edges {
                 node {
                     id
