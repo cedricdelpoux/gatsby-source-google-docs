@@ -8,28 +8,26 @@ async function getToken({
   scope,
   token_path,
   token_env_variable,
+  token,
 }) {
-  if (process.env[token_env_variable]) {
-    const token = JSON.parse(process.env[token_env_variable])
-    return token
+  if (token) {
+    return JSON.parse(token)
+  } else if (process.env[token_env_variable]) {
+    return JSON.parse(process.env[token_env_variable])
   } else if (fs.existsSync(token_path)) {
-    const token = JSON.parse(fs.readFileSync(token_path, "utf-8"))
-    return token
+    return JSON.parse(fs.readFileSync(token_path, "utf-8"))
   } else {
-    const token = await getNewToken({access_type, client, scope})
-    fs.writeFileSync(token_path, JSON.stringify(token))
-    return token
+    const newToken = await getNewToken({access_type, client, scope})
+    fs.writeFileSync(token_path, JSON.stringify(newToken))
+    return newToken
   }
 }
 
 async function getAuth({
-  access_type,
   client_id,
   client_secret,
   redirect_uris,
-  scope,
-  token_path,
-  token_env_variable,
+  ...tokenProps
 }) {
   const client = new google.auth.OAuth2(
     client_id,
@@ -37,13 +35,8 @@ async function getAuth({
     redirect_uris[0]
   )
 
-  const token = await getToken({
-    access_type,
-    client,
-    scope,
-    token_path,
-    token_env_variable,
-  })
+  const token = await getToken(tokenProps)
+
   client.setCredentials(token)
   return client
 }

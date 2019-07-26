@@ -1,4 +1,8 @@
-# 1.12.0 (2019-07-01)
+# 1.13.0 (2019-07-26)
+
+-   Added: `token` option
+
+# 1.12.0 (2019-07-25)
 
 -   Added: `timeBetweenCalls` option
 -   Added: `debug` option

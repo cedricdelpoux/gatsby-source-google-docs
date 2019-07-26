@@ -62,7 +62,18 @@ module.exports = {
                     client_secret: "YOUR_CLIENT_SECRET",
                     // Optional
                     // --------
+                    // There are three different ways to set your token
+                    token: {
+                        access_token: "...",
+                        refresh_token: "...",
+                        scope: "...",
+                        token_type: "Bearer",
+                        expiry_date: 1556201561825,
+                    },
+                    // or
                     token_path: "google-docs-token.json",
+                    // or
+                    token_env_variable: "GATSBY_GOOGLE_DOCS_TOKEN",
                 },
                 // Optional
                 // --------
