@@ -24,7 +24,7 @@
     "gatsby-source-filesystem": "^2.0.38",
     "googleapis": "39.2.0",
     "json2md": "^1.6.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.13",
     "readline-sync": "^1.4.9",
     "yamljs": "^0.3.0"
   },
