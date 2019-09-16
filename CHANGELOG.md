@@ -1,3 +1,7 @@
+# 1.14.0 (2019-09-16)
+
+-   Added: tables styling by @justinsunho
+
 # 1.13.0 (2019-07-26)
 
 -   Added: `token` option
