@@ -39,7 +39,7 @@ function getTextFromParagraph(p) {
   return p.elements
     ? p.elements
         .filter(el => el.textRun && el.textRun.content !== "\n")
-        .map(el => (el.textRun ? el.textRun.content : ""))
+        .map(el => (el.textRun ? getText(el, false) : ""))
         .join("")
     : ""
 }
