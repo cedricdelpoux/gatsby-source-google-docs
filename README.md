@@ -45,7 +45,7 @@ Run `gatsby develop` to generate a token file.
 
 ### Add the plugin to your configuration:
 
-In your `gatsby-node.js` file, configure the `gatsby-source-google-docs` and the `gatsby-transformer-remark` plugins:
+In your `gatsby-config.js` file, configure the `gatsby-source-google-docs` and the `gatsby-transformer-remark` plugins:
 
 ```js
 module.exports = {
