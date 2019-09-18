@@ -35,7 +35,7 @@ async function getAuth({
     redirect_uris[0]
   )
 
-  const token = await getToken(tokenProps)
+  const token = await getToken({...tokenProps, client})
 
   client.setCredentials(token)
   return client
