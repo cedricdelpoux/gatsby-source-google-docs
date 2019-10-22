@@ -7,9 +7,9 @@
 -   🔥 No need for a CMS anymore.
 -   🖋 Write your blog posts on Google Docs.
 -   🗂 Organize your documents in one or multiple folder in Google Drive (trees allowed)
--   🤡 Add custom metadata fields to yours documents
+-   🤡 Add custom metadata fields to your documents
 
-It's that simple
+It's that simple!
 
 ## Getting started
 
