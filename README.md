@@ -86,7 +86,7 @@ module.exports = {
             },
         },
         // Use gatsby-transformer-remark to modify the generated markdown
-        // Not mandatary, but recommanded to be compliant with gatsby remark ecosystem
+        // Not mandatory, but recommended to be compliant with the Gatsby remark ecosystem
         {
             resolve: "gatsby-transformer-remark",
             options: {
