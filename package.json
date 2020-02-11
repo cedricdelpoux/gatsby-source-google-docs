@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "1.14.2",
+  "version": "2.0.0-beta.1",
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": "https://github.com/xuopled/gatsby-source-google-docs",
   "author": {
@@ -21,33 +21,39 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "gatsby-source-filesystem": "^2.0.38",
-    "googleapis": "39.2.0",
+    "gatsby-source-filesystem": "^2.1.48",
+    "googleapis": "47.0.0",
+    "inquirer": "^7.0.4",
     "json2md": "^1.6.2",
     "lodash": "^4.17.13",
-    "readline-sync": "^1.4.9",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "cross-env": "^5.1.5",
-    "eslint": "^5.3.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-jest": "^22.4.1",
-    "husky": "^2.1.0",
-    "jest": "^24.7.1",
-    "lint-staged": "^8.1.5",
-    "prettier": "1.17.0"
+    "cross-env": "^7.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jest": "^23.7.0",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.7",
+    "prettier": "1.19.1"
   },
   "peerDependencies": {
     "gatsby": "^2.0.0"
   },
   "scripts": {
+    "clean": "rm -rf ./gatsby-node.js ./utils",
+    "prebuild": "yarn clean",
     "build": "cross-env BABEL_ENV=production babel src --out-dir . --ignore 'src/__tests__/*'",
     "lint": "eslint --ext .js src",
     "test": "jest",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "token": "./scripts/generate-token.js"
+  },
+  "bin": {
+    "gatsby-source-google-docs-token": "./scripts/generate-token.js"
   },
   "husky": {
     "hooks": {

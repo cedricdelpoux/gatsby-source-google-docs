@@ -1,69 +1,55 @@
 const {google} = require("googleapis")
 
-const convertGoogleDocumentToJson = require("./convert-google-document-to-json")
-const convertJsonToMarkdown = require("./convert-json-to-markdown")
+const {
+  convertGoogleDocumentToJson,
+  convertJsonToMarkdown,
+} = require("./converters")
+const {googleAuth} = require("./google-auth")
+const {fetchGoogleDriveFiles} = require("./google-drive")
 
-async function fetchGoogleDocsContent({apiKey, id, auth}) {
+async function fetchGoogleDocsContent({id}) {
+  const auth = googleAuth.getAuth()
+
   return new Promise((resolve, reject) => {
-    try {
-      google.options({auth})
-      google
-        .discoverAPI(
-          "https://docs.googleapis.com/$discovery/rest?version=v1&key=" + apiKey
-        )
-        .then(function(docs) {
-          docs.documents.get(
-            {
-              documentId: id,
-            },
-            (err, res) => {
-              if (err) {
-                return reject(err)
-              }
+    google.docs({version: "v1", auth}).documents.get(
+      {
+        documentId: id,
+      },
+      (err, res) => {
+        if (err) {
+          return reject(err)
+        }
 
-              if (!res.data) {
-                return reject("empty data")
-              }
+        if (!res.data) {
+          return reject("Empty data")
+        }
 
-              const content = convertGoogleDocumentToJson(res.data)
-
-              resolve(content)
-            }
-          )
-        })
-    } catch (e) {
-      reject(e)
-    }
+        resolve(convertGoogleDocumentToJson(res.data))
+      }
+    )
   })
 }
 
-async function fetchGoogleDocsDocuments({auth, apiKey, googleDriveFiles}) {
-  const requests = await googleDriveFiles.map(
-    async file =>
-      new Promise(async (resolve, reject) => {
-        try {
-          const content = await fetchGoogleDocsContent({
-            apiKey,
-            auth,
-            id: file.id,
-          })
+async function fetchGoogleDocsDocuments(pluginOptions) {
+  const googleDriveFiles = await fetchGoogleDriveFiles(pluginOptions)
 
-          const markdown = convertJsonToMarkdown({file, content})
-
-          const document = {
-            ...file,
-            content,
-            markdown,
-          }
-
-          resolve(document)
-        } catch (e) {
-          reject(e)
-        }
+  return Promise.all(
+    googleDriveFiles.map(async file => {
+      const content = await fetchGoogleDocsContent({
+        id: file.id,
       })
-  )
 
-  return await Promise.all(requests)
+      const markdown = convertJsonToMarkdown({file, content})
+
+      const document = {
+        ...file,
+        content,
+        markdown,
+      }
+
+      return document
+    })
+  )
 }
 
 module.exports = {

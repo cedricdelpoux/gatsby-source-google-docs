@@ -1,3 +1,5 @@
+const json2md = require("json2md")
+const YAML = require("yamljs")
 const _last = require("lodash/last")
 const _get = require("lodash/get")
 const _repeat = require("lodash/repeat")
@@ -39,7 +41,7 @@ function getTextFromParagraph(p) {
   return p.elements
     ? p.elements
         .filter(el => el.textRun && el.textRun.content !== "\n")
-        .map(el => (el.textRun ? getText(el, false) : ""))
+        .map(el => (el.textRun ? getText(el) : ""))
         .join("")
     : ""
 }
@@ -51,7 +53,32 @@ function getTableCellContent(content) {
     .join("")
 }
 
-function getText(element, {isHeader = false}) {
+function getImage(inlineObjects, element) {
+  const embeddedObject =
+    inlineObjects[element.inlineObjectElement.inlineObjectId]
+      .inlineObjectProperties.embeddedObject
+
+  if (embeddedObject && embeddedObject.imageProperties) {
+    return {
+      source: embeddedObject.imageProperties.contentUri,
+      title: embeddedObject.title || "",
+      description: embeddedObject.description || "",
+    }
+  }
+
+  return null
+}
+
+function getBulletContent(inlineObjects, element) {
+  if (element.inlineObjectElement) {
+    const image = getImage(inlineObjects, element)
+    return `![${image.description}](${image.source} "${image.title}")`
+  }
+
+  return getText(element)
+}
+
+function getText(element, {isHeader = false} = {}) {
   let text = cleanText(element.textRun.content)
   const {
     link,
@@ -86,7 +113,7 @@ function getText(element, {isHeader = false}) {
   return text
 }
 
-module.exports = data => {
+function convertGoogleDocumentToJson(data) {
   const {body, inlineObjects, lists} = data
   const content = []
 
@@ -99,8 +126,9 @@ module.exports = data => {
       if (paragraph.bullet) {
         const listId = paragraph.bullet.listId
         const listTag = getListTag(lists[listId])
+
         const bulletContent = paragraph.elements
-          .map(getText)
+          .map(el => getBulletContent(inlineObjects, el))
           .join(" ")
           .replace(" .", ".")
           .replace(" ,", ",")
@@ -133,17 +161,11 @@ module.exports = data => {
         paragraph.elements.forEach(el => {
           // EmbeddedObject
           if (el.inlineObjectElement) {
-            const embeddedObject =
-              inlineObjects[el.inlineObjectElement.inlineObjectId]
-                .inlineObjectProperties.embeddedObject
+            const image = getImage(inlineObjects, el)
 
-            // Images
-            if (embeddedObject.imageProperties) {
+            if (image) {
               tagContent.push({
-                img: {
-                  source: embeddedObject.imageProperties.contentUri,
-                  title: embeddedObject.title,
-                },
+                img: image,
               })
             }
           }
@@ -187,4 +209,19 @@ module.exports = data => {
   })
 
   return content
+}
+
+function convertJsonToMarkdown({content, file}) {
+  // Do NOT move the formatting of the following lines
+  // to prevent markdown parsing errors
+  return `---
+${YAML.stringify(file)}
+---
+  
+${json2md(content)}`
+}
+
+module.exports = {
+  convertGoogleDocumentToJson,
+  convertJsonToMarkdown,
 }

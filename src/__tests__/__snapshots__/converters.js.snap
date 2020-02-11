@@ -1,11 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`converts document 1`] = `
+exports[`Converts document 1`] = `
 "---
 id: hi
 metadatIsCool: yeah
----
 
+---
+  
 ## headers
 
 # Header 1

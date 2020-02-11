@@ -1,3 +1,10 @@
+# 2.0.0 (2019-09-16)
+
+-   Added: Script `gatsby-source-google-docs-token` for token generation
+-   Added: New documentation
+-   Updated: Simpler token behavior
+-   Deleted: `config` option
+
 # 1.14.0 (2019-09-16)
 
 -   Added: tables styling by @justinsunho
