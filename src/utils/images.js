@@ -13,8 +13,9 @@ async function getImagesNodes({
 
   for (const element of document.content) {
     if (element.img) {
+      const id = ((Date.now() + Math.random()) * 10000).toString(36)
+      const name = `GoogleDocsImage-${id}`
       const url = element.img.source
-      const name = `GoogleDocsImage-${url}`
       const imageNode = await createRemoteFileNode({
         parentNodeId,
         name,
@@ -59,26 +60,6 @@ async function fetchAndReplaceGoogleImages({
   })
 
   for (const imageNode of imagesNodes) {
-    // const imagesDirName = "images"
-    // const rootPath = path.join(process.cwd())
-    // const publicPath = path.join(process.cwd(), "public")
-    // const imagesPath = path.join(publicPath, imagesDirName)
-    // const fromPath = path.join(rootPath, imageNode.relativePath)
-    // const toPath = path.join(imagesPath, document.path)
-    // const publicImagePath = path.join(
-    //   "/",
-    //   imagesDirName,
-    //   document.path,
-    //   imageNode.base
-    // )
-    // if (!fs.existsSync(imagesPath)) {
-    //   fs.mkdirSync(imagesPath)
-    // }
-    // if (!fs.existsSync(toPath)) {
-    //   fs.mkdirSync(toPath)
-    // }
-    // fs.copyFileSync(fromPath, path.join(toPath, imageNode.base))
-    // document.markdown = document.markdown.replace(url, publicImagePath)
     markdown = markdown.replace(
       new RegExp(imageNode.url, "g"),
       imageNode.relativePath
