@@ -7,20 +7,22 @@ Create a `src/templates/post.js` file where you will define your post template:
 ```js
 export default ({data: {post}}) => (
     <>
-        <h1>{post.frontmatter.name}</h1>
-        <p>{post.frontmatter.createdTime}</p>
-        <div dangerouslySetInnerHTML={{__html: post.html}} />
+        <h1>{post.document.name}</h1>
+        <p>{post.document.createdTime}</p>
+        <div
+            dangerouslySetInnerHTML={{__html: post.childMarkdownRemark.html}}
+        />
     </>
 )
 
 export const pageQuery = graphql`
-    query Post($path: String!) {
-        post: markdownRemark(fields: {path: {eq: $path}}) {
+    post: googleDocs(document: {path: {eq: $path}}) {
+        document {
+            name
+            createdTime
+        }
+        childMarkdownRemark {
             html
-            frontmatter {
-                name
-                createdTime
-            }
         }
     }
 `

@@ -16,7 +16,7 @@ exports.sourceNodes = async (
     const googleDocsDocuments = await fetchGoogleDocsDocuments(pluginOptions)
 
     for (const document of googleDocsDocuments) {
-      const documentNodeId = createNodeId(`GoogleDocs-${document.id}`)
+      const documentNodeId = createNodeId(`google-docs-${document.id}`)
 
       if (pluginOptions.replaceGoogleImages !== false) {
         document.markdown = await fetchAndReplaceGoogleImages({

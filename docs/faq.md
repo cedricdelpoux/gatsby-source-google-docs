@@ -84,6 +84,37 @@ Fill the description field of your document in Google Drive with a JSON object c
 }
 ```
 
+## How can I query images only?
+
+```js
+query GoogleDocsImages {
+    googleDocImages: allFile(filter: {name: {glob: "google-docs-image-**"}}) {
+        edges {
+            node {
+                id
+                name
+                childImageSharp {
+                    fluid {
+                        base64
+                        tracedSVG
+                        aspectRatio
+                        src
+                        srcSet
+                        srcWebp
+                        srcSetWebp
+                        sizes
+                        originalImg
+                        originalName
+                        presentationWidth
+                        presentationHeight
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 ## How to use `gatsby-source-google-docs` without `remark` ecosystem?
 
 Update your config to prevent the plugin to replace the google images urls:
