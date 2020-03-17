@@ -4,7 +4,7 @@
 
 `gatsby-source-google-docs` is a [Gatsby](https://www.gatsbyjs.org/) plugin to use [Google Docs](https://docs.google.com/) as a data source.
 
-Why to use [Google Gocs](https://docs.google.com/) to write your content :
+Why use [Google Docs](https://docs.google.com/) to write your content :
 
 -   🖋 Best online WYSIWYG editor
 -   🖥 Desktop web app
@@ -12,7 +12,7 @@ Why to use [Google Gocs](https://docs.google.com/) to write your content :
 -   🛩 Offline redaction
 -   🔥 No need for external CMS
 -   ✅ No more content is your source code
--   🗂 Automatic breadbrumb generation
+-   🗂 Automatic breadcrumb generation
 -   🤡 Custom metadata fields
 
 ## Usage
