@@ -11,7 +11,7 @@ Why use [Google Docs](https://docs.google.com/) to write your content :
 -   📱 Mobile app
 -   🛩 Offline redaction
 -   🔥 No need for external CMS
--   ✅ No more content is your source code
+-   ✅ No more content in your source code
 -   🗂 Automatic breadcrumb generation
 -   🤡 Custom metadata fields
 
