@@ -4,9 +4,10 @@ exports[`Converts document 1`] = `
 "---
 id: hi
 metadatIsCool: yeah
+cover: null
 
 ---
-  
+
 ## headers
 
 # Header 1
@@ -62,7 +63,7 @@ This paragraph has some code in it.
 
 ## Images
 
-![Image Title](https://lh3.googleusercontent.com/Z4q7bVeLnbi4CpZYOCMAOU4_H0uovwNvElapqBEC1DVp93TXFVpyFtCZG6xj_j3l85XsTsj7zDxpoiqWDZj0-DmIUeBAazlC2a59Z7uJqPWrwDegGxBt_pKp5Qj2yeYgVSxGz-61sBmuP7kfxw)
+![Alt Text](https://lh3.googleusercontent.com/Z4q7bVeLnbi4CpZYOCMAOU4_H0uovwNvElapqBEC1DVp93TXFVpyFtCZG6xj_j3l85XsTsj7zDxpoiqWDZj0-DmIUeBAazlC2a59Z7uJqPWrwDegGxBt_pKp5Qj2yeYgVSxGz-61sBmuP7kfxw \\"Image Title\\")
 
 
 

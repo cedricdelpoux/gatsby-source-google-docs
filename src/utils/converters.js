@@ -89,9 +89,9 @@ function getText(element, {isHeader = false} = {}) {
     bold,
     italic,
   } = element.textRun.textStyle
-  
-  text = text.replace(/\*/g, '\\*')
-  text = text.replace(/_/g, '\\_')
+
+  text = text.replace(/\*/g, "\\*")
+  text = text.replace(/_/g, "\\_")
 
   if (underline) {
     // Underline isn't supported in markdown so we'll use emphasis

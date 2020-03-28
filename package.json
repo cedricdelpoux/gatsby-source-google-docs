@@ -1,11 +1,11 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Gatsby plugin to use Google Docs as a data source",
-  "repository": "https://github.com/xuopled/gatsby-source-google-docs",
+  "repository": "https://github.com/cedricdelpoux/gatsby-source-google-docs",
   "author": {
     "name": "Cédric Delpoux",
-    "email": "xuopled@gmail.com"
+    "email": "cedric.delpoux@gmail.com"
   },
   "license": "MIT",
   "private": false,
