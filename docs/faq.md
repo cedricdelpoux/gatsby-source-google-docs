@@ -31,21 +31,67 @@ Then you can query the breadcrumb:
 
 > `breadcrumb` field wield be deleted if you don't have subtrees
 
+## How can I add a cover?
+
+Add an image in your [Google Doc first page header](https://support.google.com/docs/answer/86629).
+
+Then you can query your header cover like any Sharp node.
+
+````
+import {graphql} from "gatsby"
+import Img from "gatsby-image"
+
+const PostTemplate = ({data: {post}}) => (
+  <>
+    {post.frontmatter.cover && (
+      <Img
+        style={{width: "200px", marginBottom: "2rem"}}
+        fluid={
+          post.frontmatter.cover.image.childImageSharp.fluid
+        }
+      />
+    )}
+    <div dangerouslySetInnerHTML={{__html: post.html}} />
+  </>
+)
+
+export const pageQuery = graphql`
+  query BlogPost($path: String!) {
+     post: markdownRemark(fields: {path: {eq: $path}}) {
+        html
+       frontmatter {
+         cover {
+            image {
+              childImageSharp {
+                fluid(maxWidth: 200, quality: 100) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
+          }
+       }
+     }
+  }
+`
+```
+
 ## How can I manage drafts?
 
 Put your drafts documents into a `Drafts` folder and update the query before create your pages:
 
-```
+````
+
 {
-    allGoogleDocs(filter: {document: {breadcrumb: {nin: "Drafts"}}}) {
-    nodes {
-      document {
-        path
-      }
-    }
-  }
+allGoogleDocs(filter: {document: {breadcrumb: {nin: "Drafts"}}}) {
+nodes {
+document {
+path
 }
-```
+}
+}
+}
+
+````
 
 > You will not be able to query `breadcrumb` if all your documents are in the same folder
 
@@ -60,7 +106,7 @@ Fill the description field of your document in Google Drive with a JSON object:
     "tags": ["tag1", "tag2"],
     "draft": true
 }
-```
+````
 
 ## How can I set a custom path for one of my document?
 
@@ -117,21 +163,6 @@ query GoogleDocsImages {
 
 ## How to use `gatsby-source-google-docs` without `remark` ecosystem?
 
-Update your config to prevent the plugin to replace the google images urls:
-
-```js
-module.exports = {
-    plugins: [
-        {
-            resolve: "gatsby-source-google-docs",
-            options: {
-                replaceGoogleImages: false,
-            },
-        },
-    ],
-}
-```
-
 You can query the JSON and Markdown used to generate the html and do your custom processing:
 
 ```graphql
@@ -140,6 +171,7 @@ query {
         nodes {
             document {
                 name
+                cover
                 markdown
                 content {
                     p

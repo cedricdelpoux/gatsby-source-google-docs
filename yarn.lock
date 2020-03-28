@@ -3045,10 +3045,10 @@ json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
-json2md@^1.6.2:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/json2md/-/json2md-1.6.5.tgz#f8c118be09726d29c9068214471bb2726eda422a"
-  integrity sha512-Q2SV+GwlWB3+3MyWP9UNZqDF1Pkeh7pJh1QChup6vGRem3ONA/8MOnxfe8MiqgEhv6Pb8g8MzTSqFBHEczMhBA==
+json2md@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/json2md/-/json2md-1.7.0.tgz#aaf4bad77ec8c0e623169a288add12b6493e180e"
+  integrity sha512-g/lg6H3sEeyqCTqNLn8DTsqAa2wwqUI0Y7MnZ8d6wJLMJLgsMp5mBO9hPIPPuFjv/C1vYBoKAZG8TdTfcIGZCA==
   dependencies:
     indento "^1.1.7"
 

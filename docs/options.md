@@ -6,6 +6,10 @@ module.exports = {
         {
             resolve: "gatsby-source-google-docs",
             options: {
+                //---
+                // All the following options are OPTIONAL
+                //---
+                //
                 // To fetch only documents to specific folders
                 // folders Ids can be found in Google Drive URLs
                 // https://drive.google.com/drive/folders/FOLDER_ID
@@ -18,9 +22,6 @@ module.exports = {
                 fieldsMapper: {createdTime: "date", name: "title"},
                 // To add default fields values
                 fieldsDefault: {draft: false},
-                // To do not replace Google images urls by local ones
-                // Usefull if you decide to do not use `gatsby-transformer-remark`
-                replaceGoogleImages: false
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
                 debug: true,

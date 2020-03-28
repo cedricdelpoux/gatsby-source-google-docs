@@ -53,26 +53,28 @@ function getTableCellContent(content) {
     .join("")
 }
 
-function getImage(inlineObjects, element) {
+function getImage(document, element) {
+  const {inlineObjects} = document
+  const {inlineObjectId} = element.inlineObjectElement
+
   const embeddedObject =
-    inlineObjects[element.inlineObjectElement.inlineObjectId]
-      .inlineObjectProperties.embeddedObject
+    inlineObjects[inlineObjectId].inlineObjectProperties.embeddedObject
 
   if (embeddedObject && embeddedObject.imageProperties) {
     return {
       source: embeddedObject.imageProperties.contentUri,
       title: embeddedObject.title || "",
-      description: embeddedObject.description || "",
+      alt: embeddedObject.description || "",
     }
   }
 
   return null
 }
 
-function getBulletContent(inlineObjects, element) {
+function getBulletContent(document, element) {
   if (element.inlineObjectElement) {
-    const image = getImage(inlineObjects, element)
-    return `![${image.description}](${image.source} "${image.title}")`
+    const image = getImage(document, element)
+    return `![${image.alt}](${image.source} "${image.title}")`
   }
 
   return getText(element)
@@ -116,8 +118,42 @@ function getText(element, {isHeader = false} = {}) {
   return text
 }
 
-function convertGoogleDocumentToJson(data) {
-  const {body, inlineObjects, lists} = data
+function getCover(document) {
+  const {headers, documentStyle} = document
+
+  if (
+    !documentStyle ||
+    !documentStyle.firstPageHeaderId ||
+    !headers[documentStyle.firstPageHeaderId]
+  ) {
+    return null
+  }
+
+  const headerInlineObject = _get(headers[documentStyle.firstPageHeaderId], [
+    "content",
+    0,
+    "paragraph",
+    "elements",
+    0,
+  ])
+
+  const image = headerInlineObject
+    ? getImage(document, headerInlineObject)
+    : null
+
+  return image
+    ? {
+        image: image.source,
+        title: image.title,
+        alt: image.alt,
+      }
+    : null
+}
+
+function convertGoogleDocumentToJson(document) {
+  const {body} = document
+  const cover = getCover(document)
+
   const content = []
 
   body.content.forEach(({paragraph, table}, i) => {
@@ -128,10 +164,11 @@ function convertGoogleDocumentToJson(data) {
       // Lists
       if (paragraph.bullet) {
         const listId = paragraph.bullet.listId
-        const listTag = getListTag(lists[listId])
+        const list = document.lists[listId]
+        const listTag = getListTag(list)
 
         const bulletContent = paragraph.elements
-          .map(el => getBulletContent(inlineObjects, el))
+          .map(el => getBulletContent(document, el))
           .join(" ")
           .replace(" .", ".")
           .replace(" ,", ",")
@@ -164,7 +201,7 @@ function convertGoogleDocumentToJson(data) {
         paragraph.elements.forEach(el => {
           // EmbeddedObject
           if (el.inlineObjectElement) {
-            const image = getImage(inlineObjects, el)
+            const image = getImage(document, el)
 
             if (image) {
               tagContent.push({
@@ -211,16 +248,16 @@ function convertGoogleDocumentToJson(data) {
     }
   })
 
-  return content
+  return {cover, content}
 }
 
-function convertJsonToMarkdown({content, file}) {
+function convertJsonToMarkdown({content, metadata}) {
   // Do NOT move the formatting of the following lines
   // to prevent markdown parsing errors
   return `---
-${YAML.stringify(file)}
+${YAML.stringify(metadata)}
 ---
-  
+
 ${json2md(content)}`
 }
 
