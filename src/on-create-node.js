@@ -13,13 +13,15 @@ const onCreateNodeMarkdownRemark = async ({
     node.frontmatter.cover &&
     GOOGLE_IMAGE_REGEX.test(node.frontmatter.cover.image)
   ) {
+    const url = node.frontmatter.cover.image
     const fileNode = await createRemoteFileNode({
-      url: node.frontmatter.cover.image,
+      url,
       parentNodeId: node.id,
       createNode,
       createNodeId,
       cache,
       store,
+      name: "google-docs-image-" + createNodeId(url),
     })
 
     if (fileNode) {
@@ -40,6 +42,7 @@ const onCreateNodeMarkdownRemark = async ({
           createNodeId,
           cache,
           store,
+          name: "google-docs-image-" + createNodeId(url),
         })
 
         return fileNode
