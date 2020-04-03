@@ -15,6 +15,26 @@ gatsby-source-google-docs-token
 
 You should add the `.google/` folder to your `.gitignore` because it contains some sensitive informartions.
 
+### Troubleshooting
+
+#### `'gatsby-source-google-docs-token' is not recognized as an internal or external command,`
+
+Add an `npm` script to your `package.json`:
+
+```
+"scripts": {
+    "token": "gatsby-source-google-docs-token"
+}
+```
+
+Then generate a token:
+
+```
+yarn token
+# or
+npm run token
+```
+
 ## Environment variable
 
 if `process.env.GATSBY_SOURCE_GOOGLE_DOCS_TOKEN` exists, it will take over the generated token file.
