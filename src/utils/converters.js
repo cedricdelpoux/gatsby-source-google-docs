@@ -55,10 +55,13 @@ function getTableCellContent(content) {
 
 function getImage(document, element) {
   const {inlineObjects} = document
-  const {inlineObjectId} = element.inlineObjectElement
 
-  const embeddedObject =
-    inlineObjects[inlineObjectId].inlineObjectProperties.embeddedObject
+  if (!inlineObjects || !element.inlineObjectElement) {
+    return null
+  }
+
+  const inlineObject = inlineObjects[element.inlineObjectElement.inlineObjectId]
+  const embeddedObject = inlineObject.inlineObjectProperties.embeddedObject
 
   if (embeddedObject && embeddedObject.imageProperties) {
     return {
@@ -129,7 +132,7 @@ function getCover(document) {
     return null
   }
 
-  const headerInlineObject = _get(headers[documentStyle.firstPageHeaderId], [
+  const headerElement = _get(headers[documentStyle.firstPageHeaderId], [
     "content",
     0,
     "paragraph",
@@ -137,9 +140,7 @@ function getCover(document) {
     0,
   ])
 
-  const image = headerInlineObject
-    ? getImage(document, headerInlineObject)
-    : null
+  const image = getImage(document, headerElement)
 
   return image
     ? {
