@@ -57,7 +57,7 @@ const PostTemplate = ({data: {post}}) => (
 
 export const pageQuery = graphql`
   query BlogPost($path: String!) {
-     post: markdownRemark(fields: {path: {eq: $path}}) {
+     post: markdownRemark(frontmatter: {path: {eq: $path}}) {
         html
        frontmatter {
          cover {
@@ -79,19 +79,18 @@ export const pageQuery = graphql`
 
 Put your drafts documents into a `Drafts` folder and update the query before create your pages:
 
-````
-
+```
 {
-allGoogleDocs(filter: {document: {breadcrumb: {nin: "Drafts"}}}) {
-nodes {
-document {
-path
-}
-}
-}
+    allGoogleDocs(filter: {document: {breadcrumb: {nin: "Drafts"}}}) {
+        nodes {
+            document {
+                path
+            }
+        }
+    }
 }
 
-````
+```
 
 > You will not be able to query `breadcrumb` if all your documents are in the same folder
 
