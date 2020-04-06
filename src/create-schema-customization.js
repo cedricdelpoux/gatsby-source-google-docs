@@ -8,10 +8,6 @@ exports.createSchemaCustomization = ({actions}) => {
     type GoogleDocs implements Node {
       document: Document
     }
-
-    type MarkdownRemark implements Node {
-      frontmatter: Document
-    }
   `
   createTypes(typeDefs)
 }
