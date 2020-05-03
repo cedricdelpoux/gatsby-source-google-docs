@@ -9,10 +9,7 @@ const onCreateNodeMarkdownRemark = async ({
   cache,
   createNodeId,
 }) => {
-  if (
-    node.frontmatter.cover &&
-    GOOGLE_IMAGE_REGEX.test(node.frontmatter.cover.image)
-  ) {
+  if (node.frontmatter.cover) {
     const url = node.frontmatter.cover.image
     const fileNode = await createRemoteFileNode({
       url,
