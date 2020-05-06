@@ -1,12 +1,12 @@
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
-const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/g
+const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/
 
 exports.onCreateNode = async ({
   node,
   actions: {createNode},
   store,
-  cache,
+  getCache,
   createNodeId,
   reporter,
 }) => {
@@ -27,10 +27,11 @@ exports.onCreateNode = async ({
         parentNodeId: node.id,
         createNode,
         createNodeId,
-        cache,
+        getCache,
         store,
         name: "google-docs-image-" + createNodeId(url),
         ext: ".png",
+        reporter,
       })
     } catch (e) {
       reporter.warn(`source-google-docs: ${e}`)
@@ -55,10 +56,11 @@ exports.onCreateNode = async ({
             parentNodeId: node.id,
             createNode,
             createNodeId,
-            cache,
+            getCache,
             store,
             name: "google-docs-image-" + createNodeId(url),
             ext: ".png",
+            reporter,
           })
         } catch (e) {
           reporter.warn(`source-google-docs: ${e}`)
