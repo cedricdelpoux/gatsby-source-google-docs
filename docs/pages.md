@@ -15,14 +15,16 @@ export default ({data: {post}}) => (
     </>
 )
 
-export const pageQuery = graphql`
-    post: googleDocs(document: {path: {eq: $path}}) {
-        document {
-            name
-            createdTime
-        }
-        childMarkdownRemark {
-            html
+export const query = graphql`
+    query($path: String) {
+        post: googleDocs(document: {path: {eq: $path}}) {
+            document {
+                name
+                createdTime
+            }
+            childMarkdownRemark {
+                html
+            }
         }
     }
 `
