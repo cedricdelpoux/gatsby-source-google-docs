@@ -72,4 +72,4 @@ This project is licensed under the MIT License - see the
 
 [npm-badge]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gatsby-source-google-docs
-[github-issue]: https://github.com/xuopled/gatsby-source-google-docs/issues/new
+[github-issue]: https://github.com/cedricdelpoux/gatsby-source-google-docs/issues/new
