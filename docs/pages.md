@@ -32,6 +32,8 @@ export const query = graphql`
 
 ## Create a page for each post
 
+Add this to `gatsby-node.js`
+
 ```js
 const path = require(`path`)
 
