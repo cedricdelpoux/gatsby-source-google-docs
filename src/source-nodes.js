@@ -20,6 +20,10 @@ exports.sourceNodes = async (
         dir: process.cwd(),
       })
     }
+
+    reporter.success(
+      `source-google-docs: ${googleDocsDocuments.length} documents fetched`
+    )
   } catch (e) {
     if (pluginOptions.debug) {
       reporter.panic(`source-google-docs: `, e)

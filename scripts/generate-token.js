@@ -6,8 +6,7 @@ const path = require("path")
 const {google} = require("googleapis")
 const inquirer = require("inquirer")
 
-const GOOGLEDOCS_PATH = path.join(process.cwd(), ".google")
-const TOKEN_PATH = path.join(GOOGLEDOCS_PATH, "token.json")
+const ENV_FILE_PATH = path.join(process.cwd(), ".env")
 const NEW_PROJECT_URL = "https://console.developers.google.com/projectcreate"
 const DOCS_API_URL =
   "https://console.developers.google.com/apis/library/docs.googleapis.com"
@@ -121,21 +120,21 @@ async function generateToken() {
 
     const {tokens} = await client.getToken(authorization_code)
 
-    if (!fs.existsSync(GOOGLEDOCS_PATH)) {
-      fs.mkdirSync(GOOGLEDOCS_PATH)
+    if (!fs.existsSync(ENV_FILE_PATH)) {
+      fs.mkdirSync(ENV_FILE_PATH)
     }
 
-    fs.writeFileSync(
-      TOKEN_PATH,
-      JSON.stringify({
+    fs.appendFileSync(
+      ENV_FILE_PATH,
+      `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN=${JSON.stringify({
         client_id,
         client_secret,
         ...tokens,
-      })
+      })}`
     )
 
     console.log("")
-    console.log("Token generated successfully")
+    console.log("Token added successfully to your .env file")
     console.log("Enjoy `gatsby-source-google-docs` plugin")
   } catch (e) {
     console.log("")

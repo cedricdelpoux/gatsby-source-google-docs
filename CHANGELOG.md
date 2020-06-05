@@ -2,6 +2,7 @@
 
 -   Added: Script `gatsby-source-google-docs-token` for token generation
 -   Added: New documentation
+-   Added: Gatsby Cloud compatibility
 -   Updated: Simpler token behavior
 -   Deleted: `config` option
 
