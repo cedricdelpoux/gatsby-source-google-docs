@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0-beta.11",
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": "https://github.com/cedricdelpoux/gatsby-source-google-docs",
   "author": {
@@ -55,6 +55,14 @@
   },
   "bin": {
     "gatsby-source-google-docs-token": "./scripts/generate-token.js"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ],
+    "*.{css,js,md}": [
+      "prettier --write"
+    ]
   },
   "husky": {
     "hooks": {

@@ -120,17 +120,13 @@ async function generateToken() {
 
     const {tokens} = await client.getToken(authorization_code)
 
-    if (!fs.existsSync(ENV_FILE_PATH)) {
-      fs.mkdirSync(ENV_FILE_PATH)
-    }
-
     fs.appendFileSync(
       ENV_FILE_PATH,
       `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN=${JSON.stringify({
         client_id,
         client_secret,
         ...tokens,
-      })}`
+      })}\n`
     )
 
     console.log("")
