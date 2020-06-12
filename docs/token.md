@@ -10,14 +10,15 @@ Token can be provided to `gatsby-source-google-docs` with two different way.
 gatsby-source-google-docs-token
 ```
 
-> You must be in the root folder of your project to run the script because it will write the token to your file system.
-> Path should be /.google
+Follow the instructions and the token will be added to your `.env` file with the format `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN={...}`
 
-You should add the `.google/` folder to your `.gitignore` because it contains some sensitive informartions.
+If you have multiple `.env` files for your different environments, you need to copy the token to your different files
 
-### Troubleshooting
+You should add the `.env/` folder to your `.gitignore` because it contains some sensitive informations.
 
-#### `'gatsby-source-google-docs-token' is not recognized as an internal or external command,`
+## Troubleshooting
+
+### `'gatsby-source-google-docs-token' is not recognized as an internal or external command,`
 
 Add an `npm` script to your `package.json`:
 
@@ -34,11 +35,3 @@ yarn token
 # or
 npm run token
 ```
-
-## Environment variable
-
-if `process.env.GATSBY_SOURCE_GOOGLE_DOCS_TOKEN` exists, it will take over the generated token file.
-
-It is usefull on CDN like `Netlify` because you should not commit your token file.
-
-Copy content of `/.google/token.json` and paste it in a environment variable
