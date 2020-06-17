@@ -29,8 +29,6 @@ yarn add gatsby-source-google-docs gatsby-transformer-remark gatsby-remark-image
 gatsby-source-google-docs-token
 ```
 
-> If you have multiple `.env` files for your different environments, the script will write the token at the end of each file
-
 3. [Add the plugin](./docs/options.md) in your `gatsby-config.js` file
 
 ```js
@@ -49,6 +47,13 @@ module.exports = {
 
 4. [Create pages](./docs/pages.md)
 
+## Showcase
+
+You are using `gatsby-source-google-docs` for your website?
+Thank you!
+
+Please add your website to the [Showcase](./showcase.yml)
+
 ## Documentation
 
 -   [Token](./docs/token.md)
@@ -60,8 +65,6 @@ module.exports = {
 
 -   ⇄ Pull/Merge requests and ★ Stars are always welcome.
 -   For bugs and feature requests, please [create an issue][github-issue].
-
-See [CONTRIBUTING](./CONTRIBUTING.md) guidelines
 
 ## Changelog
 

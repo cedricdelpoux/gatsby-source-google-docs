@@ -14,6 +14,12 @@ const DRIVE_API_URL =
 const OAUTH_URL =
   "https://console.developers.google.com/apis/credentials/oauthclient"
 
+const envFiles = glob.sync(".env*")
+
+if (envFiles.length === 0) {
+  envFiles.push(".env")
+}
+
 async function waitConfirmation() {
   const {confirm} = await inquirer.prompt([
     {
@@ -120,7 +126,7 @@ async function generateToken() {
 
     const {tokens} = await client.getToken(authorization_code)
 
-    glob.sync(".env*").forEach(file => {
+    envFiles.forEach(file => {
       fs.appendFileSync(
         file,
         `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN=${JSON.stringify({
