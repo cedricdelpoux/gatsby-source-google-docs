@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "2.0.0-beta.11",
+  "version": "2.0.0-beta.12",
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": "https://github.com/cedricdelpoux/gatsby-source-google-docs",
   "author": {
@@ -22,6 +22,7 @@
   "main": "index.js",
   "dependencies": {
     "gatsby-source-filesystem": "^2.1.48",
+    "glob": "^7.1.6",
     "googleapis": "47.0.0",
     "inquirer": "^7.0.4",
     "json2md": "^1.7.0",

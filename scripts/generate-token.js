@@ -2,11 +2,10 @@
 /* eslint-disable no-console */
 
 const fs = require("fs")
-const path = require("path")
 const {google} = require("googleapis")
 const inquirer = require("inquirer")
+const glob = require("glob")
 
-const ENV_FILE_PATH = path.join(process.cwd(), ".env")
 const NEW_PROJECT_URL = "https://console.developers.google.com/projectcreate"
 const DOCS_API_URL =
   "https://console.developers.google.com/apis/library/docs.googleapis.com"
@@ -29,6 +28,7 @@ async function waitConfirmation() {
     throw new Error("Please read and follow the instructions")
   }
 }
+
 async function generateToken() {
   try {
     console.log("Create a new Google project:")
@@ -120,17 +120,19 @@ async function generateToken() {
 
     const {tokens} = await client.getToken(authorization_code)
 
-    fs.appendFileSync(
-      ENV_FILE_PATH,
-      `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN=${JSON.stringify({
-        client_id,
-        client_secret,
-        ...tokens,
-      })}\n`
-    )
+    glob.sync(".env*").forEach(file => {
+      fs.appendFileSync(
+        file,
+        `GATSBY_SOURCE_GOOGLE_DOCS_TOKEN=${JSON.stringify({
+          client_id,
+          client_secret,
+          ...tokens,
+        })}\n`
+      )
+    })
 
     console.log("")
-    console.log("Token added successfully to your .env file")
+    console.log("Token added successfully to your .env files")
     console.log("Enjoy `gatsby-source-google-docs` plugin")
   } catch (e) {
     console.log("")

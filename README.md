@@ -29,6 +29,8 @@ yarn add gatsby-source-google-docs gatsby-transformer-remark gatsby-remark-image
 gatsby-source-google-docs-token
 ```
 
+> If you have multiple `.env` files for your different environments, the script will write the token at the end of each file
+
 3. [Add the plugin](./docs/options.md) in your `gatsby-config.js` file
 
 ```js
