@@ -254,7 +254,7 @@ function convertGoogleDocumentToJson(document) {
 
   // Footnotes
   let formatedFootnotes = []
-  Object.entries(footnotes).forEach(({value}) => {
+  Object.entries(footnotes).forEach(([, value]) => {
     // Concatenate all content
     const text_items = value.content[0].paragraph.elements.map(element =>
       getText(element)
@@ -280,7 +280,7 @@ function convertGoogleDocumentToJson(document) {
 }
 
 // Extra converter for footnotes
-json2md.converters.footnote = function({footnote}) {
+json2md.converters.footnote = function(footnote) {
   return `[^${footnote.number}]: ${footnote.text}`
 }
 
