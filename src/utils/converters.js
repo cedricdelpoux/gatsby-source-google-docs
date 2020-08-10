@@ -1,11 +1,7 @@
 const json2md = require("json2md")
-
 const YAML = require("yamljs")
-
 const _last = require("lodash/last")
-
 const _get = require("lodash/get")
-
 const _repeat = require("lodash/repeat")
 
 function getParagraphTag(p) {
@@ -18,6 +14,7 @@ function getParagraphTag(p) {
     HEADING_4: "h4",
     HEADING_5: "h5",
   }
+
   return tags[p.paragraphStyle.namedStyleType]
 }
 
@@ -28,7 +25,6 @@ function getListTag(list) {
     0,
     "glyphType",
   ])
-
   return glyphType !== undefined ? "ol" : "ul"
 }
 
@@ -96,6 +92,7 @@ function getText(element, {isHeader = false} = {}) {
     bold,
     italic,
   } = element.textRun.textStyle
+
   text = text.replace(/\*/g, "\\*")
   text = text.replace(/_/g, "\\_")
 
@@ -106,8 +103,9 @@ function getText(element, {isHeader = false} = {}) {
 
   if (italic) {
     text = `_${text}_`
-  } // Set bold unless it's a header
+  }
 
+  // Set bold unless it's a header
   if (bold & !isHeader) {
     text = `**${text}**`
   }
@@ -143,6 +141,7 @@ function getCover(document) {
   ])
 
   const image = getImage(document, headerElement)
+
   return image
     ? {
         image: image.source,
@@ -155,35 +154,38 @@ function getCover(document) {
 function convertGoogleDocumentToJson(document) {
   const {body, footnotes} = document
   const cover = getCover(document)
+
   const content = []
   const footnoteIDs = {}
+
   body.content.forEach(({paragraph, table}, i) => {
     // Paragraphs
     if (paragraph) {
-      const tag = getParagraphTag(paragraph) // Lists
-
+      const tag = getParagraphTag(paragraph)
+      // Lists
       if (paragraph.bullet) {
         const listId = paragraph.bullet.listId
         const list = document.lists[listId]
         const listTag = getListTag(list)
+
         const bulletContent = paragraph.elements
           .map(el => getBulletContent(document, el))
           .join(" ")
           .replace(" .", ".")
           .replace(" ,", ",")
-        const prev = body.content[i - 1]
 
+        const prev = body.content[i - 1]
         const prevListId = _get(prev, "paragraph.bullet.listId")
 
         if (prevListId === listId) {
           const list = _last(content)[listTag]
-
           const {nestingLevel} = paragraph.bullet
 
           if (nestingLevel !== undefined) {
             // mimic nested lists
             const lastIndex = list.length - 1
             const indent = getNestedListIndent(nestingLevel, listTag)
+
             list[lastIndex] += `\n${indent} ${bulletContent}`
           } else {
             list.push(bulletContent)
@@ -193,9 +195,12 @@ function convertGoogleDocumentToJson(document) {
             [listTag]: [bulletContent],
           })
         }
-      } // Headings, Images, Texts
+      }
+
+      // Headings, Images, Texts
       else if (tag) {
         let tagContent = []
+
         paragraph.elements.forEach(el => {
           // EmbeddedObject
           if (el.inlineObjectElement) {
@@ -206,7 +211,8 @@ function convertGoogleDocumentToJson(document) {
                 img: image,
               })
             }
-          } // Headings, Texts
+          }
+          // Headings, Texts
           else if (el.textRun && el.textRun.content !== "\n") {
             tagContent.push({
               [tag]: getText(el, {
@@ -236,7 +242,9 @@ function convertGoogleDocumentToJson(document) {
           content.push(...tagContent)
         }
       }
-    } // Table
+    }
+
+    // Table
     else if (table && table.tableRows.length > 0) {
       const [thead, ...tbody] = table.tableRows
       content.push({
@@ -252,7 +260,7 @@ function convertGoogleDocumentToJson(document) {
     }
   })
 
-  // Footnotes
+  // Footnotes reference section (end of document)
   let formatedFootnotes = []
   Object.entries(footnotes).forEach(([, value]) => {
     // Concatenate all content
@@ -263,7 +271,7 @@ function convertGoogleDocumentToJson(document) {
       .join(" ")
       .replace(" .", ".")
       .replace(" ,", ",")
-    // const text = value.content[0].paragraph.elements[0].textRun.content
+
     formatedFootnotes.push({
       footnote: {number: footnoteIDs[value.footnoteId], text: text},
     })
@@ -279,7 +287,7 @@ function convertGoogleDocumentToJson(document) {
   }
 }
 
-// Extra converter for footnotes
+// Add extra converter for footnotes
 json2md.converters.footnote = function(footnote) {
   return `[^${footnote.number}]: ${footnote.text}`
 }

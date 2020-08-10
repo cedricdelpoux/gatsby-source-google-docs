@@ -1,5 +1,9 @@
 // const fs = require("fs")
 // const path = require("path")
+require("dotenv").config({
+  path: `.env`,
+})
+
 const {google} = require("googleapis")
 
 // const googledocsPath = path.join(process.cwd(), ".google")
