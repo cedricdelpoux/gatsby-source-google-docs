@@ -7,15 +7,15 @@ exports.sourceNodes = async (
   try {
     const googleDocsDocuments = await fetchGoogleDocsDocuments(pluginOptions)
 
-    for (let document of googleDocsDocuments) {
+    for (let googleDoc of googleDocsDocuments) {
       createNode({
-        document,
-        id: createNodeId(`google-docs-${document.id}`),
+        document: googleDoc,
+        id: createNodeId(`google-docs-${googleDoc.id}`),
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",
-          content: document.markdown,
-          contentDigest: createContentDigest(document.markdown),
+          content: googleDoc.markdown,
+          contentDigest: createContentDigest(googleDoc.markdown),
         },
         dir: process.cwd(),
       })

@@ -140,8 +140,8 @@ async function fetchTree({
   })
 }
 
-async function fetchGoogleDriveFiles({folders = [null], ...options}) {
-  const googleDriveFiles = []
+async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
+  const googleDriveDocuments = []
 
   await Promise.all(
     folders.map(async folderId => {
@@ -151,17 +151,26 @@ async function fetchGoogleDriveFiles({folders = [null], ...options}) {
         ...options,
       })
 
-      const flattenGoogleDriveFiles = flattenTree({
+      const flattenGoogleDriveDocuments = flattenTree({
         path: "",
         files: googleDriveTree,
         ...options,
       })
 
-      googleDriveFiles.push(...flattenGoogleDriveFiles)
+      googleDriveDocuments.push(...flattenGoogleDriveDocuments)
     })
   )
 
-  return googleDriveFiles
+  if (
+    options.enhanceDocument &&
+    typeof options.enhanceDocument === "function"
+  ) {
+    return googleDriveDocuments.map(googleDoc =>
+      options.enhanceDocument(googleDoc)
+    )
+  }
+
+  return googleDriveDocuments
 }
 
 function flattenTree({path, files, fieldsMapper}) {
@@ -193,5 +202,5 @@ function flattenTree({path, files, fieldsMapper}) {
 }
 
 module.exports = {
-  fetchGoogleDriveFiles,
+  fetchGoogleDriveDocuments,
 }

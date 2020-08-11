@@ -25,6 +25,13 @@ module.exports = {
                 // To ignore some folder in the tree
                 // It can be folder names or IDs
                 ignoredFolders: ["drafts"]
+                // Compute extra data for each document
+                enhanceDocument: (document) => {
+                  const isPost = document.breadcrumb && document.breadcrumb[1] === "posts"
+                  const category = isPost ? document.breadcrumb[2] : null
+                  const path = document.path.replace(`/${category}`, "")
+                  return {...document, path, category}
+                },
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
                 debug: true,

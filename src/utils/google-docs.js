@@ -5,7 +5,7 @@ const {
   convertJsonToMarkdown,
 } = require("./converters")
 const {googleAuth} = require("./google-auth")
-const {fetchGoogleDriveFiles} = require("./google-drive")
+const {fetchGoogleDriveDocuments} = require("./google-drive")
 
 async function fetchGoogleDocs({id}) {
   const auth = googleAuth.getAuth()
@@ -31,24 +31,24 @@ async function fetchGoogleDocs({id}) {
 }
 
 async function fetchGoogleDocsDocuments(pluginOptions) {
-  const googleDriveFiles = await fetchGoogleDriveFiles(pluginOptions)
+  const googleDriveDocument = await fetchGoogleDriveDocuments(pluginOptions)
   const relativePaths = {}
 
   const googleDocsDocuments = await Promise.all(
-    googleDriveFiles.map(async file => {
+    googleDriveDocument.map(async metadata => {
       const {cover, content} = await fetchGoogleDocs({
-        id: file.id,
+        id: metadata.id,
       })
 
-      relativePaths[file.id] = file.path
+      relativePaths[metadata.id] = metadata.path
 
-      return {file, cover, content}
+      return {metadata, cover, content}
     })
   )
 
-  return googleDocsDocuments.map(({file, cover, content}) => {
+  return googleDocsDocuments.map(({metadata, cover, content}) => {
     let markdown = convertJsonToMarkdown({
-      metadata: {...file, cover},
+      metadata: {...metadata, cover},
       content,
     })
 
@@ -63,14 +63,12 @@ async function fetchGoogleDocsDocuments(pluginOptions) {
       }
     }
 
-    const document = {
-      ...file,
+    return {
+      ...metadata,
       cover,
       content,
       markdown,
     }
-
-    return document
   })
 }
 
