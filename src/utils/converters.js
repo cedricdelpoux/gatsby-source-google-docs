@@ -213,7 +213,7 @@ function convertGoogleDocumentToJson(document) {
               })
             }
           }
-          
+
           // Headings, Texts
           else if (el.textRun && el.textRun.content !== "\n") {
             tagContent.push({
