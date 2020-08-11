@@ -9,33 +9,29 @@ const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
 
 const enhanceDocument = ({
   document,
-  fieldsDefault,
-  fieldsMapper,
+  fieldsDefault = {},
+  fieldsMapper = {},
   breadcrumb,
 }) => {
   const enhancedDocument = _cloneDeep(document)
 
   // Default values
-  if (fieldsDefault) {
-    Object.keys(fieldsDefault).forEach(key => {
-      Object.assign(enhancedDocument, {
-        [key]: fieldsDefault[key],
-      })
+  Object.keys(fieldsDefault).forEach(key => {
+    Object.assign(enhancedDocument, {
+      [key]: fieldsDefault[key],
     })
-  }
+  })
 
   // Fields transformation
-  if (fieldsMapper) {
-    Object.keys(fieldsMapper).forEach(oldKey => {
-      const newKey = fieldsMapper[oldKey]
+  Object.keys(fieldsMapper).forEach(oldKey => {
+    const newKey = fieldsMapper[oldKey]
 
-      Object.assign(enhancedDocument, {
-        [newKey]: document[oldKey],
-      })
-
-      delete enhancedDocument[oldKey]
+    Object.assign(enhancedDocument, {
+      [newKey]: document[oldKey],
     })
-  }
+
+    delete enhancedDocument[oldKey]
+  })
 
   // Breadcrumb
   Object.assign(enhancedDocument, {
@@ -66,6 +62,7 @@ async function fetchTree({
   fields,
   fieldsDefault,
   fieldsMapper,
+  ignoredFolders = [],
 }) {
   const auth = googleAuth.getAuth()
 
@@ -104,6 +101,13 @@ async function fetchTree({
 
         let folders = []
         for (const folder of rawFolders) {
+          if (
+            ignoredFolders.includes(folder.name) ||
+            ignoredFolders.includes(folder.id)
+          ) {
+            continue
+          }
+
           if (debug) {
             const breadCrumbString =
               breadcrumb.length > 0 ? breadcrumb.join("/") + "/" : ""
@@ -119,6 +123,7 @@ async function fetchTree({
             folderId: folder.id,
             fields,
             fieldsMapper,
+            ignoredFolders,
           })
 
           folders.push({

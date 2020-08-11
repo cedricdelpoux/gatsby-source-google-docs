@@ -22,6 +22,9 @@ module.exports = {
                 fieldsMapper: {createdTime: "date", name: "title"},
                 // To add default fields values
                 fieldsDefault: {draft: false},
+                // To ignore some folder in the tree
+                // It can be folder names or IDs
+                ignoredFolders: ["drafts"]
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
                 debug: true,
