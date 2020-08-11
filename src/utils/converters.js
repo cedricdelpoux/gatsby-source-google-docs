@@ -162,7 +162,7 @@ function convertGoogleDocumentToJson(document) {
     // Paragraphs
     if (paragraph) {
       const tag = getParagraphTag(paragraph)
-      
+
       // Lists
       if (paragraph.bullet) {
         const listId = paragraph.bullet.listId
