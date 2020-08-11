@@ -152,10 +152,11 @@ function getCover(document) {
 }
 
 function convertGoogleDocumentToJson(document) {
-  const {body} = document
+  const {body, footnotes} = document
   const cover = getCover(document)
 
   const content = []
+  const footnoteIDs = {}
 
   body.content.forEach(({paragraph, table}, i) => {
     // Paragraphs
@@ -191,7 +192,9 @@ function convertGoogleDocumentToJson(document) {
             list.push(bulletContent)
           }
         } else {
-          content.push({[listTag]: [bulletContent]})
+          content.push({
+            [listTag]: [bulletContent],
+          })
         }
       }
 
@@ -214,8 +217,19 @@ function convertGoogleDocumentToJson(document) {
           // Headings, Texts
           else if (el.textRun && el.textRun.content !== "\n") {
             tagContent.push({
-              [tag]: getText(el, {isHeader: tag !== "p"}),
+              [tag]: getText(el, {
+                isHeader: tag !== "p",
+              }),
             })
+          }
+          
+          // Footnotes
+          else if (el.footnoteReference) {
+            tagContent.push({
+              [tag]: `[^${el.footnoteReference.footnoteNumber}]`,
+            })
+            footnoteIDs[el.footnoteReference.footnoteId] =
+              el.footnoteReference.footnoteNumber
           }
         })
 
@@ -249,7 +263,36 @@ function convertGoogleDocumentToJson(document) {
     }
   })
 
-  return {cover, content}
+  // Footnotes reference section (end of document)
+  let formatedFootnotes = []
+  Object.entries(footnotes).forEach(([, value]) => {
+    // Concatenate all content
+    const text_items = value.content[0].paragraph.elements.map(element =>
+      getText(element)
+    )
+    const text = text_items
+      .join(" ")
+      .replace(" .", ".")
+      .replace(" ,", ",")
+
+    formatedFootnotes.push({
+      footnote: {number: footnoteIDs[value.footnoteId], text: text},
+    })
+  })
+  formatedFootnotes.sort(
+    (item1, item2) =>
+      parseInt(item1.footnote.number) - parseInt(item2.footnote.number)
+  )
+  content.push(...formatedFootnotes)
+  return {
+    cover,
+    content,
+  }
+}
+
+// Add extra converter for footnotes
+json2md.converters.footnote = function(footnote) {
+  return `[^${footnote.number}]: ${footnote.text}`
 }
 
 function convertJsonToMarkdown({content, metadata}) {
