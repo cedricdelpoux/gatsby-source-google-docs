@@ -152,7 +152,7 @@ function getCover(document) {
 }
 
 function convertGoogleDocumentToJson(document) {
-  const {body, footnotes} = document
+  const {body, footnotes = {}} = document
   const cover = getCover(document)
 
   const content = []
@@ -222,7 +222,7 @@ function convertGoogleDocumentToJson(document) {
               }),
             })
           }
-          
+
           // Footnotes
           else if (el.footnoteReference) {
             tagContent.push({
