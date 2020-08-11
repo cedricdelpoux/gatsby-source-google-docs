@@ -43,8 +43,9 @@ exports.onCreateNode = async ({
     }
   }
 
-  const googleUrls = node.internal.content.match(GOOGLE_IMAGE_REGEX)
-
+  const googleUrls = node.internal.content.match(
+    new RegExp(GOOGLE_IMAGE_REGEX.source, "g")
+  )
   if (Array.isArray(googleUrls)) {
     const filesNodes = await Promise.all(
       googleUrls.map(async url => {
