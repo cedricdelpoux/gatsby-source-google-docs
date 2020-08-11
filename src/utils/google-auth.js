@@ -1,9 +1,7 @@
-// const fs = require("fs")
-// const path = require("path")
+require("dotenv").config()
+
 const {google} = require("googleapis")
 
-// const googledocsPath = path.join(process.cwd(), ".google")
-// const tokenPath = path.join(googledocsPath, "token.json")
 const token_fields = [
   "client_id",
   "client_secret",
@@ -27,10 +25,6 @@ const isTokenValid = token =>
 
 class GoogleAuth {
   constructor() {
-    // if (!fs.existsSync(googledocsPath)) {
-    //   fs.mkdirSync(googledocsPath)
-    // }
-
     const {client_id, client_secret, ...token} = this.getToken()
 
     const auth = new google.auth.OAuth2(client_id, client_secret)

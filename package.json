@@ -43,6 +43,7 @@
     "prettier": "1.19.1"
   },
   "peerDependencies": {
+    "dotenv": "^8.2.0",
     "gatsby": "^2.0.0"
   },
   "scripts": {
