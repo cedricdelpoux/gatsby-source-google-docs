@@ -26,11 +26,11 @@ module.exports = {
                 // It can be folder names or IDs
                 ignoredFolders: ["drafts"]
                 // Compute extra data for each document
-                enhanceDocument: (document) => {
-                  const isPost = document.breadcrumb && document.breadcrumb[1] === "posts"
-                  const category = isPost ? document.breadcrumb[2] : null
-                  const path = document.path.replace(`/${category}`, "")
-                  return {...document, path, category}
+                updateMetadata: (metadata) => {
+                  const isPost = metadata.breadcrumb && metadata.breadcrumb[1] === "posts"
+                  const category = isPost ? metadata.breadcrumb[2] : null
+                  const path = metadata.path.replace(`/${category}`, "")
+                  return {...metadata, path, category}
                 },
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug

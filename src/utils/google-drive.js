@@ -161,12 +161,9 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
     })
   )
 
-  if (
-    options.enhanceDocument &&
-    typeof options.enhanceDocument === "function"
-  ) {
-    return googleDriveDocuments.map(googleDoc =>
-      options.enhanceDocument(googleDoc)
+  if (options.updateMetadata && typeof options.updateMetadata === "function") {
+    return googleDriveDocuments.map(metadata =>
+      options.updateMetadata(metadata)
     )
   }
 
