@@ -4,7 +4,7 @@ const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0
 
 exports.onCreateNode = async ({
   node,
-  actions: {createNode},
+  actions: {createNode, createNodeField},
   store,
   cache,
   createNodeId,
@@ -13,6 +13,12 @@ exports.onCreateNode = async ({
   if (node.internal.type !== "MarkdownRemark") {
     return
   }
+
+  createNodeField({
+    node,
+    name: `slug`,
+    value: node.frontmatter.path,
+  })
 
   if (
     node.frontmatter.cover &&
