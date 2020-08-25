@@ -22,8 +22,7 @@
   "main": "index.js",
   "files": [
     "gatsby-node.js",
-    "utils",
-    "scripts"
+    "utils"
   ],
   "dependencies": {
     "gatsby-source-filesystem": "^2.1.48",
@@ -48,13 +47,12 @@
     "gatsby": "^2.0.0"
   },
   "scripts": {
-    "lint": "eslint gatsby-node.js utils scripts example",
+    "lint": "eslint gatsby-node.js utils example",
     "test": "jest",
-    "prepublishOnly": "yarn lint && yarn test",
-    "token": "./scripts/generate-token.js"
+    "prepublishOnly": "yarn lint && yarn test"
   },
   "bin": {
-    "gatsby-source-google-docs-token": "./scripts/generate-token.js"
+    "gatsby-source-google-docs-token": "./utils/generate-token.js"
   },
   "lint-staged": {
     "*.js": [
