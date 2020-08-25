@@ -1,14 +1,20 @@
 const {google} = require("googleapis")
+const GoogleOAuth2 = require("google-oauth2-env-vars")
+
+const {ENV_TOKEN_VAR} = require("./constants")
 
 const {
   convertGoogleDocumentToJson,
   convertJsonToMarkdown,
 } = require("./converters")
-const {googleAuth} = require("./google-auth")
+
 const {fetchGoogleDriveDocuments} = require("./google-drive")
 
 async function fetchGoogleDocs({id}) {
-  const auth = googleAuth.getAuth()
+  const googleOAuth2 = new GoogleOAuth2({
+    token: ENV_TOKEN_VAR,
+  })
+  const auth = await googleOAuth2.getAuth()
 
   return new Promise((resolve, reject) => {
     google.docs({version: "v1", auth}).documents.get(

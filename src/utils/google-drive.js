@@ -1,8 +1,9 @@
 const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
 const _cloneDeep = require("lodash/cloneDeep")
+const GoogleOAuth2 = require("google-oauth2-env-vars")
 
-const {googleAuth} = require("./google-auth")
+const {ENV_TOKEN_VAR} = require("./constants")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
@@ -64,7 +65,10 @@ async function fetchTree({
   fieldsMapper,
   ignoredFolders = [],
 }) {
-  const auth = googleAuth.getAuth()
+  const googleOAuth2 = new GoogleOAuth2({
+    token: ENV_TOKEN_VAR,
+  })
+  const auth = await googleOAuth2.getAuth()
 
   return new Promise((resolve, reject) => {
     google.drive({version: "v3", auth}).files.list(

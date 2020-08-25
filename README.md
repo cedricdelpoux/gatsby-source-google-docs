@@ -23,11 +23,24 @@ Why use [Google Docs](https://docs.google.com/) to write your content :
 yarn add gatsby-source-google-docs gatsby-transformer-remark gatsby-remark-images
 ```
 
-2. Open a terminal at the root of your project and [Generate a token](./docs/token.md)
+2. [Generate a token](./docs/token.md)
+
+The package needs 3 `.env` variables with the following format to work:
+
+```dotenv
+GOOGLE_OAUTH_CLIENT_ID=2...m.apps.googleusercontent.com
+GOOGLE_OAUTH_CLIENT_SECRET=Q...axL
+GOOGLE_DOCS_TOKEN={"access_token":"ya...J0","refresh_token":"1..mE","scope":"https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/documents.readonly","token_type":"Bearer","expiry_date":1598284554759}
+```
+
+`gatsby-source-google-docs` expose a script to make the generation easier.
+Open a terminal at the root of your project and type:
 
 ```shell
 gatsby-source-google-docs-token
 ```
+
+> The format changed in `v2.0.0-beta.16`. Check the [migration guide](./docs/token.md)
 
 3. [Add the plugin](./docs/options.md) in your `gatsby-config.js` file
 

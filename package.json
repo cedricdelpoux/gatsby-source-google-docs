@@ -22,9 +22,8 @@
   "main": "index.js",
   "dependencies": {
     "gatsby-source-filesystem": "^2.1.48",
-    "glob": "^7.1.6",
+    "google-oauth2-env-vars": "^1.0.0",
     "googleapis": "47.0.0",
-    "inquirer": "^7.0.4",
     "json2md": "^1.7.0",
     "lodash": "^4.17.13",
     "yamljs": "^0.3.0"
