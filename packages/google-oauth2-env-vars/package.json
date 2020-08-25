@@ -1,0 +1,56 @@
+{
+  "name": "google-oauth2-env-vars",
+  "version": "1.0.0",
+  "description": "Generate and cache Google OAuth 2.0 tokens in .env files",
+  "repository": "https://github.com/cedricdelpoux/google-oauth2-env-vars",
+  "author": {
+    "name": "Cédric Delpoux",
+    "email": "cedric.delpoux@gmail.com"
+  },
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "google",
+    "oauth",
+    "oauth2",
+    "token",
+    "api"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "utils"
+  ],
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "glob": "^7.1.6",
+    "googleapis": "^59.0.0",
+    "inquirer": "^7.3.3",
+    "open": "^7.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.10.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
+    "prettier": "2.0.5"
+  },
+  "scripts": {
+    "lint": "eslint index.js utils/*.js",
+    "prepublishOnly": "yarn lint"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ],
+    "*.{css,js,md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
