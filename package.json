@@ -48,7 +48,7 @@
     "gatsby": "^2.0.0"
   },
   "scripts": {
-    "lint": "eslint gatsby-node.js utils",
+    "lint": "eslint gatsby-node.js utils scripts example",
     "test": "jest",
     "prepublishOnly": "yarn lint && yarn test",
     "token": "./scripts/generate-token.js"
