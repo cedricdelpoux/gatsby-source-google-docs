@@ -20,6 +20,11 @@
     "drive"
   ],
   "main": "index.js",
+  "files": [
+    "gatsby-node.js",
+    "utils",
+    "scripts"
+  ],
   "dependencies": {
     "gatsby-source-filesystem": "^2.1.48",
     "google-oauth2-env-vars": "^1.0.0",
