@@ -1,4 +1,4 @@
-const {fetchGoogleDocsDocuments} = require("./utils/google-docs")
+const {fetchGoogleDocsDocuments} = require("./google-docs")
 
 exports.sourceNodes = async (
   {actions: {createNode}, createNodeId, createContentDigest, reporter},
