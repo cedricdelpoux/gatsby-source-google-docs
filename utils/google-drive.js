@@ -3,6 +3,7 @@ const _kebabCase = require("lodash/kebabCase")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
 
 const {ENV_TOKEN_VAR} = require("./constants")
+const {convertYamlToObject} = require("./converters")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
@@ -40,13 +41,23 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
     delete metadata[oldKey]
   })
 
-  // Transform description into metadata if description is JSON object
+  // Transform description into metadata if description is JSON or YAML
   if (metadata.description) {
     try {
-      metadata.description = JSON.parse(metadata.description)
+      // Try parsing JSON object
+      const descriptionObject = JSON.parse(metadata.description)
+      metadata = {...metadata, ...descriptionObject}
     } catch (e) {
-      // Description field is not a JSON
-      // Do not throw an error if JSON.parse fail
+      // Description field is not valid JSON
+      // Do not throw an error
+      try {
+        // Try to convert description from YAML to JSON
+        const descriptionObject = convertYamlToObject(metadata.description)
+        metadata = {...metadata, ...descriptionObject}
+      } catch (e) {
+        // Description field is not valid YAML
+        // Do not throw an error
+      }
     }
   }
 
@@ -150,17 +161,16 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
   )
 
   googleDriveDocuments = googleDriveDocuments.map(metadata => {
-    let newMetadata = {...metadata}
+    let updatedMetadata = updateMetadata({metadata, ...options})
 
-    newMetadata = updateMetadata({metadata: newMetadata, ...options})
     if (
       options.updateMetadata &&
       typeof options.updateMetadata === "function"
     ) {
-      newMetadata = options.updateMetadata(newMetadata)
+      updatedMetadata = options.updateMetadata(updatedMetadata)
     }
-    console.log("newMetadata", metadata, newMetadata)
-    return newMetadata
+
+    return updatedMetadata
   })
 
   return googleDriveDocuments

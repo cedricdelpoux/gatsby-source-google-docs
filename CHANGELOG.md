@@ -5,6 +5,7 @@
 -   Added: Gatsby Cloud compatibility
 -   Added: crosslinks between documents
 -   Added: Footnotes support
+-   Added: YAML and JSON Google Drive descriptions are transformed to metadata
 -   Updated: Simpler token behavior
 -   Deleted: `config` option
 

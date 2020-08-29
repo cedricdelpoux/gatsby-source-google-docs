@@ -4,6 +4,10 @@ const _last = require("lodash/last")
 const _get = require("lodash/get")
 const _repeat = require("lodash/repeat")
 
+function convertYamlToObject(yamlString) {
+  return YAML.parse(yamlString)
+}
+
 function getParagraphTag(p) {
   const tags = {
     NORMAL_TEXT: "p",
@@ -308,4 +312,5 @@ ${json2md(content)}`
 module.exports = {
   convertGoogleDocumentToJson,
   convertJsonToMarkdown,
+  convertYamlToObject,
 }

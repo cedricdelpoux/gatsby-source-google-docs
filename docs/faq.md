@@ -29,7 +29,7 @@ Then you can query the breadcrumb:
 
 ```
 
-> `breadcrumb` field wield be deleted if you don't have subtrees
+> `breadcrumb` field will be deleted if you don't have subtrees
 
 ## How can I add a cover?
 
@@ -109,24 +109,26 @@ Fill the description field of your document in Google Drive with a JSON object:
 
 ## How can I set a custom path for one of my document?
 
-Fill the description field of your document in Google Drive with a JSON object containing a `path` key:
+Fill the description field of your document in Google Drive with a YAML object containing a `path` key:
 
-```json
-{
-    "path": "custom-path",
-    "createdTime": "2019-01-01"
-}
+```yaml
+path: custom-path
 ```
 
 ## How can I set a fixed date for one of my document?
 
-Fill the description field of your document in Google Drive with a JSON object containing files
+Fill the description field of your document in Google Drive with a YAML object overriding Google `createdTime` field
 
-```json
-{
-    "path": "custom-path",
-    "createdTime": "2019-01-01"
-}
+```yaml
+createdTime: 2019-01-01
+```
+
+## How can I add some metadata to one of my document?
+
+Fill the description field of your document in Google Drive with a YAML object
+
+```yaml
+template: post
 ```
 
 ## How can I query images only?
