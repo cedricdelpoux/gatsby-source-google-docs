@@ -89,5 +89,7 @@ exports.onCreateNode = async ({
         )
       }
     })
+
+    node.frontmatter.images___NODE = filesNodes.map(file => file.id)
   }
 }
