@@ -1,6 +1,5 @@
 const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
-const _cloneDeep = require("lodash/cloneDeep")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
 
 const {ENV_TOKEN_VAR} = require("./constants")
@@ -8,17 +7,24 @@ const {ENV_TOKEN_VAR} = require("./constants")
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
 
-const enhanceDocument = ({
-  document,
-  fieldsDefault = {},
-  fieldsMapper = {},
-  breadcrumb,
-}) => {
-  const enhancedDocument = _cloneDeep(document)
+const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
+  const breadcrumb = metadata.path
+    .split("/")
+    // Remove empty strings
+    .filter(element => element)
+
+  if (metadata.name === "index" && breadcrumb.length > 0) {
+    // Remove "index"
+    breadcrumb.pop()
+    // Remove folder name and use it as name
+    metadata.name = breadcrumb.pop()
+    // Path need to be updated
+    metadata.path = `/${breadcrumb.join("/")}/${metadata.name}`
+  }
 
   // Default values
   Object.keys(fieldsDefault).forEach(key => {
-    Object.assign(enhancedDocument, {
+    Object.assign(metadata, {
       [key]: fieldsDefault[key],
     })
   })
@@ -27,33 +33,24 @@ const enhanceDocument = ({
   Object.keys(fieldsMapper).forEach(oldKey => {
     const newKey = fieldsMapper[oldKey]
 
-    Object.assign(enhancedDocument, {
-      [newKey]: document[oldKey],
+    Object.assign(metadata, {
+      [newKey]: metadata[oldKey],
     })
 
-    delete enhancedDocument[oldKey]
-  })
-
-  // Breadcrumb
-  Object.assign(enhancedDocument, {
-    breadcrumb,
+    delete metadata[oldKey]
   })
 
   // Transform description into metadata if description is JSON object
-  if (document.description) {
+  if (metadata.description) {
     try {
-      const description = JSON.parse(document.description)
-
-      Object.assign(enhancedDocument, description)
-
-      delete enhancedDocument.description
+      metadata.description = JSON.parse(metadata.description)
     } catch (e) {
       // Description field is not a JSON
       // Do not throw an error if JSON.parse fail
     }
   }
 
-  return enhancedDocument
+  return {...metadata, breadcrumb}
 }
 
 async function fetchTree({
@@ -61,8 +58,6 @@ async function fetchTree({
   breadcrumb,
   folderId,
   fields,
-  fieldsDefault,
-  fieldsMapper,
   ignoredFolders = [],
 }) {
   const googleOAuth2 = new GoogleOAuth2({
@@ -87,20 +82,11 @@ async function fetchTree({
           return reject(err)
         }
 
-        const rawDocuments = res.data.files.filter(
+        const documents = res.data.files.filter(
           file => file.mimeType === MIME_TYPE_DOCUMENT
         )
         const rawFolders = res.data.files.filter(
           file => file.mimeType === MIME_TYPE_FOLDER
-        )
-
-        const documents = rawDocuments.map(document =>
-          enhanceDocument({
-            document,
-            fieldsDefault,
-            fieldsMapper,
-            breadcrumb,
-          })
         )
 
         let folders = []
@@ -126,7 +112,6 @@ async function fetchTree({
             breadcrumb: [...breadcrumb, folder.name],
             folderId: folder.id,
             fields,
-            fieldsMapper,
             ignoredFolders,
           })
 
@@ -145,7 +130,7 @@ async function fetchTree({
 }
 
 async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
-  const googleDriveDocuments = []
+  let googleDriveDocuments = []
 
   await Promise.all(
     folders.map(async folderId => {
@@ -158,32 +143,33 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
       const flattenGoogleDriveDocuments = flattenTree({
         path: "",
         files: googleDriveTree,
-        ...options,
       })
 
       googleDriveDocuments.push(...flattenGoogleDriveDocuments)
     })
   )
 
-  if (options.updateMetadata && typeof options.updateMetadata === "function") {
-    return googleDriveDocuments.map(metadata =>
-      options.updateMetadata(metadata)
-    )
-  }
+  googleDriveDocuments = googleDriveDocuments.map(metadata => {
+    let newMetadata = {...metadata}
+
+    newMetadata = updateMetadata({metadata: newMetadata, ...options})
+    if (
+      options.updateMetadata &&
+      typeof options.updateMetadata === "function"
+    ) {
+      newMetadata = options.updateMetadata(newMetadata)
+    }
+    console.log("newMetadata", metadata, newMetadata)
+    return newMetadata
+  })
 
   return googleDriveDocuments
 }
 
-function flattenTree({path, files, fieldsMapper}) {
+function flattenTree({path, files}) {
   const documents = files
     .filter(file => file.mimeType === MIME_TYPE_DOCUMENT)
-    .map(file => {
-      const fileName =
-        fieldsMapper && fieldsMapper["name"]
-          ? file[fieldsMapper["name"]]
-          : file.name
-      return {...file, path: `${path}/${_kebabCase(fileName)}`}
-    })
+    .map(file => ({...file, path: `${path}/${_kebabCase(file.name)}`}))
 
   const documentsInFolders = files
     .filter(file => file.mimeType === MIME_TYPE_FOLDER)
@@ -191,7 +177,6 @@ function flattenTree({path, files, fieldsMapper}) {
       const folderFiles = flattenTree({
         path: `${path}/${_kebabCase(folder.name)}`,
         files: folder.files,
-        fieldsMapper,
       })
 
       acc.push(...folderFiles)
