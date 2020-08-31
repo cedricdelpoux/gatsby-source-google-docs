@@ -46,6 +46,11 @@
     "dotenv": "^8.2.0",
     "gatsby": "^2.0.0"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "example"
+    ]
+  },
   "scripts": {
     "lint": "eslint gatsby-node.js utils example/src",
     "test": "jest",
