@@ -77,8 +77,9 @@ exports.onCreateNode = async ({
       })
     )
 
-    filesNodes.forEach(fileNode => {
-      if (fileNode) {
+    filesNodes
+      .filter(fileNode => fileNode)
+      .forEach(fileNode => {
         node.internal.content = node.internal.content.replace(
           new RegExp(fileNode.url, "g"),
           fileNode.relativePath
@@ -87,9 +88,10 @@ exports.onCreateNode = async ({
           new RegExp(fileNode.url, "g"),
           fileNode.relativePath
         )
-      }
-    })
+      })
 
-    node.frontmatter.images___NODE = filesNodes.map(file => file.id)
+    node.frontmatter.images___NODE = filesNodes
+      .filter(fileNode => fileNode)
+      .map(fileNode => fileNode.id)
   }
 }
