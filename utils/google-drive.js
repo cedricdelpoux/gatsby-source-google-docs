@@ -44,23 +44,15 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
     delete metadata[oldKey]
   })
 
-  // Transform description into metadata if description is JSON or YAML
+  // Transform description into metadata if description is YAML
   if (metadata.description) {
     try {
-      // Try parsing JSON object
-      const descriptionObject = JSON.parse(metadata.description)
+      // Try to convert description from YAML
+      const descriptionObject = convertYamlToObject(metadata.description)
       metadata = {...metadata, ...descriptionObject}
     } catch (e) {
-      // Description field is not valid JSON
+      // Description field is not valid YAML
       // Do not throw an error
-      try {
-        // Try to convert description from YAML to JSON
-        const descriptionObject = convertYamlToObject(metadata.description)
-        metadata = {...metadata, ...descriptionObject}
-      } catch (e) {
-        // Description field is not valid YAML
-        // Do not throw an error
-      }
     }
   }
 
