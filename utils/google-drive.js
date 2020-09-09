@@ -20,7 +20,10 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
     // Remove folder name and use it as name
     metadata.name = breadcrumb.pop()
     // Path need to be updated
-    metadata.path = `/${breadcrumb.join("/")}/${metadata.name}`
+    metadata.path =
+      breadcrumb.length > 0
+        ? `/${breadcrumb.join("/")}/${metadata.name}`
+        : `/${metadata.name}`
   }
 
   // Default values
