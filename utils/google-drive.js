@@ -98,6 +98,7 @@ async function fetchTree({
         let folders = []
         for (const folder of rawFolders) {
           if (
+            folder.name.toLowerCase() === "drafts" ||
             ignoredFolders.includes(folder.name) ||
             ignoredFolders.includes(folder.id)
           ) {

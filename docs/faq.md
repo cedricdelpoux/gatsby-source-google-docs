@@ -77,19 +77,19 @@ export const pageQuery = graphql`
 
 ## How can I manage drafts?
 
-Put your drafts documents into a `Drafts` folder and update the query before create your pages:
+All document into `Drafts` or `drafts` folders will be ignored.
+
+You can also use a different name using the `ignoredFolders` option:
 
 ```
 {
-    allGoogleDocs(filter: {document: {breadcrumb: {nin: "Drafts"}}}) {
-        nodes {
-            document {
-                path
-            }
-        }
-    }
+  resolve: "gatsby-source-google-docs",
+  options: {
+    ignoredFolders: [
+      "my-custom-drafts-folder",
+    ],
+  }
 }
-
 ```
 
 > You will not be able to query `breadcrumb` if all your documents are in the same folder

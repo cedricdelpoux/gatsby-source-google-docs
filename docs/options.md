@@ -24,7 +24,7 @@ module.exports = {
                 fieldsDefault: {draft: false},
                 // To ignore some folder in the tree
                 // It can be folder names or IDs
-                ignoredFolders: ["drafts"]
+                ignoredFolders: ["my-custom-drafts-folder"]
                 // Compute extra data for each document
                 updateMetadata: (metadata) => {
                   const isPost = metadata.breadcrumb && metadata.breadcrumb[1] === "posts"
