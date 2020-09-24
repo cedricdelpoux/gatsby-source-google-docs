@@ -1,7 +1,7 @@
 const {fetchGoogleDocsDocuments} = require("./google-docs")
 
 exports.sourceNodes = async (
-  {actions: {createNode}, createNodeId, createContentDigest, reporter},
+  {actions: {createNode}, createContentDigest, reporter},
   pluginOptions
 ) => {
   try {
@@ -9,8 +9,8 @@ exports.sourceNodes = async (
 
     for (let googleDoc of googleDocsDocuments) {
       createNode({
-        document: googleDoc,
-        id: createNodeId(`google-docs-${googleDoc.id}`),
+        ...googleDoc,
+        // id: createNodeId(`google-docs-${googleDoc.id}`),
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",

@@ -1,12 +1,8 @@
 exports.createSchemaCustomization = ({actions}) => {
   const {createTypes} = actions
   const typeDefs = `
-    type Document {
-      breadcrumb: [String!]!
-    }
-
     type GoogleDocs implements Node {
-      document: Document
+      breadcrumb: [String!]!
     }
   `
   createTypes(typeDefs)
