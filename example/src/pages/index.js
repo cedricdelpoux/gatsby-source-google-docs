@@ -1,13 +1,13 @@
 import {graphql, Link} from "gatsby"
 import React from "react"
 
-export default ({data: {allMarkdownRemark}}) => {
+export default ({data: {allGoogleDocs}}) => {
   return (
     <div>
       <ul>
-        {allMarkdownRemark.nodes.map(({frontmatter: {path, title}}) => (
+        {allGoogleDocs.nodes.map(({path, name}) => (
           <li key={path}>
-            <Link to={path}>{title}</Link>
+            <Link to={path}>{name}</Link>
           </li>
         ))}
       </ul>
@@ -17,12 +17,10 @@ export default ({data: {allMarkdownRemark}}) => {
 
 export const pageQuery = graphql`
   query IndexQuery {
-    allMarkdownRemark(sort: {fields: frontmatter___date, order: DESC}) {
+    allGoogleDocs(sort: {fields: createdTime, order: DESC}) {
       nodes {
-        frontmatter {
-          path
-          title
-        }
+        path
+        name
       }
     }
   }

@@ -2,18 +2,21 @@ require("dotenv").config()
 
 module.exports = {
   plugins: [
+    "gatsby-plugin-sharp",
+    "gatsby-transformer-sharp",
     {
       // resolve: "gatsby-source-google-docs",
       resolve: require.resolve(`..`),
       options: {
         debug: true,
         folders: [process.env.GOOGLE_DOCS_FOLDER],
-        fields: ["createdTime", "name"],
-        fieldsMapper: {createdTime: "date", name: "title"},
       },
     },
-    "gatsby-plugin-sharp",
-    "gatsby-transformer-sharp",
-    "gatsby-transformer-remark",
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: ["gatsby-remark-images"],
+      },
+    },
   ],
 }

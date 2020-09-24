@@ -4,11 +4,9 @@ exports.createPages = async ({graphql, actions: {createPage}, reporter}) => {
   const result = await graphql(
     `
       {
-        allMarkdownRemark {
+        allGoogleDocs {
           nodes {
-            frontmatter {
-              path
-            }
+            path
           }
         }
       }
@@ -20,10 +18,10 @@ exports.createPages = async ({graphql, actions: {createPage}, reporter}) => {
   }
 
   try {
-    const {allMarkdownRemark} = result.data
+    const {allGoogleDocs} = result.data
 
-    if (allMarkdownRemark) {
-      allMarkdownRemark.nodes.forEach(({frontmatter: {path}}) => {
+    if (allGoogleDocs) {
+      allGoogleDocs.nodes.forEach(({path}) => {
         createPage({
           path,
           component: resolve(`src/templates/page.js`),
