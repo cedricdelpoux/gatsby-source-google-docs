@@ -25,22 +25,22 @@
     "utils"
   ],
   "dependencies": {
-    "gatsby-source-filesystem": "^2.1.48",
+    "gatsby-source-filesystem": "^2.3.30",
     "google-oauth2-env-vars": "^1.0.0",
-    "googleapis": "47.0.0",
-    "json2md": "^1.7.0",
-    "lodash": "^4.17.13",
+    "googleapis": "60.0.1",
+    "json2md": "^1.7.1",
+    "lodash": "^4.17.20",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-jest": "^23.7.0",
-    "eslint-plugin-react": "^7.20.6",
-    "husky": "^4.2.1",
-    "jest": "^25.1.0",
-    "lint-staged": "^10.0.7",
-    "prettier": "1.19.1"
+    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-react": "^7.21.1",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.4.0",
+    "prettier": "2.1.2"
   },
   "peerDependencies": {
     "dotenv": "^8.2.0",
