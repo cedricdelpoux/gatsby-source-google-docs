@@ -44,8 +44,8 @@ function getNestedListIndent(level, listTag) {
 function getTextFromParagraph(p) {
   return p.elements
     ? p.elements
-        .filter(el => el.textRun && el.textRun.content !== "\n")
-        .map(el => (el.textRun ? getText(el) : ""))
+        .filter((el) => el.textRun && el.textRun.content !== "\n")
+        .map((el) => (el.textRun ? getText(el) : ""))
         .join("")
     : ""
 }
@@ -174,7 +174,7 @@ function convertGoogleDocumentToJson(document) {
         const listTag = getListTag(list)
 
         const bulletContent = paragraph.elements
-          .map(el => getBulletContent(document, el))
+          .map((el) => getBulletContent(document, el))
           .join(" ")
           .replace(" .", ".")
           .replace(" ,", ",")
@@ -206,7 +206,7 @@ function convertGoogleDocumentToJson(document) {
       else if (tag) {
         let tagContent = []
 
-        paragraph.elements.forEach(el => {
+        paragraph.elements.forEach((el) => {
           // EmbeddedObject
           if (el.inlineObjectElement) {
             const image = getImage(document, el)
@@ -237,10 +237,10 @@ function convertGoogleDocumentToJson(document) {
           }
         })
 
-        if (tagContent.every(el => el[tag] !== undefined)) {
+        if (tagContent.every((el) => el[tag] !== undefined)) {
           content.push({
             [tag]: tagContent
-              .map(el => el[tag])
+              .map((el) => el[tag])
               .join(" ")
               .replace(" .", ".")
               .replace(" ,", ","),
@@ -248,6 +248,36 @@ function convertGoogleDocumentToJson(document) {
         } else {
           content.push(...tagContent)
         }
+      }
+    }
+
+    // Code Blocks
+    else if (table && table.rows === 1 && table.columns === 1) {
+      const firstRow = table.tableRows[0]
+      const firstCell = firstRow.tableCells[0]
+      const codeContent = firstCell.content
+        .map(({paragraph}) =>
+          paragraph.elements.map((el) => el.textRun.content).join("")
+        )
+        .join("")
+        .replace(/\x0B/g, "\n") //eslint-disable-line no-control-regex
+        .split("\n")
+
+      if (codeContent.length > 0) {
+        let lang = "text"
+        const langMatch = codeContent[0].match(/^\s*lang:\s*(.*)$/)
+
+        if (langMatch) {
+          codeContent.shift()
+          lang = langMatch[1]
+        }
+
+        content.push({
+          code: {
+            language: lang,
+            content: codeContent,
+          },
+        })
       }
     }
 
@@ -259,7 +289,7 @@ function convertGoogleDocumentToJson(document) {
           headers: thead.tableCells.map(({content}) =>
             getTableCellContent(content)
           ),
-          rows: tbody.map(row =>
+          rows: tbody.map((row) =>
             row.tableCells.map(({content}) => getTableCellContent(content))
           ),
         },
@@ -271,13 +301,10 @@ function convertGoogleDocumentToJson(document) {
   let formatedFootnotes = []
   Object.entries(footnotes).forEach(([, value]) => {
     // Concatenate all content
-    const text_items = value.content[0].paragraph.elements.map(element =>
+    const text_items = value.content[0].paragraph.elements.map((element) =>
       getText(element)
     )
-    const text = text_items
-      .join(" ")
-      .replace(" .", ".")
-      .replace(" ,", ",")
+    const text = text_items.join(" ").replace(" .", ".").replace(" ,", ",")
 
     formatedFootnotes.push({
       footnote: {number: footnoteIDs[value.footnoteId], text: text},
@@ -288,6 +315,7 @@ function convertGoogleDocumentToJson(document) {
       parseInt(item1.footnote.number) - parseInt(item2.footnote.number)
   )
   content.push(...formatedFootnotes)
+
   return {
     cover,
     content,
@@ -295,7 +323,7 @@ function convertGoogleDocumentToJson(document) {
 }
 
 // Add extra converter for footnotes
-json2md.converters.footnote = function(footnote) {
+json2md.converters.footnote = function (footnote) {
   return `[^${footnote.number}]: ${footnote.text}`
 }
 

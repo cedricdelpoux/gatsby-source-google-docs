@@ -10,14 +10,12 @@ exports.sourceNodes = async (
     for (let googleDoc of googleDocsDocuments) {
       createNode({
         ...googleDoc,
-        // id: createNodeId(`google-docs-${googleDoc.id}`),
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",
           content: googleDoc.markdown,
           contentDigest: createContentDigest(googleDoc.markdown),
         },
-        dir: process.cwd(),
       })
     }
 

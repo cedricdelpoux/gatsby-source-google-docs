@@ -75,6 +75,36 @@ export const pageQuery = graphql`
 `
 ```
 
+## How can I add code blocks?
+
+Use [Code Blocks](https://gsuite.google.com/marketplace/app/code_blocks/100740430168) Google Docs extension to format your code blocks.
+
+To specify the lang, you need to add a fist line in your code block following the format `lang:javascript`.
+
+To get Syntax highlighting, I recommend using
+`prismjs` but it's not mandatory.
+
+```
+yarn add prismjs gatsby-remark-prismjs
+```
+
+Add the `gatsby-remark-prismjs` plugin to your `gatsby-config.js`
+
+```js
+{
+  resolve: "gatsby-transformer-remark",
+  options: {
+    plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
+  },
+},
+```
+
+Import a `prismjs` theme in your `gatsby-browser.js`
+
+```js
+require("prismjs/themes/prism.css")
+```
+
 ## How can I manage drafts?
 
 All document into `Drafts` or `drafts` folders will be ignored.
