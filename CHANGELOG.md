@@ -3,7 +3,8 @@
 -   Added: Script `gatsby-source-google-docs-token` for token generation
 -   Added: New documentation
 -   Added: Gatsby Cloud compatibility
--   Added: crosslinks between documents
+-   Added: Crosslinks between documents
+-   Added: Code Blocks support
 -   Added: Footnotes support
 -   Added: YAML Google Drive descriptions are transformed to metadata
 -   Updated: Simpler token behavior
