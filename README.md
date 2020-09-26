@@ -1,9 +1,19 @@
-# gatsby-source-google-docs
+<div align="center">
+  <h1>gatsby-source-google-docs</h1>
+  <br/>
+  <p>
+    <img src="./logo.png" alt="gatsby-source-google-docs" height="100px">
+  </p>
+  <br/>
 
 [![Npm version][badge-npm]][npm]
 [![Npm downloads][badge-npm-dl]][npm]
 [![MIT license][badge-licence]](./LICENCE.md)
 [![PRs welcome][badge-prs-welcome]](#contributing)
+
+</div>
+
+---
 
 `gatsby-source-google-docs` is a [Gatsby](https://www.gatsbyjs.org/) plugin to use [Google Docs](https://docs.google.com/) as a data source.
 
