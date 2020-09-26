@@ -4,6 +4,38 @@ const _last = require("lodash/last")
 const _get = require("lodash/get")
 const _repeat = require("lodash/repeat")
 
+// If the table has only one cell
+// and the monospace font "Consolas" is applied everywhere
+function isCodeBlocks(table) {
+  const hasOneCell = table.rows === 1 && table.columns === 1
+
+  if (!hasOneCell) {
+    return false
+  }
+
+  const firstRow = table.tableRows[0]
+  const firstCell = firstRow.tableCells[0]
+  const hasMonospaceFont = firstCell.content.every(({paragraph}) =>
+    paragraph.elements.every(({textRun}) => {
+      const content = textRun.content
+        .replace(/\n/g, "")
+        .replace(/\x0B/g, "") //eslint-disable-line no-control-regex
+        .trim()
+      const isEmpty = content === ""
+      const fontFamily = _get(textRun, [
+        "textStyle",
+        "weightedFontFamily",
+        "fontFamily",
+      ])
+      const hasConsolasFont = fontFamily === "Consolas"
+
+      return isEmpty || hasConsolasFont
+    })
+  )
+
+  return hasMonospaceFont
+}
+
 function convertYamlToObject(yamlString) {
   return YAML.parse(yamlString)
 }
@@ -252,7 +284,7 @@ function convertGoogleDocumentToJson(document) {
     }
 
     // Code Blocks
-    else if (table && table.rows === 1 && table.columns === 1) {
+    else if (table && isCodeBlocks(table)) {
       const firstRow = table.tableRows[0]
       const firstCell = firstRow.tableCells[0]
       const codeContent = firstCell.content
@@ -282,7 +314,7 @@ function convertGoogleDocumentToJson(document) {
     }
 
     // Table
-    else if (table && table.tableRows.length > 0) {
+    else if (table && table.rows > 0) {
       const [thead, ...tbody] = table.tableRows
       content.push({
         table: {
