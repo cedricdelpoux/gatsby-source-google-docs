@@ -13,7 +13,7 @@ export default ({
       <h1>{name}</h1>
       {cover && (
         <Img
-          style={{width: "200px", marginBottom: "2rem"}}
+          style={{width: "500px", marginBottom: "2rem"}}
           fluid={cover.image.childImageSharp.fluid}
         />
       )}
@@ -29,7 +29,7 @@ export const pageQuery = graphql`
       cover {
         image {
           childImageSharp {
-            fluid(maxWidth: 200, quality: 100) {
+            fluid(maxWidth: 500, quality: 100) {
               ...GatsbyImageSharpFluid
             }
           }
