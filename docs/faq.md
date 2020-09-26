@@ -37,41 +37,39 @@ Add an image in your [Google Doc first page header](https://support.google.com/d
 
 Then you can query your header cover like any Sharp node.
 
-````
+```js
 import {graphql} from "gatsby"
 import Img from "gatsby-image"
 
 const PostTemplate = ({data: {post}}) => (
-  <>
-    {post.frontmatter.cover && (
-      <Img
-        style={{width: "200px", marginBottom: "2rem"}}
-        fluid={
-          post.frontmatter.cover.image.childImageSharp.fluid
-        }
-      />
-    )}
-    <div dangerouslySetInnerHTML={{__html: post.html}} />
-  </>
+    <>
+        {post.frontmatter.cover && (
+            <Img
+                style={{width: "200px", marginBottom: "2rem"}}
+                fluid={post.frontmatter.cover.image.childImageSharp.fluid}
+            />
+        )}
+        <div dangerouslySetInnerHTML={{__html: post.html}} />
+    </>
 )
 
 export const pageQuery = graphql`
-  query BlogPost($path: String!) {
-     post: markdownRemark(frontmatter: {path: {eq: $path}}) {
-        html
-       frontmatter {
-         cover {
-            image {
-              childImageSharp {
-                fluid(maxWidth: 200, quality: 100) {
-                  ...GatsbyImageSharpFluid
+    query BlogPost($path: String!) {
+        post: markdownRemark(frontmatter: {path: {eq: $path}}) {
+            html
+            frontmatter {
+                cover {
+                    image {
+                        childImageSharp {
+                            fluid(maxWidth: 200, quality: 100) {
+                                ...GatsbyImageSharpFluid
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
-       }
-     }
-  }
+        }
+    }
 `
 ```
 
@@ -135,7 +133,7 @@ Fill the description field of your document in Google Drive with a JSON object:
     "tags": ["tag1", "tag2"],
     "draft": true
 }
-````
+```
 
 ## How can I set a custom path for one of my document?
 
