@@ -193,6 +193,7 @@ function convertGoogleDocumentToJson(document) {
 
   const content = []
   const footnoteIDs = {}
+  const headings = []
 
   body.content.forEach(({paragraph, table}, i) => {
     // Paragraphs
@@ -252,10 +253,18 @@ function convertGoogleDocumentToJson(document) {
 
           // Headings, Texts
           else if (el.textRun && el.textRun.content !== "\n") {
+            const isHeader = tag !== "p"
+
+            const text = getText(el, {
+              isHeader,
+            })
+
+            if (isHeader) {
+              headings.push({index: content.length, tag, text})
+            }
+
             tagContent.push({
-              [tag]: getText(el, {
-                isHeader: tag !== "p",
-              }),
+              [tag]: text,
             })
           }
 
@@ -351,6 +360,7 @@ function convertGoogleDocumentToJson(document) {
   return {
     cover,
     content,
+    headings,
   }
 }
 

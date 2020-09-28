@@ -7,6 +7,7 @@
 -   Added: Code Blocks support
 -   Added: Footnotes support
 -   Added: YAML Google Drive descriptions are transformed to metadata
+-   Added: `demoteHeadings` option
 -   Updated: Simpler token behavior
 -   Deleted: `config` option
 

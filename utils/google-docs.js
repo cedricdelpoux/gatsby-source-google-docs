@@ -10,7 +10,38 @@ const {
 
 const {fetchGoogleDriveDocuments} = require("./google-drive")
 
-async function fetchGoogleDocs({id}) {
+const demoteHeadings = ({content, headings}) => {
+  const newContent = {...content}
+
+  headings.forEach((title) => {
+    const titleLevel = Number(title.tag.substring(1))
+    const demotedTag = "h" + (titleLevel + 1)
+    newContent[title.index] = {[demotedTag]: title.text}
+  })
+
+  return newContent
+}
+
+const replaceCrossDocumentsLinksbyRelativePaths = ({
+  markdown,
+  relativePaths,
+}) => {
+  let newMarkdown = markdown.slice()
+
+  const googleDocsUrlsMatches = markdown.matchAll(
+    /https:\/\/docs.google.com\/document\/d\/([a-zA-Z0-9_-]+)/g
+  )
+
+  for (const [url, id] of googleDocsUrlsMatches) {
+    if (relativePaths[id]) {
+      newMarkdown = newMarkdown.replace(new RegExp(url, "g"), relativePaths[id])
+    }
+  }
+
+  return newMarkdown
+}
+
+async function fetchGoogleDocsDocument({id}) {
   const googleOAuth2 = new GoogleOAuth2({
     token: ENV_TOKEN_VAR,
   })
@@ -30,7 +61,7 @@ async function fetchGoogleDocs({id}) {
           return reject("Empty data")
         }
 
-        resolve(convertGoogleDocumentToJson(res.data))
+        resolve(res.data)
       }
     )
   })
@@ -41,38 +72,41 @@ async function fetchGoogleDocsDocuments(pluginOptions) {
   const relativePaths = {}
 
   const googleDocsDocuments = await Promise.all(
-    googleDriveDocument.map(async metadata => {
-      const {cover, content} = await fetchGoogleDocs({
+    googleDriveDocument.map(async (metadata) => {
+      const document = await fetchGoogleDocsDocument({
         id: metadata.id,
       })
 
       relativePaths[metadata.id] = metadata.path
 
-      return {metadata, cover, content}
+      return {document, metadata}
     })
   )
 
-  return googleDocsDocuments.map(({metadata, cover, content}) => {
+  return googleDocsDocuments.map(({document, metadata}) => {
+    let {content, cover, headings} = convertGoogleDocumentToJson(document)
+
     let markdown = convertJsonToMarkdown({
       metadata: {...metadata, cover},
       content,
     })
 
-    // Replace Google Docs urls by relative paths
-    const googleDocsUrlsMatches = markdown.matchAll(
-      /https:\/\/docs.google.com\/document\/d\/([a-zA-Z0-9_-]+)/g
-    )
+    // Readers will have no access to real documents
+    // Replace all cross-documents links by relative paths
+    markdown = replaceCrossDocumentsLinksbyRelativePaths({
+      markdown,
+      relativePaths,
+    })
 
-    for (const [url, id] of googleDocsUrlsMatches) {
-      if (relativePaths[id]) {
-        markdown = markdown.replace(new RegExp(url, "g"), relativePaths[id])
-      }
+    // h1 -> h2, h2 -> h3, ...
+    if (pluginOptions.demoteHeadings === true) {
+      content = demoteHeadings({content, headings})
     }
 
     return {
       ...metadata,
-      cover,
       content,
+      cover,
       markdown,
     }
   })

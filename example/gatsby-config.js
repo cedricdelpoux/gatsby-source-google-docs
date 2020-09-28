@@ -10,6 +10,7 @@ module.exports = {
       options: {
         debug: true,
         folders: [process.env.GOOGLE_DOCS_FOLDER],
+        demoteHeadings: true,
       },
     },
     {
