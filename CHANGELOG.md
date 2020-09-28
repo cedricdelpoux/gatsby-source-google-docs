@@ -5,6 +5,7 @@
 -   Added: Gatsby Cloud compatibility
 -   Added: Crosslinks between documents
 -   Added: Code Blocks support
+-   Added: Inline Code support
 -   Added: Footnotes support
 -   Added: YAML Google Drive descriptions are transformed to metadata
 -   Added: `demoteHeadings` option

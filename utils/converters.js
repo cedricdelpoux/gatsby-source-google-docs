@@ -121,13 +121,25 @@ function getBulletContent(document, element) {
 
 function getText(element, {isHeader = false} = {}) {
   let text = cleanText(element.textRun.content)
+
+  if (!text) {
+    return ""
+  }
+
   const {
     link,
     underline,
     strikethrough,
     bold,
     italic,
+    weightedFontFamily,
   } = element.textRun.textStyle
+  const inlineCode =
+    weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
+
+  if (inlineCode) {
+    return "`" + text + "`"
+  }
 
   text = text.replace(/\*/g, "\\*")
   text = text.replace(/_/g, "\\_")
@@ -258,6 +270,10 @@ function convertGoogleDocumentToJson(document) {
             const text = getText(el, {
               isHeader,
             })
+
+            if (!text) {
+              return
+            }
 
             if (isHeader) {
               headings.push({index: content.length, tag, text})

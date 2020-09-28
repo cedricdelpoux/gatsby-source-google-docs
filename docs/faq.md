@@ -97,6 +97,8 @@ Add the `gatsby-remark-prismjs` plugin to your `gatsby-config.js`
 },
 ```
 
+> If you use inline code, you should set the `noInlineHighlight` option of `gatsby-remark-prismjs` to .true` to avoid warnings during the build about missing lang
+
 Import a `prismjs` theme in your `gatsby-browser.js`
 
 ```js
