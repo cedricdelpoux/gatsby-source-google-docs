@@ -278,16 +278,19 @@ function convertGoogleDocumentToJson(document) {
           }
         })
 
-        if (tagContent.every((el) => el[tag] !== undefined)) {
-          content.push({
-            [tag]: tagContent
-              .map((el) => el[tag])
-              .join(" ")
-              .replace(" .", ".")
-              .replace(" ,", ","),
-          })
-        } else {
-          content.push(...tagContent)
+        if (tagContent.length > 0) {
+          if (tagContent.every((el) => el[tag] !== undefined)) {
+            content.push({
+              [tag]: tagContent
+                .map((el) => el[tag])
+                .filter((el) => el)
+                .join(" ")
+                .replace(" .", ".")
+                .replace(" ,", ","),
+            })
+          } else {
+            content.push(...tagContent)
+          }
         }
       }
     }
