@@ -36,32 +36,34 @@ class GoogleOAuth2 {
   }
 
   getEnvVars() {
-    let envToken
     let envClientId
     let envClientSecret
+    let envToken
+
+    if (process.env[CLIENT_ID]) {
+      envClientId = process.env[CLIENT_ID]
+    } else {
+      throw new Error(`${CLIENT_ID} not found in .env`)
+    }
+
+    if (process.env[CLIENT_SECRET]) {
+      envClientSecret = process.env[CLIENT_SECRET]
+    } else {
+      throw new Error(`${CLIENT_SECRET} not found in .env`)
+    }
 
     if (this.tokenName && process.env[this.tokenName]) {
       envToken = JSON.parse(process.env[this.tokenName])
     }
 
     if (!envToken) {
-      throw new Error("Token not found in .env files")
+      throw new Error(`${this.tokenName} not found in .env`)
     }
 
     if (!this.isTokenValid(envToken)) {
-      throw new Error("Token not valid. Please generate a new one")
-    }
-
-    if (process.env[CLIENT_ID]) {
-      envClientId = process.env[CLIENT_ID]
-    } else {
-      throw new Error(`${CLIENT_ID} not found in .env files`)
-    }
-
-    if (process.env[CLIENT_SECRET]) {
-      envClientSecret = process.env[CLIENT_SECRET]
-    } else {
-      throw new Error(`${CLIENT_SECRET} not found in .env files`)
+      throw new Error(
+        `${this.tokenName} not valid. Please generate a new token`
+      )
     }
 
     return {
@@ -69,6 +71,28 @@ class GoogleOAuth2 {
       [CLIENT_SECRET]: envClientSecret,
       [this.tokenName]: envToken,
     }
+  }
+
+  async generateEnvVars() {
+    let envVars
+
+    try {
+      envVars = this.getEnvVars()
+      console.log(`✅${CLIENT_ID} found in .env`)
+      console.log(`✅${CLIENT_SECRET} found in .env`)
+      console.log(`✅${this.tokenName} found in .env`)
+    } catch (e) {
+      console.log(`❌${e.message}`)
+      envVars = await this.getNewEnvVars()
+    }
+
+    console.log("")
+    console.log("------------------------")
+    console.log("|      .env vars       |")
+    console.log("------------------------")
+    console.log(envVars)
+
+    return envVars
   }
 
   async getAuth() {

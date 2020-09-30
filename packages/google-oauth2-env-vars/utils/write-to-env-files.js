@@ -11,7 +11,9 @@ const writeToEnvFiles = (name, value) => {
   try {
     envFiles.forEach((file) => {
       fs.appendFileSync(file, `${name}=${value}\n`)
+      console.log(`✅${name} added to ${file}`)
     })
+    console.log("")
   } catch (e) {
     throw new Error(e)
   }

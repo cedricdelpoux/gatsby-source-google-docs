@@ -12,7 +12,7 @@ GOOGLE_PHOTOS_TOKEN={"access_token":"ya..54c","refresh_token":"1..qq0","scope":"
 
 ## Examples
 
-### Generate token
+### Generate .env vars
 
 ```js
 const GoogleOAuth2 = require("google-oauth2-env-vars")
@@ -26,16 +26,10 @@ const googleOAuth2 = new GoogleOAuth2({
   apis: ["photoslibrary.googleapis.com"],
 })
 
-let envVars
-
-try {
-  envVars = googleOAuth2.getEnvVars()
-} catch (e) {
-  envVars = await googleOAuth2.getNewEnvVars()
-}
+const envVars = await googleOAuth2.generateEnvVars()
 ```
 
-### Use token
+### Get Auth
 
 ```js
 const GoogleOAuth2 = require("google-oauth2-env-vars")
