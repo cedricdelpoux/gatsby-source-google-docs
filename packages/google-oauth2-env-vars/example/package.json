@@ -1,0 +1,7 @@
+{
+  "name": "google-oauth2-env-vars-example",
+  "private": true,
+  "scripts": {
+    "token": "./generate-token.js"
+  }
+}
