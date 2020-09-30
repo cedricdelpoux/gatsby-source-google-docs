@@ -802,6 +802,11 @@ anymatch@^3.0.3, anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+arch@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/arch/-/arch-2.1.2.tgz#0c52bbe7344bb4fa260c443d2cbad9c00ff2f0bf"
+  integrity sha512-NTBIIbAfkJeIletyABbVtdPgeKfDafR+1mZV/AyyfC1UkVkp9iUjV+wwmqtUgphHYajbI86jejBJp5e+jkGTiQ==
+
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
@@ -1256,6 +1261,15 @@ cli-width@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-3.0.0.tgz#a2f48437a2caa9a22436e794bf071ec9e61cedf6"
   integrity sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==
+
+clipboardy@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/clipboardy/-/clipboardy-2.3.0.tgz#3c2903650c68e46a91b388985bc2774287dba290"
+  integrity sha512-mKhiIL2DrQIsuXMgBgnfEHOZOryC7kY7YO//TN6c63wlEm3NG5tz+YgY5rVi29KCmq/QQjKYvM7a19+MDOTHOQ==
+  dependencies:
+    arch "^2.1.1"
+    execa "^1.0.0"
+    is-wsl "^2.1.1"
 
 cliui@^6.0.0:
   version "6.0.0"
@@ -2404,17 +2418,18 @@ google-auth-library@^6.0.0:
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
-google-oauth2-env-vars@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/google-oauth2-env-vars/-/google-oauth2-env-vars-1.0.0.tgz#c532d84d0c59e7cd02f39fcfbee33feb8b13c5c8"
-  integrity sha512-/5VeQQjzCwU1eNI/rI3dHKu147NVkDMiZLzbveKT9QeR5g2av6H/GMx3tebI1evHab/ub1vCIlotYHemO/De0g==
+google-oauth2-env-vars@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/google-oauth2-env-vars/-/google-oauth2-env-vars-1.1.0.tgz#9eae1b1720630aea13be84c471882b95b2b35aa0"
+  integrity sha512-KnfYmVi9iJ8xyzqJ18al7O4sXgCK4IrV47bAKnCnRfmA7UAje2r2S9wvtBMBEOd8WhAHUqMReCR0+25mmp2tDg==
   dependencies:
+    clipboardy "^2.3.0"
     dotenv "^8.2.0"
     express "^4.17.1"
     glob "^7.1.6"
-    googleapis "^59.0.0"
+    googleapis "^60.0.1"
     inquirer "^7.3.3"
-    open "^7.2.0"
+    open "^7.3.0"
 
 google-p12-pem@^3.0.0:
   version "3.0.3"
@@ -2435,18 +2450,10 @@ googleapis-common@^4.4.0:
     url-template "^2.0.8"
     uuid "^8.0.0"
 
-googleapis@60.0.1:
+googleapis@60.0.1, googleapis@^60.0.1:
   version "60.0.1"
   resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-60.0.1.tgz#f0614cbf798e1308ef6e7dd6b7cbf3c464692975"
   integrity sha512-r/7pDeIMAm/FepbAl2iM+uRQURf2manjOaOVR0j7v2fDPU8QEme44z6N6qGroqJtne0JO5BM0FUz4LuskcwGeQ==
-  dependencies:
-    google-auth-library "^6.0.0"
-    googleapis-common "^4.4.0"
-
-googleapis@^59.0.0:
-  version "59.0.0"
-  resolved "https://registry.yarnpkg.com/googleapis/-/googleapis-59.0.0.tgz#aec5c6f5b0b347c9c6996d45fa8ad8176e585fae"
-  integrity sha512-GV/E4KRN89a4GxSk7D7cwUfRYgcJHR05sOgm/WGdwc/u8dxNXG5lWmz9gF5ZwFGk2yKtVxL4VZNn4zBuZ6rmGg==
   dependencies:
     google-auth-library "^6.0.0"
     googleapis-common "^4.4.0"
@@ -4082,10 +4089,10 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-open@^7.2.0:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/open/-/open-7.2.1.tgz#07b0ade11a43f2a8ce718480bdf3d7563a095195"
-  integrity sha512-xbYCJib4spUdmcs0g/2mK1nKo/jO2T7INClWd/beL7PFkXRWgr8B23ssDHX/USPn2M2IjDR5UdpYs6I67SnTSA==
+open@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/open/-/open-7.3.0.tgz#45461fdee46444f3645b6e14eb3ca94b82e1be69"
+  integrity sha512-mgLwQIx2F/ye9SmbrUkurZCnkoXyXyu9EbHtJZrICjVAJfyMArdHp3KkixGdZx1ZHFPNIwl0DDM1dFFqXbTLZw==
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"

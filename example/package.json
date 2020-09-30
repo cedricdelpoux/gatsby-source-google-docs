@@ -8,7 +8,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "token": "../scripts/generate-token.js"
+    "token": "../utils/generate-token.js"
   },
   "dependencies": {
     "gatsby": "^2.24.66",
