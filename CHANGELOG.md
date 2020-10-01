@@ -1,4 +1,4 @@
-# 2.0.0 (2019-09-16)
+# 2.0.0 (2020-10-01)
 
 -   Added: Script `gatsby-source-google-docs-token` for token generation
 -   Added: New documentation
@@ -7,6 +7,8 @@
 -   Added: Code Blocks support
 -   Added: Inline Code support
 -   Added: Footnotes support
+-   Added: Blockquotes support
+-   Added: Underline support
 -   Added: YAML Google Drive descriptions are transformed to metadata
 -   Added: `demoteHeadings` option
 -   Updated: Simpler token behavior
