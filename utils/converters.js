@@ -36,6 +36,28 @@ function isCodeBlocks(table) {
   return hasMonospaceFont
 }
 
+function isQuote(table) {
+  const hasOneCell = table.rows === 1 && table.columns === 1
+
+  if (!hasOneCell) {
+    return false
+  }
+
+  const firstRow = table.tableRows[0]
+  const firstCell = firstRow.tableCells[0]
+  let {
+    0: firstContent,
+    [firstCell.content.length - 1]: lastContent,
+  } = firstCell.content
+
+  const startText = firstContent.paragraph.elements[0].textRun.content || ""
+  const lastText = lastContent.paragraph.elements[0].textRun.content || ""
+  const startsWithQuote = startText.replace(/\n/g, "").startsWith("“")
+  const endsWithQuote = lastText.replace(/\n/g, "").endsWith("”")
+
+  return startsWithQuote && endsWithQuote
+}
+
 function convertYamlToObject(yamlString) {
   return YAML.parse(yamlString)
 }
@@ -64,29 +86,18 @@ function getListTag(list) {
   return glyphType !== undefined ? "ol" : "ul"
 }
 
-function cleanText(text) {
-  return text.replace(/\n/g, "").trim()
-}
-
 function getNestedListIndent(level, listTag) {
   const indentType = listTag === "ol" ? "1." : "-"
   return `${_repeat("  ", level)}${indentType} `
 }
 
-function getTextFromParagraph(p) {
-  return p.elements
-    ? p.elements
-        .filter((el) => el.textRun && el.textRun.content !== "\n")
-        .map((el) => (el.textRun ? getText(el) : ""))
-        .join("")
-    : ""
-}
-
 function getTableCellContent(content) {
   if (!content.length === 0) return ""
+
   return content
-    .map(({paragraph}) => cleanText(getTextFromParagraph(paragraph)))
+    .map(({paragraph}) => paragraph.elements.map(getText).join(""))
     .join("")
+    .replace(/\n/g, "<br/>") // Replace newline characters by <br/> to avoid multi-paragraphs
 }
 
 function getImage(document, element) {
@@ -116,11 +127,17 @@ function getBulletContent(document, element) {
     return `![${image.alt}](${image.source} "${image.title}")`
   }
 
-  return getText(element)
+  return getText(element, {inline: true})
 }
 
-function getText(element, {isHeader = false} = {}) {
-  let text = cleanText(element.textRun.content)
+function getText(element, {withBold = true, inline = false} = {}) {
+  if (!element.textRun) {
+    return ""
+  }
+
+  let text = inline
+    ? element.textRun.content.replace(/\n/g, "").trim()
+    : element.textRun.content
 
   if (!text) {
     return ""
@@ -152,8 +169,7 @@ function getText(element, {isHeader = false} = {}) {
     text = `_${text}_`
   }
 
-  // Set bold unless it's a header
-  if (bold & !isHeader) {
+  if (bold & withBold) {
     text = `**${text}**`
   }
 
@@ -219,6 +235,7 @@ function convertGoogleDocumentToJson(document) {
 
         const bulletContent = paragraph.elements
           .map((el) => getBulletContent(document, el))
+          .filter((el) => el) // Remove empty elements before join
           .join(" ")
           .replace(" .", ".")
           .replace(" ,", ",")
@@ -267,7 +284,8 @@ function convertGoogleDocumentToJson(document) {
             const isHeader = tag !== "p"
 
             const text = getText(el, {
-              isHeader,
+              withBold: !isHeader,
+              inline: true,
             })
 
             if (!text) {
@@ -308,6 +326,16 @@ function convertGoogleDocumentToJson(document) {
           }
         }
       }
+    }
+
+    // Quote
+    else if (table && isQuote(table)) {
+      const firstRow = table.tableRows[0]
+      const firstCell = firstRow.tableCells[0]
+      const quote = getTableCellContent(firstCell.content)
+      const blockquote = quote.replace(/“|”/g, "") // Delete smart-quotes
+
+      content.push({blockquote})
     }
 
     // Code Blocks
@@ -361,7 +389,7 @@ function convertGoogleDocumentToJson(document) {
   Object.entries(footnotes).forEach(([, value]) => {
     // Concatenate all content
     const text_items = value.content[0].paragraph.elements.map((element) =>
-      getText(element)
+      getText(element, {inline: true})
     )
     const text = text_items.join(" ").replace(" .", ".").replace(" ,", ",")
 
