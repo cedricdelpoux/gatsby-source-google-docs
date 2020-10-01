@@ -22,7 +22,8 @@
   "main": "index.js",
   "files": [
     "gatsby-node.js",
-    "utils"
+    "utils",
+    "docs"
   ],
   "dependencies": {
     "gatsby-source-filesystem": "^2.3.31",
