@@ -86,6 +86,7 @@ Please add your website to the [Showcase](./showcase.yml)
 -   [Options](./docs/options.md)
 -   [Create pages](./docs/pages.md)
 -   [FAQ](./docs/faq.md)
+-   [Sheets Usage](./docs/sheets.md)
 
 ## Contributing
 
