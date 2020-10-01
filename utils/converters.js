@@ -145,8 +145,7 @@ function getText(element, {isHeader = false} = {}) {
   text = text.replace(/_/g, "\\_")
 
   if (underline) {
-    // Underline isn't supported in markdown so we'll use emphasis
-    text = `_${text}_`
+    text = `<u>${text}</u>`
   }
 
   if (italic) {
