@@ -40,17 +40,17 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi p
 
  1. Buy flour and salt
  2. Mix together with water
- 3. Bake 
+ 3. Bake
 
 ## Links
 
 
-This is [_an example_](http://example.com/) link.
+This is [<u>an example</u>](http://example.com/) link.
 
 ## Inline formatting
 
 
-_Italics_ and **bold** and **_bold italics_** and some _underlined text_ and ~~striked out~~
+_Italics_ and **bold** and **_bold italics_** and some <u>underlined text</u> and ~~striked out~~
 
 
 This paragraph has some \`code\` in it.
