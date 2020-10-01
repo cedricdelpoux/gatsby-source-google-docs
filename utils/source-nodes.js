@@ -16,6 +16,7 @@ exports.sourceNodes = async (
           content: googleDoc.markdown,
           contentDigest: createContentDigest(googleDoc.markdown),
         },
+        dir: process.cwd(), // To make gatsby-remark-images works
       })
     }
 
