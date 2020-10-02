@@ -4,11 +4,13 @@
 -   Added: New documentation
 -   Added: Gatsby Cloud compatibility
 -   Added: Crosslinks between documents
+-   Added: Underline support
+-   Added: Blockquote support
+-   Added: Superscript support
+-   Added: Subscript support
 -   Added: Code Blocks support
 -   Added: Inline Code support
 -   Added: Footnotes support
--   Added: Blockquotes support
--   Added: Underline support
 -   Added: YAML Google Drive descriptions are transformed to metadata
 -   Added: `demoteHeadings` option
 -   Updated: Simpler token behavior

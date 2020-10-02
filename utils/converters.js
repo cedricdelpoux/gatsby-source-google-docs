@@ -144,13 +144,15 @@ function getText(element, {withBold = true, inline = false} = {}) {
   }
 
   const {
-    link,
-    underline,
-    strikethrough,
+    baselineOffset,
     bold,
     italic,
+    link,
+    strikethrough,
+    underline,
     weightedFontFamily,
   } = element.textRun.textStyle
+
   const inlineCode =
     weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
 
@@ -160,6 +162,14 @@ function getText(element, {withBold = true, inline = false} = {}) {
 
   text = text.replace(/\*/g, "\\*")
   text = text.replace(/_/g, "\\_")
+
+  if (baselineOffset === "SUPERSCRIPT") {
+    text = `<sup>${text}</sup>`
+  }
+
+  if (baselineOffset === "SUBSCRIPT") {
+    text = `<sub>${text}</sub>`
+  }
 
   if (underline) {
     text = `<ins>${text}</ins>`
