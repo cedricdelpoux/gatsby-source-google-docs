@@ -162,7 +162,7 @@ function getText(element, {withBold = true, inline = false} = {}) {
   text = text.replace(/_/g, "\\_")
 
   if (underline) {
-    text = `<u>${text}</u>`
+    text = `<ins>${text}</ins>`
   }
 
   if (italic) {

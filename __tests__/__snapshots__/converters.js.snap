@@ -45,12 +45,12 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi p
 ## Links
 
 
-This is [<u>an example</u>](http://example.com/) link.
+This is [<ins>an example</ins>](http://example.com/) link.
 
 ## Inline formatting
 
 
-_Italics_ and **bold** and **_bold italics_** and some <u>underlined text</u> and ~~striked out~~
+_Italics_ and **bold** and **_bold italics_** and some <ins>underlined text</ins> and ~~striked out~~
 
 
 This paragraph has some \`code\` in it.
