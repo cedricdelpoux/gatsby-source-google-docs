@@ -16,7 +16,7 @@ Organize your documents in Google Drive with folders:
 
 Then you can query the breadcrumb:
 
-```
+```graphql
 {
   allGoogleDocs {
     nodes {

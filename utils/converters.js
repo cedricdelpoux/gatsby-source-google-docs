@@ -169,7 +169,7 @@ function getText(element, {withBold = true, inline = false} = {}) {
     text = `_${text}_`
   }
 
-  if (bold & withBold) {
+  if (bold && withBold) {
     text = `**${text}**`
   }
 
@@ -214,6 +214,7 @@ function getCover(document) {
     : null
 }
 
+/** @param {import('googleapis').docs_v1.Schema$Document} document */
 function convertGoogleDocumentToJson(document) {
   const {body, footnotes = {}} = document
   const cover = getCover(document)

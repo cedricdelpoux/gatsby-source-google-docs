@@ -41,32 +41,28 @@ const replaceCrossDocumentsLinksbyRelativePaths = ({
   return newMarkdown
 }
 
+/**
+ * @param {object} options
+ * @param {string} options.id
+ */
 async function fetchGoogleDocsDocument({id}) {
   const googleOAuth2 = new GoogleOAuth2({
     token: ENV_TOKEN_VAR,
   })
   const auth = await googleOAuth2.getAuth()
 
-  return new Promise((resolve, reject) => {
-    google.docs({version: "v1", auth}).documents.get(
-      {
-        documentId: id,
-      },
-      (err, res) => {
-        if (err) {
-          return reject(err)
-        }
-
-        if (!res.data) {
-          return reject("Empty data")
-        }
-
-        resolve(res.data)
-      }
-    )
+  const res = await google.docs({version: "v1", auth}).documents.get({
+    documentId: id,
   })
+
+  if (!res.data) {
+    throw new Error("Empty Data")
+  }
+
+  return res.data
 }
 
+/** @param {import('..').Options} pluginOptions */
 async function fetchGoogleDocsDocuments(pluginOptions) {
   const googleDriveDocument = await fetchGoogleDriveDocuments(pluginOptions)
   const relativePaths = {}
