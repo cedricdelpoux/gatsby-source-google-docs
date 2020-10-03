@@ -17,12 +17,12 @@ export interface Options {
    * You could need to fetch additional documents fields to your nodes
    * All available options: https://developers.google.com/drive/api/v3/reference/files#resource
    */
-  fields?: (keyof Fields)[],
+  fields?: string[],
   /**
    * To rename fields
    * Be careful, some documentation instructions could be different
    */
-  fieldsMapper?: Record<keyof Fields, string>,
+  fieldsMapper?: Record<string, string>,
   /**
    * To add default fields values
    */
@@ -57,10 +57,6 @@ export interface Metadata {
   };
   markdown: string;
   breadcrumb: string[];
-}
-
-export interface Fields {
-
 }
 
 export interface Folder {

@@ -65,8 +65,18 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   return {...metadata, breadcrumb}
 }
 
+async function getGdrive() {
+  const googleOAuth2 = new GoogleOAuth2({
+    token: ENV_TOKEN_VAR,
+  })
+  const auth = await googleOAuth2.getAuth()
+
+  return google.drive({version: "v3", auth})
+}
+
 /**
  * @typedef FetchTreeOptions
+ * @property {import('googleapis').drive_v3.Drive} drive
  * @property {string[]} breadcrumb
  * @property {string} folderId
  */
@@ -76,18 +86,14 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
  * @returns {Promise<import('..').FileOrFolder[]>}
  */
 async function fetchTree({
+  drive,
   debug,
   breadcrumb,
   folderId,
   fields,
   ignoredFolders = [],
 }) {
-  const googleOAuth2 = new GoogleOAuth2({
-    token: ENV_TOKEN_VAR,
-  })
-  const auth = await googleOAuth2.getAuth()
-
-  const res = await google.drive({version: "v3", auth}).files.list({
+  const res = await drive.files.list({
     includeTeamDriveItems: true,
     supportsAllDrives: true,
     q: `${
@@ -125,6 +131,7 @@ async function fetchTree({
     }
 
     const files = await fetchTree({
+      drive,
       debug,
       breadcrumb: [...breadcrumb, folder.name],
       folderId: folder.id,
@@ -147,9 +154,11 @@ async function fetchTree({
 async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
   let googleDriveDocuments = []
 
+  const drive = await getGdrive()
   await Promise.all(
     folders.map(async (folderId) => {
       const googleDriveTree = await fetchTree({
+        drive,
         breadcrumb: [],
         folderId,
         ...options,
