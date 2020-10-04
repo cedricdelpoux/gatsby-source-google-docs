@@ -51,16 +51,7 @@ export interface RawFolder extends drive_v3.Schema$File {
   mimeType: "application/vnd.google-apps.folder";
 }
 
-export interface Folder {
-  id: string;
-  name: string;
-  mimeType: "application/vnd.google-apps.folder";
-  files: FileOrFolder[];
-}
-
-export type FileOrFolder = DocumentFile | Folder;
-
-export interface Metadata {
+export interface Metadata extends DocumentFile {
   id?: DocumentFile['id'];
   /** The filename, like path.basename(filepath) */
   name: string;
