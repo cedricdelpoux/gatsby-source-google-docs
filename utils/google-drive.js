@@ -1,6 +1,9 @@
 const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
+const _chunk = require("lodash/chunk")
+const _flatten = require("lodash/flatten")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
+const wyt = require("@forivall/wyt")
 
 const {ENV_TOKEN_VAR} = require("./constants")
 const {convertYamlToObject} = require("./converters")
@@ -77,103 +80,138 @@ async function getGdrive() {
 /**
  * @typedef FetchTreeOptions
  * @property {import('googleapis').drive_v3.Drive} drive
- * @property {string[]} breadcrumb
- * @property {string} folderId
+ * @property {{id: string | null, breadcrumb: string[], path: string}[]} parents
  */
+
+// 10 per 1.5 seconds.
+const rateLimit = wyt(10, 1500)
 
 /**
  * @param {import('..').Options & FetchTreeOptions} options
  * @returns {Promise<import('..').FileOrFolder[]>}
  */
-async function fetchTree({
+async function fetchDocuments({
   drive,
   debug,
-  breadcrumb,
-  folderId,
+  parents,
   fields,
   ignoredFolders = [],
 }) {
-  const res = await drive.files.list({
+  const waited = await rateLimit()
+  if (debug) {
+    const waitedText =
+      waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
+    // eslint-disable-next-line no-console
+    console.info(
+      `source-google-docs: Fetching children of ${parents.length} folders` +
+        waitedText
+    )
+    // eslint-disable-next-line no-console
+    console.debug(
+      "source-google-docs:",
+      parents
+        .map((p) => (p.breadcrumb.length > 0 ? p.breadcrumb.join("/") : p.id))
+        .join("\n                    ")
+    )
+  }
+
+  const parentQuery =
+    parents.length === 1 && parents[0].id === null
+      ? false
+      : parents.map((p) => `'${p.id}' in parents`).join(" or ")
+
+  const query = {
     includeTeamDriveItems: true,
     supportsAllDrives: true,
     q: `${
-      folderId ? `'${folderId}' in parents and ` : ""
+      parentQuery ? `(${parentQuery}) and ` : ""
     }(mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
-    fields: `files(id, mimeType, name, description, createdTime, modifiedTime, starred${
+    fields: `nextPageToken,files(id, mimeType, name, description, createdTime, modifiedTime, starred, parents${
       fields ? `, ${fields.join(", ")}` : ""
     })`,
-  })
+  }
+  const res = await drive.files.list(query)
 
-  const documents = res.data.files.filter(
-    (file) => file.mimeType === MIME_TYPE_DOCUMENT
-  )
-  const rawFolders = res.data.files.filter(
+  let files = res.data.files
+
+  for (let nextPageToken = res.data.nextPageToken; nextPageToken; ) {
+    await rateLimit()
+    console.info(`source-google-docs: nextPage`)
+    const nextRes = await drive.files.list({
+      ...query,
+      pageToken: nextPageToken,
+    })
+    files = [...files, ...nextRes.data.files]
+    nextPageToken = nextRes.data.nextPageToken
+  }
+
+  const documents = files
+    .filter(
+      /** @returns {file is import("..").DocumentFile} */
+      (file) => file.mimeType === MIME_TYPE_DOCUMENT
+    )
+    .map((file) => {
+      const parentIds = file.parents && new Set(file.parents)
+      const parent = parentIds && parents.find((p) => parentIds.has(p.id))
+      const parentPath = (parent && parent.path) || ""
+      return {...file, path: `${parentPath}/${_kebabCase(file.name)}`}
+    })
+
+  const rawFolders = files.filter(
+    /** @returns {file is import("..").RawFolder} */
     (file) => file.mimeType === MIME_TYPE_FOLDER
   )
 
-  let folders = []
-  for (const folder of rawFolders) {
-    if (
-      folder.name.toLowerCase() === "drafts" ||
-      ignoredFolders.includes(folder.name) ||
-      ignoredFolders.includes(folder.id)
-    ) {
-      continue
-    }
-
-    if (debug) {
-      const breadCrumbString =
-        breadcrumb.length > 0 ? breadcrumb.join("/") + "/" : ""
-      // eslint-disable-next-line no-console
-      console.info(
-        `source-google-docs: Fetching ${breadCrumbString}${folder.name}`
+  const nonIgnoredRawFolders = rawFolders.filter(
+    (folder) =>
+      !(
+        folder.name.toLowerCase() === "drafts" ||
+        ignoredFolders.includes(folder.name) ||
+        ignoredFolders.includes(folder.id)
       )
-    }
+  )
 
-    const files = await fetchTree({
-      drive,
-      debug,
-      breadcrumb: [...breadcrumb, folder.name],
-      folderId: folder.id,
-      fields,
-      ignoredFolders,
-    })
-
-    folders.push({
-      id: folder.id,
-      name: folder.name,
-      mimeType: folder.mimeType,
-      files,
-    })
+  if (nonIgnoredRawFolders.length === 0) {
+    return documents
   }
 
-  return [...documents, ...folders]
+  const nextParents = nonIgnoredRawFolders.map((folder) => {
+    const parentIds = folder.parents && new Set(folder.parents)
+    const parent = parentIds && parents.find((p) => parentIds.has(p.id))
+    const parentPath = (parent && parent.path) || ""
+    return {
+      id: folder.id,
+      breadcrumb: [...((parent && parent.breadcrumb) || []), folder.name],
+      path: `${parentPath}/${_kebabCase(folder.name)}`,
+    }
+  })
+
+  const documentsInFolders = await Promise.all(
+    _chunk(nextParents, 50).map((chunk) =>
+      fetchDocuments({
+        drive,
+        debug,
+        parents: chunk,
+        fields,
+        ignoredFolders,
+      })
+    )
+  )
+
+  return [...documents, ..._flatten(documentsInFolders)]
 }
 
 /** @param {import('..').Options} pluginOptions */
 async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
-  let googleDriveDocuments = []
-
   const drive = await getGdrive()
-  await Promise.all(
-    folders.map(async (folderId) => {
-      const googleDriveTree = await fetchTree({
-        drive,
-        breadcrumb: [],
-        folderId,
-        ...options,
-      })
 
-      const flattenGoogleDriveDocuments = flattenTree({
-        path: "",
-        files: googleDriveTree,
-      })
-
-      googleDriveDocuments.push(...flattenGoogleDriveDocuments)
+  const googleDriveDocuments = (
+    await fetchDocuments({
+      drive,
+      parents: folders.map((id) => ({id, breadcrumb: [], path: ""})),
+      ...options,
     })
-  )
-
-  googleDriveDocuments = googleDriveDocuments.map((metadata) => {
+  ).map((metadata) => {
     let updatedMetadata = updateMetadata({metadata, ...options})
 
     if (
@@ -182,41 +220,10 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
     ) {
       updatedMetadata = options.updateMetadata(updatedMetadata)
     }
-
     return updatedMetadata
   })
 
   return googleDriveDocuments
-}
-
-/**
- * @param {object} options
- * @param {string} options.path
- * @param {import('..').FileOrFolder[]} options.files
- * @returns {import('googleapis').drive_v3.Schema$File[]} Array of files
- */
-function flattenTree({path, files}) {
-  const documents = files
-    .filter((file) => file.mimeType === MIME_TYPE_DOCUMENT)
-    .map((file) => ({...file, path: `${path}/${_kebabCase(file.name)}`}))
-
-  const documentsInFolders = files
-    .filter(
-      /** @returns {file is import('..').Folder} */
-      (file) => file.mimeType === MIME_TYPE_FOLDER
-    )
-    .reduce((acc, folder) => {
-      const folderFiles = flattenTree({
-        path: `${path}/${_kebabCase(folder.name)}`,
-        files: folder.files,
-      })
-
-      acc.push(...folderFiles)
-
-      return acc
-    }, [])
-
-  return [...documents, ...documentsInFolders]
 }
 
 module.exports = {

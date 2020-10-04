@@ -43,8 +43,25 @@ export interface Options {
   debug?: boolean,
 }
 
+export interface DocumentFile extends drive_v3.Schema$File {
+  mimeType: "application/vnd.google-apps.document";
+}
+
+export interface RawFolder extends drive_v3.Schema$File {
+  mimeType: "application/vnd.google-apps.folder";
+}
+
+export interface Folder {
+  id: string;
+  name: string;
+  mimeType: "application/vnd.google-apps.folder";
+  files: FileOrFolder[];
+}
+
+export type FileOrFolder = DocumentFile | Folder;
+
 export interface Metadata {
-  id?: drive_v3.Schema$File['id'];
+  id?: DocumentFile['id'];
   /** The filename, like path.basename(filepath) */
   name: string;
   path: string;
@@ -58,12 +75,3 @@ export interface Metadata {
   markdown: string;
   breadcrumb: string[];
 }
-
-export interface Folder {
-  id: string;
-  name: string;
-  mimeType: "application/vnd.google-apps.folder";
-  files: drive_v3.Schema$File[];
-}
-
-export type FileOrFolder = drive_v3.Schema$File | Folder;

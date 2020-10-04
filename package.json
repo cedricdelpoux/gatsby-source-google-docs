@@ -26,6 +26,7 @@
     "docs"
   ],
   "dependencies": {
+    "@forivall/wyt": "^2.0.2",
     "gatsby-source-filesystem": "^2.3.31",
     "google-oauth2-env-vars": "^1.1.0",
     "googleapis": "60.0.1",
