@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Document "Code" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "Type \`gatsby-source-google-docs-token\` to generate a token",
+    },
+    Object {
+      "type": "code",
+      "value": Object {
+        "content": Array [
+          "",
+          "const foo = \\"bar\\"",
+          "",
+          "module.exports = {",
+          "    plugins: [",
+          "        \\"gatsby-source-google-docs\\",",
+          "    ],",
+          "}",
+        ],
+        "language": "js",
+      },
+    },
+    Object {
+      "type": "code",
+      "value": Object {
+        "content": Array [
+          "module.exports = {",
+          "    plugins: [",
+          "        \\"gatsby-source-google-docs\\",",
+          "    ],",
+          "}",
+        ],
+        "language": null,
+      },
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Cover" to Object 1`] = `
+Object {
+  "cover": Object {
+    "alt": "Cover description",
+    "image": "https://lh3.googleusercontent.com/nDkE8IlmeehGxZUwGXvxn_dMEnZGZBFAp0i3p_07UC9Lj_V_wfNCBh3FbcHiknyR_aNXue63CmGPi9dTykd9gqobAu88AgHq1af0ag81US_ykXwb-gm04enjY_feYOfPTD3Biq1fk03IKvZ8RA",
+    "title": "Cover title",
+  },
+  "elements": Array [],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Empty" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Footnotes" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "Text with a footnote[^1] and an other one[^2]",
+    },
+    Object {
+      "type": "footnote",
+      "value": Object {
+        "number": "1",
+        "text": " Footnote 1 description",
+      },
+    },
+    Object {
+      "type": "footnote",
+      "value": Object {
+        "number": "2",
+        "text": " Footnote 2 description",
+      },
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Horizontal rule" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "Text followed by horizontal rule ",
+    },
+    Object {
+      "type": "p",
+      "value": "<hr/>",
+    },
+    Object {
+      "type": "p",
+      "value": "and some other text",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Images" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw \\"\\")",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Lists" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "ul",
+      "value": Array [
+        "List **item** 1",
+        Object {
+          "type": "ol",
+          "value": Array [
+            "Sublist item 1",
+            "Sublist item 2",
+            "Sublist item 3",
+          ],
+        },
+        "<ins>List</ins> item 2",
+        "List item 3",
+        Object {
+          "type": "ol",
+          "value": Array [
+            "Sub list item 1",
+            Object {
+              "type": "ol",
+              "value": Array [
+                "Sub sub list item 1",
+                "Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA \\"\\")image",
+              ],
+            },
+            "Sub list item 2",
+            "Sub list item 3",
+          ],
+        },
+        "List item 4",
+        "List item 5",
+      ],
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Quote" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "blockquote",
+      "value": "The way to get started is to quit talking and begin doing.",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Tables" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "table",
+      "value": Object {
+        "headers": Array [
+          "Col 1",
+          "Col 2",
+          "Col 3",
+        ],
+        "rows": Array [
+          Array [
+            "Col 1 line 1",
+            "Col 2 line 1",
+            "Col 3 line 1",
+          ],
+          Array [
+            "Col 1 line 2",
+            "Col 2 line 2",
+            "Col 3 line 2",
+          ],
+        ],
+      },
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Texts" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "h1",
+      "value": "Title level 1",
+    },
+    Object {
+      "type": "h2",
+      "value": "Title level 2",
+    },
+    Object {
+      "type": "h3",
+      "value": "Title level 3",
+    },
+    Object {
+      "type": "h4",
+      "value": "Title level 4",
+    },
+    Object {
+      "type": "h5",
+      "value": "Title level 5",
+    },
+    Object {
+      "type": "h6",
+      "value": "Title level 6",
+    },
+    Object {
+      "type": "p",
+      "value": "**bold**",
+    },
+    Object {
+      "type": "p",
+      "value": "_italic_",
+    },
+    Object {
+      "type": "p",
+      "value": "<ins>underline</ins>",
+    },
+    Object {
+      "type": "p",
+      "value": "~~strikethrough~~ ",
+    },
+    Object {
+      "type": "p",
+      "value": "<sup>superscript</sup>",
+    },
+    Object {
+      "type": "p",
+      "value": "<sub>subscript</sub>",
+    },
+    Object {
+      "type": "p",
+      "value": "**_boldItalic_**",
+    },
+    Object {
+      "type": "p",
+      "value": "text with **space bold after** and _space italic before_.",
+    },
+    Object {
+      "type": "p",
+      "value": "		indented text",
+    },
+    Object {
+      "type": "p",
+      "value": "[Link to itself](https://docs.google.com/document/d/1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw)",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
