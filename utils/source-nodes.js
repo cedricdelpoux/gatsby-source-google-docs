@@ -1,28 +1,48 @@
-const {fetchGoogleDocsDocuments} = require("./google-docs")
+const {fetchDocuments} = require("./google-docs")
 
 exports.sourceNodes = async (
   {actions: {createNode}, createContentDigest, reporter},
   pluginOptions
 ) => {
   try {
-    const googleDocsDocuments = await fetchGoogleDocsDocuments(pluginOptions)
+    let nodesCount = 0
+    const googleDocuments = await fetchDocuments(pluginOptions)
 
-    for (let googleDoc of googleDocsDocuments) {
+    const timerNodes = reporter.activityTimer(
+      `source-google-docs: Creating GoogleDocs nodes`
+    )
+
+    if (pluginOptions.debug) {
+      timerNodes.start()
+    }
+
+    for (let googleDocument of googleDocuments) {
+      const markdown = googleDocument.toMarkdown()
+      const {metadata, cover} = googleDocument.toObject()
+
       createNode({
-        ...googleDoc,
+        cover,
+        markdown,
+        ...metadata,
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",
-          content: googleDoc.markdown,
-          contentDigest: createContentDigest(googleDoc.markdown),
+          content: markdown,
+          contentDigest: createContentDigest(markdown),
         },
         dir: process.cwd(), // To make gatsby-remark-images works
       })
+
+      nodesCount += 1
+
+      if (pluginOptions.debug) {
+        timerNodes.setStatus(nodesCount)
+      }
     }
 
-    reporter.success(
-      `source-google-docs: ${googleDocsDocuments.length} documents fetched`
-    )
+    if (pluginOptions.debug) {
+      timerNodes.end()
+    }
 
     return
   } catch (e) {

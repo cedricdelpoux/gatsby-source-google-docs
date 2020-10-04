@@ -1,9 +1,9 @@
 const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
+const yamljs = require("yamljs")
 
 const {ENV_TOKEN_VAR} = require("./constants")
-const {convertYamlToObject} = require("./converters")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
@@ -12,7 +12,7 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   const breadcrumb = metadata.path
     .split("/")
     // Remove empty strings
-    .filter(element => element)
+    .filter((element) => element)
 
   if (metadata.name === "index" && breadcrumb.length > 0) {
     // Remove "index"
@@ -27,14 +27,14 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   }
 
   // Default values
-  Object.keys(fieldsDefault).forEach(key => {
+  Object.keys(fieldsDefault).forEach((key) => {
     Object.assign(metadata, {
       [key]: fieldsDefault[key],
     })
   })
 
   // Fields transformation
-  Object.keys(fieldsMapper).forEach(oldKey => {
+  Object.keys(fieldsMapper).forEach((oldKey) => {
     const newKey = fieldsMapper[oldKey]
 
     Object.assign(metadata, {
@@ -48,7 +48,7 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   if (metadata.description) {
     try {
       // Try to convert description from YAML
-      const descriptionObject = convertYamlToObject(metadata.description)
+      const descriptionObject = yamljs.parse(metadata.description)
       metadata = {...metadata, ...descriptionObject}
     } catch (e) {
       // Description field is not valid YAML
@@ -89,10 +89,10 @@ async function fetchTree({
         }
 
         const documents = res.data.files.filter(
-          file => file.mimeType === MIME_TYPE_DOCUMENT
+          (file) => file.mimeType === MIME_TYPE_DOCUMENT
         )
         const rawFolders = res.data.files.filter(
-          file => file.mimeType === MIME_TYPE_FOLDER
+          (file) => file.mimeType === MIME_TYPE_FOLDER
         )
 
         let folders = []
@@ -136,11 +136,11 @@ async function fetchTree({
   })
 }
 
-async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
+async function fetchDocumentsMetadata({folders = [null], ...options}) {
   let googleDriveDocuments = []
 
   await Promise.all(
-    folders.map(async folderId => {
+    folders.map(async (folderId) => {
       const googleDriveTree = await fetchTree({
         breadcrumb: [],
         folderId,
@@ -156,7 +156,7 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
     })
   )
 
-  googleDriveDocuments = googleDriveDocuments.map(metadata => {
+  googleDriveDocuments = googleDriveDocuments.map((metadata) => {
     let updatedMetadata = updateMetadata({metadata, ...options})
 
     if (
@@ -174,11 +174,11 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
 
 function flattenTree({path, files}) {
   const documents = files
-    .filter(file => file.mimeType === MIME_TYPE_DOCUMENT)
-    .map(file => ({...file, path: `${path}/${_kebabCase(file.name)}`}))
+    .filter((file) => file.mimeType === MIME_TYPE_DOCUMENT)
+    .map((file) => ({...file, path: `${path}/${_kebabCase(file.name)}`}))
 
   const documentsInFolders = files
-    .filter(file => file.mimeType === MIME_TYPE_FOLDER)
+    .filter((file) => file.mimeType === MIME_TYPE_FOLDER)
     .reduce((acc, folder) => {
       const folderFiles = flattenTree({
         path: `${path}/${_kebabCase(folder.name)}`,
@@ -194,5 +194,5 @@ function flattenTree({path, files}) {
 }
 
 module.exports = {
-  fetchGoogleDriveDocuments,
+  fetchDocumentsMetadata,
 }
