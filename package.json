@@ -54,7 +54,7 @@
   },
   "scripts": {
     "lint": "eslint gatsby-node.js utils example/src",
-    "test": "jest",
+    "test": "jest --coverage",
     "prepublishOnly": "yarn lint && yarn test"
   },
   "bin": {
