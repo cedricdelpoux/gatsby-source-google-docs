@@ -2,50 +2,11 @@ const {google} = require("googleapis")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
 
 const {ENV_TOKEN_VAR} = require("./constants")
+const {GoogleDocument} = require("./google-document")
+const {writeDocumentToTests} = require("./write-document-to-tests")
+const {fetchDocumentsMetadata} = require("./google-drive")
 
-const {
-  convertGoogleDocumentToJson,
-  convertJsonToMarkdown,
-} = require("./converters")
-
-const {fetchGoogleDriveDocuments} = require("./google-drive")
-
-const demoteHeadings = ({content, headings}) => {
-  const newContent = {...content}
-
-  headings.forEach((title) => {
-    const titleLevel = Number(title.tag.substring(1))
-    const demotedTag = "h" + (titleLevel + 1)
-    newContent[title.index] = {[demotedTag]: title.text}
-  })
-
-  return newContent
-}
-
-const replaceCrossDocumentsLinksbyRelativePaths = ({
-  markdown,
-  relativePaths,
-}) => {
-  let newMarkdown = markdown.slice()
-
-  const googleDocsUrlsMatches = markdown.matchAll(
-    /https:\/\/docs.google.com\/document\/d\/([a-zA-Z0-9_-]+)/g
-  )
-
-  for (const [url, id] of googleDocsUrlsMatches) {
-    if (relativePaths[id]) {
-      newMarkdown = newMarkdown.replace(new RegExp(url, "g"), relativePaths[id])
-    }
-  }
-
-  return newMarkdown
-}
-
-/**
- * @param {object} options
- * @param {string} options.id
- */
-async function fetchGoogleDocsDocument({id}) {
+async function fetchDocument(id) {
   const googleOAuth2 = new GoogleOAuth2({
     token: ENV_TOKEN_VAR,
   })
@@ -63,51 +24,36 @@ async function fetchGoogleDocsDocument({id}) {
 }
 
 /** @param {import('..').Options} pluginOptions */
-async function fetchGoogleDocsDocuments(pluginOptions) {
-  const googleDriveDocument = await fetchGoogleDriveDocuments(pluginOptions)
-  const relativePaths = {}
+async function fetchDocuments(pluginOptions) {
+  const documentsMetadata = await fetchDocumentsMetadata(pluginOptions)
+  const crosslinksPaths = documentsMetadata.reduce(
+    (acc, metadata) => ({...acc, [metadata.id]: metadata.path}),
+    {}
+  )
 
-  const googleDocsDocuments = await Promise.all(
-    googleDriveDocument.map(async (metadata) => {
-      const document = await fetchGoogleDocsDocument({
-        id: metadata.id,
+  const googleDocuments = await Promise.all(
+    documentsMetadata.map(async (metadata) => {
+      const document = await fetchDocument(metadata.id)
+      const googleDocument = new GoogleDocument(document, metadata, {
+        ...pluginOptions,
+        crosslinksPaths,
       })
 
-      relativePaths[metadata.id] = metadata.path
+      if (process.env.NODE_ENV === "DOCUMENT_TO_TESTS") {
+        writeDocumentToTests(googleDocument)
+      }
 
-      return {document, metadata}
+      return googleDocument
     })
   )
 
-  return googleDocsDocuments.map(({document, metadata}) => {
-    let {content, cover, headings} = convertGoogleDocumentToJson(document)
+  if (process.env.NODE_ENV === "DOCUMENT_TO_TESTS") {
+    process.exit()
+  }
 
-    let markdown = convertJsonToMarkdown({
-      metadata: {...metadata, cover},
-      content,
-    })
-
-    // Readers will have no access to real documents
-    // Replace all cross-documents links by relative paths
-    markdown = replaceCrossDocumentsLinksbyRelativePaths({
-      markdown,
-      relativePaths,
-    })
-
-    // h1 -> h2, h2 -> h3, ...
-    if (pluginOptions.demoteHeadings === true) {
-      content = demoteHeadings({content, headings})
-    }
-
-    return {
-      ...metadata,
-      content,
-      cover,
-      markdown,
-    }
-  })
+  return googleDocuments
 }
 
 module.exports = {
-  fetchGoogleDocsDocuments,
+  fetchDocuments,
 }

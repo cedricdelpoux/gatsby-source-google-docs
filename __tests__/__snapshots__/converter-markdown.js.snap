@@ -1,0 +1,174 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Document "Code" to Markdown 1`] = `
+"---
+cover: null
+---
+
+Type \`gatsby-source-google-docs-token\` to generate a token
+
+\`\`\`js
+
+const foo = \\"bar\\"
+
+module.exports = {
+    plugins: [
+        \\"gatsby-source-google-docs\\",
+    ],
+}
+\`\`\`
+
+\`\`\`
+module.exports = {
+    plugins: [
+        \\"gatsby-source-google-docs\\",
+    ],
+}
+\`\`\`
+"
+`;
+
+exports[`Document "Cover" to Markdown 1`] = `
+"---
+cover:
+    image: 'https://lh3.googleusercontent.com/nDkE8IlmeehGxZUwGXvxn_dMEnZGZBFAp0i3p_07UC9Lj_V_wfNCBh3FbcHiknyR_aNXue63CmGPi9dTykd9gqobAu88AgHq1af0ag81US_ykXwb-gm04enjY_feYOfPTD3Biq1fk03IKvZ8RA'
+    title: 'Cover title'
+    alt: 'Cover description'
+---
+"
+`;
+
+exports[`Document "Empty" to Markdown 1`] = `
+"---
+cover: null
+---
+"
+`;
+
+exports[`Document "Footnotes" to Markdown 1`] = `
+"---
+cover: null
+---
+
+Text with a footnote[^1] and an other one[^2]
+
+[^1]:  Footnote 1 description
+
+[^2]:  Footnote 2 description
+"
+`;
+
+exports[`Document "Horizontal rule" to Markdown 1`] = `
+"---
+cover: null
+---
+
+Text followed by horizontal rule 
+
+
+<hr/>
+
+
+and some other text
+"
+`;
+
+exports[`Document "Images" to Markdown 1`] = `
+"---
+cover: null
+---
+
+![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw \\"\\")
+"
+`;
+
+exports[`Document "Lists" to Markdown 1`] = `
+"---
+cover: null
+---
+
+ - List **item** 1
+     1. Sublist item 1
+     2. Sublist item 2
+     3. Sublist item 3
+    
+ - <ins>List</ins> item 2
+ - List item 3
+     1. Sub list item 1
+         1. Sub sub list item 1
+         2. Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA \\"\\")image
+        
+     2. Sub list item 2
+     3. Sub list item 3
+    
+ - List item 4
+ - List item 5
+"
+`;
+
+exports[`Document "Quote" to Markdown 1`] = `
+"---
+cover: null
+---
+> The way to get started is to quit talking and begin doing.
+"
+`;
+
+exports[`Document "Tables" to Markdown 1`] = `
+"---
+cover: null
+---
+ | Col 1 | Col 2 | Col 3 | 
+ | --- | --- | --- | 
+ | Col 1 line 1 | Col 2 line 1 | Col 3 line 1
+Col 1 line 2 | Col 2 line 2 | Col 3 line 2 | 
+"
+`;
+
+exports[`Document "Texts" to Markdown 1`] = `
+"---
+cover: null
+---
+# Title level 1
+
+## Title level 2
+
+### Title level 3
+
+#### Title level 4
+
+##### Title level 5
+
+###### Title level 6
+
+
+**bold**
+
+
+_italic_
+
+
+<ins>underline</ins>
+
+
+~~strikethrough~~ 
+
+
+<sup>superscript</sup>
+
+
+<sub>subscript</sub>
+
+
+**_boldItalic_**
+
+
+text with **space bold after** and _space italic before_.
+
+
+		indented text
+
+
+[Link to itself](https://docs.google.com/document/d/1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw)
+"
+`;

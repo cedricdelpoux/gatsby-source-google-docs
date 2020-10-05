@@ -3,10 +3,10 @@ const _kebabCase = require("lodash/kebabCase")
 const _chunk = require("lodash/chunk")
 const _flatten = require("lodash/flatten")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
+const yamljs = require("yamljs")
 const wyt = require("@forivall/wyt")
 
 const {ENV_TOKEN_VAR} = require("./constants")
-const {convertYamlToObject} = require("./converters")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
@@ -71,7 +71,7 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   if (metadata.description) {
     try {
       // Try to convert description from YAML
-      const descriptionObject = convertYamlToObject(metadata.description)
+      const descriptionObject = yamljs.parse(metadata.description)
       metadata = {...metadata, ...descriptionObject}
     } catch (e) {
       // Description field is not valid YAML
@@ -271,7 +271,7 @@ async function fetchDocuments({
 }
 
 /** @param {import('..').Options} pluginOptions */
-async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
+async function fetchDocumentsMetadata({folders = [null], ...options}) {
   const drive = await getGdrive()
 
   const googleDriveDocuments = (
@@ -296,5 +296,5 @@ async function fetchGoogleDriveDocuments({folders = [null], ...options}) {
 }
 
 module.exports = {
-  fetchGoogleDriveDocuments,
+  fetchDocumentsMetadata,
 }

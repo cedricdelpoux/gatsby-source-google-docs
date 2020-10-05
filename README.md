@@ -6,10 +6,12 @@
   </p>
   <br/>
 
-[![Npm version][badge-npm]][npm]
-[![Npm downloads][badge-npm-dl]][npm]
+[![Npm][badge-npm]][npm]
+[![Build Status][badge-build]][travis]
+[![Coverage][badge-coverage]][codecov]
+[![Downloads][badge-downloads]][npm]
+[![PRs welcome][badge-prs]](#contributing)
 [![MIT license][badge-licence]](./LICENCE.md)
-[![PRs welcome][badge-prs-welcome]](#contributing)
 
 </div>
 
@@ -103,8 +105,12 @@ This project is licensed under the MIT License - see the
 [LICENCE](./LICENCE.md) file for details
 
 [badge-npm]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square
-[badge-npm-dl]: https://img.shields.io/npm/dt/gatsby-source-google-docs.svg?style=flat-square
+[badge-downloads]: https://img.shields.io/npm/dt/gatsby-source-google-docs.svg?style=flat-square
+[badge-build]: https://img.shields.io/travis/cedricdelpoux/gatsby-source-google-docs/master?style=flat-square
+[badge-coverage]: https://img.shields.io/codecov/c/github/cedricdelpoux/gatsby-source-google-docs/master.svg?style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[badge-prs-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[badge-prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gatsby-source-google-docs
+[travis]: https://travis-ci.org/cedricdelpoux/gatsby-source-google-docs
+[codecov]: https://codecov.io/gh/cedricdelpoux/gatsby-source-google-docs
 [github-issue]: https://github.com/cedricdelpoux/gatsby-source-google-docs/issues/new
