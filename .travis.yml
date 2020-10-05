@@ -6,6 +6,7 @@ before_install:
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+  - yarn semantic-release
 
 branches:
   only:
