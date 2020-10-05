@@ -1,0 +1,8 @@
+{
+  "*.js": [
+    "yarn lint"
+  ],
+  "*.{css,js,md}": [
+    "prettier --write"
+  ]
+}

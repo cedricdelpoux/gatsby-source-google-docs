@@ -3,12 +3,8 @@
   "version": "2.0.0-beta.25",
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": "https://github.com/cedricdelpoux/gatsby-source-google-docs",
-  "author": {
-    "name": "Cédric Delpoux",
-    "email": "cedric.delpoux@gmail.com"
-  },
+  "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
   "license": "MIT",
-  "private": false,
   "keywords": [
     "gatsby",
     "gatsby-plugin",
@@ -34,6 +30,9 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-jest": "^24.0.2",
@@ -47,30 +46,13 @@
     "dotenv": "^8.2.0",
     "gatsby": "^2.0.0"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "example"
-    ]
-  },
-  "scripts": {
-    "lint": "eslint gatsby-node.js utils example/src",
-    "test": "jest --coverage",
-    "prepublishOnly": "yarn lint && yarn test"
-  },
   "bin": {
     "gatsby-source-google-docs-token": "./utils/generate-token.js"
   },
-  "lint-staged": {
-    "*.js": [
-      "yarn lint"
-    ],
-    "*.{css,js,md}": [
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "scripts": {
+    "cz": "git-cz",
+    "lint": "eslint gatsby-node.js utils example/src",
+    "test": "jest --coverage",
+    "prepublishOnly": "yarn lint && yarn test"
   }
 }
