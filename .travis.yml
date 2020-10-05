@@ -1,0 +1,12 @@
+language: node_js
+node_js: 14.9
+
+before_install:
+  - yarn add codecov
+
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+
+branches:
+  only:
+    - master
