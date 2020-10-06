@@ -17,7 +17,7 @@ filenames.forEach(function (filename) {
     expect(documentObject).toMatchSnapshot()
   })
 
-  if (filename === "texts.json") {
+  if (filename === "texts.json" || filename === "links.json") {
     const options = {
       crosslinksPaths: {[sourceDoc.documentId]: "/itself"},
     }

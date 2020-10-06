@@ -82,6 +82,24 @@ cover: null
 "
 `;
 
+exports[`Document "Links" to Markdown 1`] = `
+"---
+cover: null
+---
+
+[to self](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)
+
+
+[to self with user id](https://docs.google.com/document/u/1/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)
+
+
+[to self with edit](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/edit)
+
+
+[to self with preview](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/preview)
+"
+`;
+
 exports[`Document "Lists" to Markdown 1`] = `
 "---
 cover: null

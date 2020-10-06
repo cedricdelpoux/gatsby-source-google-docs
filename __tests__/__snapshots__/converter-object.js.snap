@@ -123,6 +123,56 @@ Object {
 }
 `;
 
+exports[`Document "Links" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "[to self](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with user id](https://docs.google.com/document/u/1/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with edit](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/edit)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with preview](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/preview)",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
+exports[`Document "Links" to Object with links  1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "[to self](/itself)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with user id](/itself)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with edit](/itself)",
+    },
+    Object {
+      "type": "p",
+      "value": "[to self with preview](/itself)",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
+
 exports[`Document "Lists" to Object 1`] = `
 Object {
   "cover": null,
