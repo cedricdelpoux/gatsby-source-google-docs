@@ -281,3 +281,76 @@ Object {
   "metadata": Object {},
 }
 `;
+
+exports[`Document "Texts" to Object with links  1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "h1",
+      "value": "Title level 1",
+    },
+    Object {
+      "type": "h2",
+      "value": "Title level 2",
+    },
+    Object {
+      "type": "h3",
+      "value": "Title level 3",
+    },
+    Object {
+      "type": "h4",
+      "value": "Title level 4",
+    },
+    Object {
+      "type": "h5",
+      "value": "Title level 5",
+    },
+    Object {
+      "type": "h6",
+      "value": "Title level 6",
+    },
+    Object {
+      "type": "p",
+      "value": "**bold**",
+    },
+    Object {
+      "type": "p",
+      "value": "_italic_",
+    },
+    Object {
+      "type": "p",
+      "value": "<ins>underline</ins>",
+    },
+    Object {
+      "type": "p",
+      "value": "~~strikethrough~~ ",
+    },
+    Object {
+      "type": "p",
+      "value": "<sup>superscript</sup>",
+    },
+    Object {
+      "type": "p",
+      "value": "<sub>subscript</sub>",
+    },
+    Object {
+      "type": "p",
+      "value": "**_boldItalic_**",
+    },
+    Object {
+      "type": "p",
+      "value": "text with **space bold after** and _space italic before_.",
+    },
+    Object {
+      "type": "p",
+      "value": "		indented text",
+    },
+    Object {
+      "type": "p",
+      "value": "[Link to itself](/itself)",
+    },
+  ],
+  "metadata": Object {},
+}
+`;
