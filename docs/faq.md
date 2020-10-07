@@ -16,7 +16,7 @@ Organize your documents in Google Drive with folders:
 
 Then you can query the breadcrumb:
 
-```
+```graphql
 {
   allGoogleDocs {
     nodes {
@@ -37,7 +37,7 @@ Add an image in your [Google Doc first page header](https://support.google.com/d
 
 Then you can query your header cover like any Sharp node.
 
-```js
+```jsx
 import {graphql} from "gatsby"
 import Img from "gatsby-image"
 

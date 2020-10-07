@@ -23,7 +23,7 @@ module.exports = {
                 fields: ["ownedByMe", "shared"],
                 //
                 // To rename fields
-                // Be carrefull, some documentation instructions could be different
+                // Be careful, some documentation instructions could be different
                 fieldsMapper: {createdTime: "date", name: "title"},
                 //
                 // To add default fields values
