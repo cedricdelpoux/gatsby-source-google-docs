@@ -104,6 +104,9 @@ cover: null
 
 
 [to self with preview](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/preview)
+
+
+[unknown url](https://docs.google.com/document/d/unknown)
 "
 `;
 
@@ -194,6 +197,6 @@ text with **space bold after** and _space italic before_.
 		indented text
 
 
-[Link to itself](https://docs.google.com/document/d/1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw)
+[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
 "
 `;

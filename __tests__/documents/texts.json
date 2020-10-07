@@ -367,7 +367,7 @@
               "startIndex": 221,
               "endIndex": 225,
               "textRun": {
-                "content": "Link to itself",
+                "content": "Link",
                 "textStyle": {
                   "underline": true,
                   "foregroundColor": {
@@ -380,7 +380,7 @@
                     }
                   },
                   "link": {
-                    "url": "https://docs.google.com/document/d/1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw"
+                    "url": "https://github.com/cedricdelpoux/gatsby-source-google-docs"
                   }
                 }
               }

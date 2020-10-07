@@ -239,6 +239,48 @@
             "direction": "LEFT_TO_RIGHT"
           }
         }
+      },
+      {
+        "startIndex": 73,
+        "endIndex": 93,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 51,
+              "endIndex": 71,
+              "textRun": {
+                "content": "unknown url",
+                "textStyle": {
+                  "underline": true,
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.06666667,
+                        "green": 0.33333334,
+                        "blue": 0.8
+                      }
+                    }
+                  },
+                  "link": {
+                    "url": "https://docs.google.com/document/d/unknown"
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 71,
+              "endIndex": 72,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {}
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
       }
     ]
   },

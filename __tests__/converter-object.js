@@ -16,15 +16,4 @@ filenames.forEach(function (filename) {
     const documentObject = googleDocument.toObject()
     expect(documentObject).toMatchSnapshot()
   })
-
-  if (filename === "texts.json" || filename === "links.json") {
-    const options = {
-      crosslinksPaths: {[sourceDoc.documentId]: "/itself"},
-    }
-    const doc = new GoogleDocument(JSON.parse(file), {}, options)
-    test(`Document "${googleDocument.document.title}" to Object with links `, () => {
-      const documentObject = doc.toObject()
-      expect(documentObject).toMatchSnapshot()
-    })
-  }
 })
