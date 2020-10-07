@@ -468,7 +468,7 @@ class GoogleDocument {
       let elementsStringify = JSON.stringify(elements)
 
       elementsStringify = elementsStringify.replace(
-        /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9]+)(?:\/edit|\/preview)?/g,
+        /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
         (match, id) => this.crosslinksPaths[id] || match
       )
 
