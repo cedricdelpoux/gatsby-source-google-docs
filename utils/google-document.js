@@ -409,30 +409,32 @@ class GoogleDocument {
     this.processCover()
 
     this.document.body.content.forEach(
-      ({paragraph, table, pageBreak, sectionBreak}, i) => {
-        // Breaks
-        if (pageBreak || sectionBreak) {
+      ({paragraph, table, pageBreak, sectionBreak, tableOfContents}, i) => {
+        // Unsupported elements
+        if (pageBreak || sectionBreak || tableOfContents) {
           return
         }
 
+        if (table) {
+          // Quotes
+          if (isQuote(table)) {
+            this.processQuote(table)
+          }
+
+          // Code Blocks
+          else if (isCodeBlocks(table)) {
+            this.processCode(table)
+          }
+
+          // Tables
+          else {
+            this.processTable(table)
+          }
+        }
+
         // Paragraphs
-        else if (paragraph) {
+        else {
           this.processParagraph(paragraph, i)
-        }
-
-        // Quotes
-        else if (table && isQuote(table)) {
-          this.processQuote(table)
-        }
-
-        // Code Blocks
-        else if (table && isCodeBlocks(table)) {
-          this.processCode(table)
-        }
-
-        // Tables
-        else if (table && table.rows > 0) {
-          this.processTable(table)
         }
       }
     )
