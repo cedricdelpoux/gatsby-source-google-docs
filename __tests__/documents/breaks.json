@@ -1,0 +1,20 @@
+{
+  "title": "Breaks",
+  "body": {
+    "content": [
+      {
+        "endIndex": 1,
+        "sectionBreak": {
+          "sectionStyle": {
+            "columnSeparatorStyle": "NONE",
+            "contentDirection": "LEFT_TO_RIGHT",
+            "sectionType": "CONTINUOUS"
+          }
+        }
+      },
+      {"startIndex": 2, "endIndex": 3, "pageBreak": {"textStyle": {}}}
+    ]
+  },
+  "lists": {},
+  "inlineObjects": {}
+}

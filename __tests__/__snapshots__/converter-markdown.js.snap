@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Document "Breaks" to Markdown 1`] = `
+"---
+cover: null
+---
+"
+`;
+
 exports[`Document "Code" to Markdown 1`] = `
 "---
 cover: null

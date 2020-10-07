@@ -82,13 +82,11 @@ class GoogleDocument {
       return `![${image.alt}](${image.source} "${image.title}")`
     }
 
-    const {content, textStyle} = el.textRun
-
-    if (!content || content === "\n") {
+    if (!el.textRun || !el.textRun.content || el.textRun.content === "\n") {
       return ""
     }
 
-    const contentMatch = content.match(/^( *)(\w+(?: \w+)*)( *)$/)
+    const contentMatch = el.textRun.content.match(/^( *)(\w+(?: \w+)*)( *)$/)
     let before = ""
     let text = ""
     let after = ""
@@ -98,7 +96,7 @@ class GoogleDocument {
       text = contentMatch[2]
       after = contentMatch[3]
     } else {
-      text = content
+      text = el.textRun.content
     }
 
     text = text.replace(/\n$/, "")
@@ -111,7 +109,7 @@ class GoogleDocument {
       strikethrough,
       underline,
       weightedFontFamily,
-    } = textStyle
+    } = el.textRun.textStyle
 
     const inlineCode =
       weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
@@ -410,27 +408,34 @@ class GoogleDocument {
   process() {
     this.processCover()
 
-    this.document.body.content.forEach(({paragraph, table}, i) => {
-      // Paragraphs
-      if (paragraph) {
-        this.processParagraph(paragraph, i)
-      }
+    this.document.body.content.forEach(
+      ({paragraph, table, pageBreak, sectionBreak}, i) => {
+        // Breaks
+        if (pageBreak || sectionBreak) {
+          return
+        }
 
-      // Quotes
-      else if (table && isQuote(table)) {
-        this.processQuote(table)
-      }
+        // Paragraphs
+        else if (paragraph) {
+          this.processParagraph(paragraph, i)
+        }
 
-      // Code Blocks
-      else if (table && isCodeBlocks(table)) {
-        this.processCode(table)
-      }
+        // Quotes
+        else if (table && isQuote(table)) {
+          this.processQuote(table)
+        }
 
-      // Tables
-      else if (table && table.rows > 0) {
-        this.processTable(table)
+        // Code Blocks
+        else if (table && isCodeBlocks(table)) {
+          this.processCode(table)
+        }
+
+        // Tables
+        else if (table && table.rows > 0) {
+          this.processTable(table)
+        }
       }
-    })
+    )
 
     // Footnotes
     this.processFootnotes()

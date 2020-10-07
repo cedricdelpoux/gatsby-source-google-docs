@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Document "Breaks" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [],
+  "metadata": Object {},
+}
+`;
+
 exports[`Document "Code" to Object 1`] = `
 Object {
   "cover": null,
