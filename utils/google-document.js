@@ -460,12 +460,10 @@ class GoogleDocument {
     if (Object.keys(this.crosslinksPaths).length > 0) {
       let elementsStringify = JSON.stringify(elements)
 
-      Object.keys(this.crosslinksPaths).forEach((id) => {
-        elementsStringify = elementsStringify.replace(
-          `https://docs.google.com/document/d/${id}`,
-          this.crosslinksPaths[id]
-        )
-      })
+      elementsStringify = elementsStringify.replace(
+        /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9]+)(?:\/edit|\/preview)?/g,
+        (match, id) => this.crosslinksPaths[id] || match
+      )
 
       elements = JSON.parse(elementsStringify)
     }
