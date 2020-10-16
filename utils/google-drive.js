@@ -31,27 +31,27 @@ function evenlyChunk(arr, count) {
  * @param {Record<string, unknown>=} options.fieldsDefault
  * @param {Record<string, string>=} options.fieldsMapper
  */
-const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
-  const breadcrumb = metadata.path
+const updateFile = ({file, fieldsDefault = {}, fieldsMapper = {}}) => {
+  const breadcrumb = file.path
     .split("/")
     // Remove empty strings
     .filter((element) => element)
 
-  if (metadata.name === "index" && breadcrumb.length > 0) {
+  if (file.name === "index" && breadcrumb.length > 0) {
     // Remove "index"
     breadcrumb.pop()
     // Remove folder name and use it as name
-    metadata.name = breadcrumb.pop()
+    file.name = breadcrumb.pop()
     // Path need to be updated
-    metadata.path =
+    file.path =
       breadcrumb.length > 0
-        ? `/${breadcrumb.join("/")}/${metadata.name}`
-        : `/${metadata.name}`
+        ? `/${breadcrumb.join("/")}/${file.name}`
+        : `/${file.name}`
   }
 
   // Default values
   Object.keys(fieldsDefault).forEach((key) => {
-    Object.assign(metadata, {
+    Object.assign(file, {
       [key]: fieldsDefault[key],
     })
   })
@@ -60,20 +60,20 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
   Object.keys(fieldsMapper).forEach((oldKey) => {
     const newKey = fieldsMapper[oldKey]
 
-    Object.assign(metadata, {
-      [newKey]: metadata[oldKey],
+    Object.assign(file, {
+      [newKey]: file[oldKey],
     })
 
-    delete metadata[oldKey]
+    delete file[oldKey]
   })
 
   // Transform description into metadata if description is YAML
-  if (metadata.description) {
+  if (file.description) {
     try {
       // Try to convert description from YAML
-      const descriptionObject = yamljs.parse(metadata.description)
+      const descriptionObject = yamljs.parse(file.description)
       if (typeof descriptionObject !== "string") {
-        metadata = {...metadata, ...descriptionObject}
+        file = {...file, ...descriptionObject}
       }
     } catch (e) {
       // Description field is not valid YAML
@@ -81,10 +81,10 @@ const updateMetadata = ({metadata, fieldsDefault = {}, fieldsMapper = {}}) => {
     }
   }
 
-  return {...metadata, breadcrumb}
+  return {...file, breadcrumb}
 }
 
-async function getGdrive() {
+async function getGoogleDrive() {
   const googleOAuth2 = new GoogleOAuth2({
     token: ENV_TOKEN_VAR,
   })
@@ -113,7 +113,7 @@ const BATCH_SIZE = 100
  * @param {import('..').Options & FetchDocumentsOptions} options
  * @returns {Promise<(import('..').DocumentFile & { path: string })[]>}
  */
-async function fetchDocuments({
+async function fetchDocumentsFiles({
   drive,
   debug,
   parents,
@@ -124,7 +124,7 @@ async function fetchDocuments({
     return _flatten(
       await Promise.all(
         evenlyChunk(parents, BATCH_SIZE).map((parents) =>
-          fetchDocuments({
+          fetchDocumentsFiles({
             drive,
             debug,
             parents,
@@ -211,7 +211,7 @@ async function fetchDocuments({
     if (nextParents.length === 0) {
       return documents
     }
-    const documentsInFolders = await fetchDocuments({
+    const documentsInFolders = await fetchDocumentsFiles({
       drive,
       debug,
       parents: nextParents,
@@ -228,7 +228,7 @@ async function fetchDocuments({
     // process one batch of children while continuing on with pages
     const parentBatch = nextParents.slice(0, BATCH_SIZE)
     nextParents = nextParents.slice(BATCH_SIZE)
-    const results = await fetchDocuments({
+    const results = await fetchDocumentsFiles({
       drive,
       debug,
       parents: parentBatch,
@@ -241,7 +241,6 @@ async function fetchDocuments({
   /** @param {string} nextPageToken */
   const fetchNextPage = async (nextPageToken) => {
     await rateLimit()
-    console.info(`source-google-docs: nextPage`)
     const nextRes = await drive.files.list({
       ...query,
       pageToken: nextPageToken,
@@ -253,7 +252,7 @@ async function fetchDocuments({
       if (nextParents.length === 0) {
         return documents
       }
-      const finalDocumentsInFolders = await fetchDocuments({
+      const finalDocumentsInFolders = await fetchDocumentsFiles({
         drive,
         debug,
         parents: nextParents,
@@ -273,30 +272,33 @@ async function fetchDocuments({
 }
 
 /** @param {import('..').Options} pluginOptions */
-async function fetchDocumentsMetadata({folders = [null], ...options}) {
-  const drive = await getGdrive()
+async function fetchFiles({folders = [null], ...options}) {
+  const drive = await getGoogleDrive()
 
-  const googleDriveDocuments = (
-    await fetchDocuments({
+  const documentsFiles = (
+    await fetchDocumentsFiles({
       drive,
       parents: folders.map((id) => ({id, breadcrumb: [], path: ""})),
       ...options,
     })
-  ).map((metadata) => {
-    let updatedMetadata = updateMetadata({metadata, ...options})
+  ).map((file) => {
+    let updatedFile = updateFile({file, ...options})
 
-    if (
-      options.updateMetadata &&
-      typeof options.updateMetadata === "function"
-    ) {
-      updatedMetadata = options.updateMetadata(updatedMetadata)
+    const updateMetadata =
+      options.updateMetadata && typeof options.updateMetadata === "function"
+        ? options.updateMetadata
+        : null
+
+    if (updateMetadata) {
+      updatedFile = updateMetadata(updatedFile)
     }
-    return updatedMetadata
+
+    return updatedFile
   })
 
-  return googleDriveDocuments
+  return documentsFiles
 }
 
 module.exports = {
-  fetchDocumentsMetadata,
+  fetchFiles,
 }

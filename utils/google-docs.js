@@ -4,7 +4,7 @@ const GoogleOAuth2 = require("google-oauth2-env-vars")
 const {ENV_TOKEN_VAR} = require("./constants")
 const {GoogleDocument} = require("./google-document")
 const {writeDocumentToTests} = require("./write-document-to-tests")
-const {fetchDocumentsMetadata} = require("./google-drive")
+const {fetchFiles} = require("./google-drive")
 
 async function fetchDocument(id) {
   const googleOAuth2 = new GoogleOAuth2({
@@ -25,16 +25,16 @@ async function fetchDocument(id) {
 
 /** @param {import('..').Options} pluginOptions */
 async function fetchDocuments(pluginOptions) {
-  const documentsMetadata = await fetchDocumentsMetadata(pluginOptions)
-  const crosslinksPaths = documentsMetadata.reduce(
-    (acc, metadata) => ({...acc, [metadata.id]: metadata.path}),
+  const documentsFiles = await fetchFiles(pluginOptions)
+  const crosslinksPaths = documentsFiles.reduce(
+    (acc, file) => ({...acc, [file.id]: file.path}),
     {}
   )
 
   const googleDocuments = await Promise.all(
-    documentsMetadata.map(async (metadata) => {
-      const document = await fetchDocument(metadata.id)
-      const googleDocument = new GoogleDocument(document, metadata, {
+    documentsFiles.map(async (file) => {
+      const document = await fetchDocument(file.id)
+      const googleDocument = new GoogleDocument(document, file, {
         ...pluginOptions,
         crosslinksPaths,
       })
