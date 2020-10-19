@@ -13,6 +13,7 @@ class GoogleDocument {
     this.document = document
     this.file = file
     this.demoteHeadings = options.demoteHeadings || false
+    this.enableFontSize = options.enableFontSize || false
     this.crosslinksPaths = options.crosslinksPaths || {}
     this.cover = null
     this.elements = []
@@ -109,6 +110,7 @@ class GoogleDocument {
       strikethrough,
       underline,
       weightedFontFamily,
+      fontSize,
     } = el.textRun.textStyle
 
     const inlineCode =
@@ -120,6 +122,14 @@ class GoogleDocument {
 
     text = text.replace(/\*/g, "\\*") // Prevent * to be bold
     text = text.replace(/_/g, "\\_") // Prevent _ to be italic
+
+    // enable font size
+
+    if (this.enableFontSize) {
+      text = `<span style="font-size:${
+        fontSize.magnitude
+      }${fontSize.unit.toLowerCase()}"><sup>${text}</sup></span>`
+    }
 
     if (baselineOffset === "SUPERSCRIPT") {
       text = `<sup>${text}</sup>`

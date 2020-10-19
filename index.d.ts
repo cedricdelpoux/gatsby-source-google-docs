@@ -13,6 +13,9 @@ export interface Options {
 
   /** h1 -> h2, h2 -> h3, ... */
   demoteHeadings?: boolean,
+
+  /** to enable font size */
+  enableFontSize?: boolean,
   /**
    * You could need to fetch additional documents fields to your nodes
    * All available options: https://developers.google.com/drive/api/v3/reference/files#resource
