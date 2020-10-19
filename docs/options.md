@@ -17,6 +17,8 @@ module.exports = {
                 //
                 // h1 -> h2, h2 -> h3, ...
                 demoteHeadings: true,
+                // enable font size ...
+                enableFontSize: false,
                 //
                 // You could need to fetch additional documents fields to your nodes
                 // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
