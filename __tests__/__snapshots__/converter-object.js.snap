@@ -314,6 +314,18 @@ Object {
       "type": "p",
       "value": "[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)",
     },
+    Object {
+      "type": "p",
+      "value": "<span style=\\"font-size:1.45em\\">Text bigger</span>",
+    },
+    Object {
+      "type": "p",
+      "value": "Text Colored",
+    },
+    Object {
+      "type": "p",
+      "value": "Text with background color",
+    },
   ],
   "file": Object {},
 }

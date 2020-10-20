@@ -298,13 +298,8 @@
           "elements": [
             {
               "startIndex": 155,
-              "endIndex": 159,
-              "textRun": {"content": "text", "textStyle": {}}
-            },
-            {
-              "startIndex": 159,
               "endIndex": 165,
-              "textRun": {"content": " with ", "textStyle": {}}
+              "textRun": {"content": "text with ", "textStyle": {}}
             },
             {
               "startIndex": 165,
@@ -399,32 +394,124 @@
       },
       {
         "startIndex": 226,
-        "endIndex": 227,
+        "endIndex": 241,
         "paragraph": {
           "elements": [
             {
               "startIndex": 226,
-              "endIndex": 227,
-              "textRun": {"content": "\n", "textStyle": {}}
+              "endIndex": 241,
+              "textRun": {
+                "content": "Text bigger\n",
+                "textStyle": {"fontSize": {"magnitude": 16, "unit": "PT"}}
+              }
             }
           ],
           "paragraphStyle": {
             "namedStyleType": "NORMAL_TEXT",
-            "direction": "LEFT_TO_RIGHT",
-            "indentFirstLine": {"magnitude": 36, "unit": "PT"},
-            "indentStart": {"magnitude": 36, "unit": "PT"}
+            "direction": "LEFT_TO_RIGHT"
           }
         }
       },
       {
-        "startIndex": 227,
-        "endIndex": 228,
+        "startIndex": 241,
+        "endIndex": 254,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 227,
-              "endIndex": 228,
-              "textRun": {"content": "  \n", "textStyle": {}}
+              "startIndex": 241,
+              "endIndex": 254,
+              "textRun": {
+                "content": "Text Colored\n",
+                "textStyle": {
+                  "foregroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.41568628,
+                        "green": 0.65882355,
+                        "blue": 0.30980393
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      },
+      {
+        "startIndex": 254,
+        "endIndex": 281,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 254,
+              "endIndex": 281,
+              "textRun": {
+                "content": "Text with background color\n",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.5764706,
+                        "green": 0.76862746,
+                        "blue": 0.49019608
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      },
+      {
+        "startIndex": 281,
+        "endIndex": 283,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 281,
+              "endIndex": 282,
+              "textRun": {
+                "content": "\t",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.5764706,
+                        "green": 0.76862746,
+                        "blue": 0.49019608
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 282,
+              "endIndex": 283,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.5764706,
+                        "green": 0.76862746,
+                        "blue": 0.49019608
+                      }
+                    }
+                  }
+                }
+              }
             }
           ],
           "paragraphStyle": {
@@ -1893,7 +1980,7 @@
       }
     }
   },
-  "revisionId": "ALm37BXNFTy3y0hR9vQ7YGDx1xDytfK63E4uW7L1j5C80YZTxIqHKZOpUpUsB3uYi7V7nrEOaFVbdMXGhNnWGw",
+  "revisionId": "ALm37BUnDvTuMcLeIvTTzVfAfbBO1BgiF7LVSA4pjylMvYCBnTafGB3hosJByeVcc_bmn_ASB4_z7e45BPSofQ",
   "suggestionsViewMode": "SUGGESTIONS_INLINE",
   "documentId": "1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw"
 }

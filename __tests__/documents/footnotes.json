@@ -127,7 +127,7 @@
                 "endIndex": 24,
                 "textRun": {
                   "content": " Footnote 1 description\n",
-                  "textStyle": {"fontSize": {"magnitude": 10, "unit": "PT"}}
+                  "textStyle": {}
                 }
               }
             ],
@@ -152,7 +152,7 @@
                 "endIndex": 24,
                 "textRun": {
                   "content": " Footnote 2 description\n",
-                  "textStyle": {"fontSize": {"magnitude": 10, "unit": "PT"}}
+                  "textStyle": {}
                 }
               }
             ],

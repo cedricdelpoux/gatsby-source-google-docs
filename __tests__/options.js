@@ -6,7 +6,7 @@ test(`"DemoteHeading" option`, () => {
   const googleDocument = new GoogleDocument(
     documentTexts,
     {},
-    {demoteHeadings: true, enableFontSize: false}
+    {demoteHeadings: true}
   )
   expect(googleDocument.toMarkdown()).toMatchSnapshot()
 })
@@ -17,7 +17,6 @@ test(`Crosslinks between documents`, () => {
       [documentLinks.documentId]: "/relative-path",
       ["unknow"]: "/404",
     },
-    enableFontSize: false,
   }
   const googleDocument = new GoogleDocument(documentLinks, {}, options)
   const documentObject = googleDocument.toMarkdown()

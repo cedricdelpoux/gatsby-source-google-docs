@@ -45,6 +45,15 @@ text with **space bold after** and _space italic before_.
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
+
+
+<span style=\\"font-size:1.45em\\">Text bigger</span>
+
+
+Text Colored
+
+
+Text with background color
 "
 `;
 
