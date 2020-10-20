@@ -324,7 +324,7 @@ Object {
     },
     Object {
       "type": "p",
-      "value": "<span style='color:rgb(147, 196, 125)'>Text with background color</span>",
+      "value": "<span style='background-color:rgb(147, 196, 125)'>Text with background color</span>",
     },
   ],
   "file": Object {},

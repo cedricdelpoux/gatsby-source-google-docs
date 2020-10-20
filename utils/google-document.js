@@ -122,7 +122,7 @@ class GoogleDocument {
       const red = Math.round(rgbColor.red * 255)
       const green = Math.round(rgbColor.green * 255)
       const blue = Math.round(rgbColor.blue * 255)
-      styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+      styles.push(`background-color:rgb(${red}, ${green}, ${blue})`)
     }
 
     if (styles.length > 0) {

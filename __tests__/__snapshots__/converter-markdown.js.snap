@@ -206,6 +206,6 @@ text with **space bold after** and _space italic before_.
 <span style='color:rgb(106, 168, 79)'>Text Colored</span>
 
 
-<span style='color:rgb(147, 196, 125)'>Text with background color</span>
+<span style='background-color:rgb(147, 196, 125)'>Text with background color</span>
 "
 `;
