@@ -59,9 +59,9 @@ cover: null
 
 Text with a footnote[^1] and an other one[^2]
 
-[^1]:  Footnote 1 description
+[^1]: Footnote 1 description
 
-[^2]:  Footnote 2 description
+[^2]: Footnote 2 description
 "
 `;
 
@@ -198,5 +198,14 @@ text with **space bold after** and _space italic before_.
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
+
+
+<span style=\\"font-size:1.45em\\">Text bigger</span>
+
+
+Text Colored
+
+
+Text with background color
 "
 `;
