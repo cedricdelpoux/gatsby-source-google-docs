@@ -19,11 +19,121 @@ class GoogleDocument {
     this.headings = []
     this.footnotes = {}
     this.bodyFontSize = this.getBodyFontSize()
-
-    // Keep the class scope in loops
-    this.formatText = this.formatText.bind(this)
-
+    this.formatText = this.formatText.bind(this) // Keep the class scope in loops
     this.process()
+  }
+
+  formatText(el, {withBold = true} = {}) {
+    if (el.inlineObjectElement) {
+      const image = this.getImage(el)
+      return `![${image.alt}](${image.source} "${image.title}")`
+    }
+
+    if (
+      !el.textRun ||
+      !el.textRun.content ||
+      !el.textRun.content.trim() ||
+      el.textRun.content === "\n"
+    ) {
+      return ""
+    }
+
+    const contentMatch = el.textRun.content.match(
+      /^( *)(\w+(?: \w+)*)( *)(?:\n)?$/
+    )
+    let before = ""
+    let text = ""
+    let after = ""
+
+    if (contentMatch) {
+      before = contentMatch[1]
+      text = contentMatch[2]
+      after = contentMatch[3]
+    } else {
+      text = el.textRun.content
+    }
+
+    text = text.replace(/\n$/, "")
+
+    const {
+      backgroundColor,
+      baselineOffset,
+      bold,
+      fontSize,
+      foregroundColor,
+      italic,
+      link,
+      strikethrough,
+      underline,
+      weightedFontFamily,
+    } = el.textRun.textStyle
+
+    const inlineCode =
+      weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
+
+    if (inlineCode) {
+      return "`" + text + "`"
+    }
+
+    const styles = []
+
+    text = text.replace(/\*/g, "\\*") // Prevent * to be bold
+    text = text.replace(/_/g, "\\_") // Prevent _ to be italic
+
+    if (baselineOffset === "SUPERSCRIPT") {
+      text = `<sup>${text}</sup>`
+    }
+
+    if (baselineOffset === "SUBSCRIPT") {
+      text = `<sub>${text}</sub>`
+    }
+
+    if (underline && !link) {
+      text = `<ins>${text}</ins>`
+    }
+
+    if (italic) {
+      text = `_${text}_`
+    }
+
+    if (bold & withBold) {
+      text = `**${text}**`
+    }
+
+    if (strikethrough) {
+      text = `~~${text}~~`
+    }
+
+    if (fontSize) {
+      const em = (fontSize.magnitude / this.bodyFontSize).toFixed(2)
+      styles.push(`font-size:${em}em`)
+    }
+
+    if (foregroundColor && !link) {
+      const {rgbColor} = foregroundColor.color
+      const red = Math.round(rgbColor.red * 255)
+      const green = Math.round(rgbColor.green * 255)
+      const blue = Math.round(rgbColor.blue * 255)
+      styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+    }
+
+    if (backgroundColor && !link) {
+      const {rgbColor} = backgroundColor.color
+      const red = Math.round(rgbColor.red * 255)
+      const green = Math.round(rgbColor.green * 255)
+      const blue = Math.round(rgbColor.blue * 255)
+      styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+    }
+
+    if (styles.length > 0) {
+      text = `<span style='${styles.join(";")}'>${text}</span>`
+    }
+
+    if (link) {
+      return `${before}[${text}](${link.url})${after}`
+    }
+
+    return before + text + after
   }
 
   getBodyFontSize() {
@@ -89,92 +199,6 @@ class GoogleDocument {
       .map(({paragraph}) => paragraph.elements.map(this.formatText).join(""))
       .join("")
       .replace(/\n/g, "<br/>") // Replace newline characters by <br/> to avoid multi-paragraphs
-  }
-
-  formatText(el, {withBold = true} = {}) {
-    if (el.inlineObjectElement) {
-      const image = this.getImage(el)
-      return `![${image.alt}](${image.source} "${image.title}")`
-    }
-
-    if (!el.textRun || !el.textRun.content || el.textRun.content === "\n") {
-      return ""
-    }
-
-    const contentMatch = el.textRun.content.match(
-      /^( *)(\w+(?: \w+)*)( *)(?:\n)?$/
-    )
-    let before = ""
-    let text = ""
-    let after = ""
-
-    if (contentMatch) {
-      before = contentMatch[1]
-      text = contentMatch[2]
-      after = contentMatch[3]
-    } else {
-      text = el.textRun.content
-    }
-
-    text = text.replace(/\n$/, "")
-
-    const {
-      baselineOffset,
-      bold,
-      italic,
-      link,
-      strikethrough,
-      underline,
-      weightedFontFamily,
-      fontSize,
-    } = el.textRun.textStyle
-
-    const inlineCode =
-      weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
-
-    if (inlineCode) {
-      return "`" + text + "`"
-    }
-
-    text = text.replace(/\*/g, "\\*") // Prevent * to be bold
-    text = text.replace(/_/g, "\\_") // Prevent _ to be italic
-
-    if (baselineOffset === "SUPERSCRIPT") {
-      text = `<sup>${text}</sup>`
-    }
-
-    if (baselineOffset === "SUBSCRIPT") {
-      text = `<sub>${text}</sub>`
-    }
-
-    if (underline && !link) {
-      text = `<ins>${text}</ins>`
-    }
-
-    if (italic) {
-      text = `_${text}_`
-    }
-
-    if (bold & withBold) {
-      text = `**${text}**`
-    }
-
-    if (strikethrough) {
-      text = `~~${text}~~`
-    }
-
-    if (fontSize) {
-      const em = (fontSize.magnitude / this.bodyFontSize).toFixed(2)
-      text = `<span style="font-size:${em}em">${text}</span>`
-    }
-
-    const fullText = before + text + after
-
-    if (link) {
-      return `[${fullText}](${link.url})`
-    }
-
-    return fullText
   }
 
   indentText(text, level) {
@@ -330,8 +354,6 @@ class GoogleDocument {
     if (tagIndentLevel > 0) {
       content = this.indentText(content, tagIndentLevel)
     }
-
-    if (!content.trim()) return
 
     this.elements.push({
       type: tag,

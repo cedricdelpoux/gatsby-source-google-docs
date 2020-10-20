@@ -288,7 +288,7 @@ Object {
     },
     Object {
       "type": "p",
-      "value": "~~strikethrough~~ ",
+      "value": "~~strikethrough~~",
     },
     Object {
       "type": "p",
@@ -316,15 +316,15 @@ Object {
     },
     Object {
       "type": "p",
-      "value": "<span style=\\"font-size:1.45em\\">Text bigger</span>",
+      "value": "<span style='font-size:1.45em'>Text bigger</span>",
     },
     Object {
       "type": "p",
-      "value": "Text Colored",
+      "value": "<span style='color:rgb(106, 168, 79)'>Text Colored</span>",
     },
     Object {
       "type": "p",
-      "value": "Text with background color",
+      "value": "<span style='color:rgb(147, 196, 125)'>Text with background color</span>",
     },
   ],
   "file": Object {},
