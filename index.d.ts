@@ -1,4 +1,4 @@
-import { drive_v3 } from 'googleapis';
+import {drive_v3} from "googleapis"
 
 export interface Options {
   //---
@@ -10,26 +10,22 @@ export interface Options {
    * https://drive.google.com/drive/folders/FOLDER_ID
    */
   folders?: string[]
-
   /** h1 -> h2, h2 -> h3, ... */
-  demoteHeadings?: boolean,
-
-  /** to enable font size */
-  enableFontSize?: boolean,
+  demoteHeadings?: boolean
   /**
    * You could need to fetch additional documents fields to your nodes
    * All available options: https://developers.google.com/drive/api/v3/reference/files#resource
    */
-  fields?: string[],
+  fields?: string[]
   /**
    * To rename fields
    * Be careful, some documentation instructions could be different
    */
-  fieldsMapper?: Record<string, string>,
+  fieldsMapper?: Record<string, string>
   /**
    * To add default fields values
    */
-  fieldsDefault?: Record<string, unknown>,
+  fieldsDefault?: Record<string, unknown>
   /**
    * To ignore some folder in the tree
    * It can be folder names or IDs
@@ -43,29 +39,29 @@ export interface Options {
    * For a better stack trace and more information
    * Usefull when you open a issue to report a bug
    */
-  debug?: boolean,
+  debug?: boolean
 }
 
 export interface DocumentFile extends drive_v3.Schema$File {
-  mimeType: "application/vnd.google-apps.document";
+  mimeType: "application/vnd.google-apps.document"
 }
 
 export interface RawFolder extends drive_v3.Schema$File {
-  mimeType: "application/vnd.google-apps.folder";
+  mimeType: "application/vnd.google-apps.folder"
 }
 
 export interface Metadata extends DocumentFile {
-  id?: DocumentFile['id'];
+  id?: DocumentFile["id"]
   /** The filename, like path.basename(filepath) */
-  name: string;
-  path: string;
-  description?: string | object;
-  content: any[];
+  name: string
+  path: string
+  description?: string | object
+  content: any[]
   cover: {
-      image: any;
-      title: any;
-      alt: any;
-  };
-  markdown: string;
-  breadcrumb: string[];
+    image: any
+    title: any
+    alt: any
+  }
+  markdown: string
+  breadcrumb: string[]
 }
