@@ -12,6 +12,7 @@
 [![Downloads][badge-downloads]][npm]
 [![PRs welcome][badge-prs]](#contributing)
 [![MIT license][badge-licence]](./LICENCE.md)
+[![Paypal][badge-paypal]](https://paypal.me/cedricdelpoux)
 
 </div>
 
@@ -104,6 +105,7 @@ See [CHANGELOG](./CHANGELOG.md)
 This project is licensed under the MIT License - see the
 [LICENCE](./LICENCE.md) file for details
 
+[badge-paypal]: https://img.shields.io/badge/sponsor-PayPal-3b7bbf.svg?style=flat-square
 [badge-npm]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square
 [badge-downloads]: https://img.shields.io/npm/dt/gatsby-source-google-docs.svg?style=flat-square
 [badge-build]: https://img.shields.io/travis/cedricdelpoux/gatsby-source-google-docs/master?style=flat-square
