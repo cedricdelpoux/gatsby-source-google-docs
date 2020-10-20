@@ -11,7 +11,6 @@ module.exports = {
         debug: true,
         folders: [process.env.GOOGLE_DOCS_FOLDER],
         demoteHeadings: true,
-        enableFontSize: false,
       },
     },
     {

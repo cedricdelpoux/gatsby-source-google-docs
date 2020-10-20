@@ -9,21 +9,35 @@ const HORIZONTAL_TAB_CHAR = "\x09"
 const GOOGLE_DOCS_INDENT = 18
 
 class GoogleDocument {
-  constructor(document, file = {}, options = {}) {
-    this.document = document
+  constructor(googleDocsDocument, file = {}, options = {}) {
+    this.document = googleDocsDocument
     this.file = file
     this.demoteHeadings = options.demoteHeadings || false
-    this.enableFontSize = options.enableFontSize || false
     this.crosslinksPaths = options.crosslinksPaths || {}
     this.cover = null
     this.elements = []
     this.headings = []
     this.footnotes = {}
+    this.bodyFontSize = this.getBodyFontSize()
 
     // Keep the class scope in loops
     this.formatText = this.formatText.bind(this)
 
     this.process()
+  }
+
+  getBodyFontSize() {
+    let fontSize = 11
+
+    const documentStyles = _get(this.document, ["namedStyles", "styles"])
+
+    if (!documentStyles) return fontSize
+
+    const normalTextStyle = documentStyles.find(
+      (style) => style.namedStyleType === "NORMAL_TEXT"
+    )
+
+    return normalTextStyle.textStyle.fontSize.magnitude
   }
 
   getImage(el) {
@@ -87,7 +101,9 @@ class GoogleDocument {
       return ""
     }
 
-    const contentMatch = el.textRun.content.match(/^( *)(\w+(?: \w+)*)( *)$/)
+    const contentMatch = el.textRun.content.match(
+      /^( *)(\w+(?: \w+)*)( *)(?:\n)?$/
+    )
     let before = ""
     let text = ""
     let after = ""
@@ -123,14 +139,6 @@ class GoogleDocument {
     text = text.replace(/\*/g, "\\*") // Prevent * to be bold
     text = text.replace(/_/g, "\\_") // Prevent _ to be italic
 
-    // enable font size
-
-    if (this.enableFontSize) {
-      text = `<span style="font-size:${
-        fontSize.magnitude
-      }${fontSize.unit.toLowerCase()}"><sup>${text}</sup></span>`
-    }
-
     if (baselineOffset === "SUPERSCRIPT") {
       text = `<sup>${text}</sup>`
     }
@@ -153,6 +161,11 @@ class GoogleDocument {
 
     if (strikethrough) {
       text = `~~${text}~~`
+    }
+
+    if (fontSize) {
+      const em = (fontSize.magnitude / this.bodyFontSize).toFixed(2)
+      text = `<span style="font-size:${em}em">${text}</span>`
     }
 
     const fullText = before + text + after
@@ -523,7 +536,7 @@ class GoogleDocument {
 
 // Add extra converter for footnotes
 json2md.converters.footnote = function (footnote) {
-  return `[^${footnote.number}]: ${footnote.text}`
+  return `[^${footnote.number}]:${footnote.text}`
 }
 
 module.exports = {
