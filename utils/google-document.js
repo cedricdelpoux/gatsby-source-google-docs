@@ -29,12 +29,7 @@ class GoogleDocument {
       return `![${image.alt}](${image.source} "${image.title}")`
     }
 
-    if (
-      !el.textRun ||
-      !el.textRun.content ||
-      !el.textRun.content.trim() ||
-      el.textRun.content === "\n"
-    ) {
+    if (!el.textRun || !el.textRun.content || !el.textRun.content.trim()) {
       return ""
     }
 
@@ -284,16 +279,18 @@ class GoogleDocument {
   processParagraph(paragraph, index) {
     const headings = []
     const tags = {
-      NORMAL_TEXT: "p",
-      SUBTITLE: "blockquote",
       HEADING_1: "h1",
       HEADING_2: "h2",
       HEADING_3: "h3",
       HEADING_4: "h4",
       HEADING_5: "h5",
       HEADING_6: "h6",
+      NORMAL_TEXT: "p",
+      SUBTITLE: "h2",
+      TITLE: "h1",
     }
-    const tag = tags[paragraph.paragraphStyle.namedStyleType]
+    const tagType = paragraph.paragraphStyle.namedStyleType
+    const tag = tags[tagType]
 
     // Lists
     if (paragraph.bullet) {
@@ -322,13 +319,11 @@ class GoogleDocument {
           withBold: false,
         })
 
-        if (text) {
-          headings.push({
-            tag,
-            text,
-          })
-          tagContentArray.push(text)
-        }
+        headings.push({
+          tag,
+          text,
+        })
+        tagContentArray.push(text)
       }
 
       // Texts

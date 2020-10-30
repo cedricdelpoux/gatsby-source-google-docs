@@ -16,6 +16,10 @@ cover: null
 
 ###### Title level 6
 
+## Title
+
+### Subtitle
+
 
 **bold**
 
@@ -47,7 +51,7 @@ text with **space bold after** and _space italic before_.
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
 
 
-<span style='font-size:1.45em'>Text bigger</span>
+<span style='font-size:1.09em'>Text bigger</span>
 
 
 <span style='color:rgb(106, 168, 79)'>Text Colored</span>

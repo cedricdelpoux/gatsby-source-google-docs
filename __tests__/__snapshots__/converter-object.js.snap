@@ -275,6 +275,14 @@ Object {
       "value": "Title level 6",
     },
     Object {
+      "type": "h1",
+      "value": "Title",
+    },
+    Object {
+      "type": "h2",
+      "value": "Subtitle",
+    },
+    Object {
       "type": "p",
       "value": "**bold**",
     },
@@ -316,7 +324,7 @@ Object {
     },
     Object {
       "type": "p",
-      "value": "<span style='font-size:1.45em'>Text bigger</span>",
+      "value": "<span style='font-size:1.09em'>Text bigger</span>",
     },
     Object {
       "type": "p",

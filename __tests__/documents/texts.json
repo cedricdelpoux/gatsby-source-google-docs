@@ -110,13 +110,8 @@
           "elements": [
             {
               "startIndex": 71,
-              "endIndex": 84,
-              "textRun": {"content": "Title level 6", "textStyle": {}}
-            },
-            {
-              "startIndex": 84,
               "endIndex": 85,
-              "textRun": {"content": "\n", "textStyle": {"bold": true}}
+              "textRun": {"content": "Title level 6\n", "textStyle": {}}
             }
           ],
           "paragraphStyle": {
@@ -128,17 +123,53 @@
       },
       {
         "startIndex": 85,
-        "endIndex": 90,
+        "endIndex": 91,
         "paragraph": {
           "elements": [
             {
               "startIndex": 85,
-              "endIndex": 89,
+              "endIndex": 91,
+              "textRun": {"content": "Title\n", "textStyle": {}}
+            }
+          ],
+          "paragraphStyle": {
+            "headingId": "h.bn61gfdlylog",
+            "namedStyleType": "TITLE",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      },
+      {
+        "startIndex": 91,
+        "endIndex": 100,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 91,
+              "endIndex": 100,
+              "textRun": {"content": "Subtitle\n", "textStyle": {}}
+            }
+          ],
+          "paragraphStyle": {
+            "headingId": "h.3yojtt49atkq",
+            "namedStyleType": "SUBTITLE",
+            "direction": "LEFT_TO_RIGHT"
+          }
+        }
+      },
+      {
+        "startIndex": 100,
+        "endIndex": 105,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 100,
+              "endIndex": 104,
               "textRun": {"content": "bold", "textStyle": {"bold": true}}
             },
             {
-              "startIndex": 89,
-              "endIndex": 90,
+              "startIndex": 104,
+              "endIndex": 105,
               "textRun": {"content": "\n", "textStyle": {}}
             }
           ],
@@ -150,18 +181,18 @@
         }
       },
       {
-        "startIndex": 90,
-        "endIndex": 97,
+        "startIndex": 105,
+        "endIndex": 112,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 90,
-              "endIndex": 96,
+              "startIndex": 105,
+              "endIndex": 111,
               "textRun": {"content": "italic", "textStyle": {"italic": true}}
             },
             {
-              "startIndex": 96,
-              "endIndex": 97,
+              "startIndex": 111,
+              "endIndex": 112,
               "textRun": {"content": "\n", "textStyle": {}}
             }
           ],
@@ -173,48 +204,22 @@
         }
       },
       {
-        "startIndex": 97,
-        "endIndex": 107,
+        "startIndex": 112,
+        "endIndex": 122,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 97,
-              "endIndex": 106,
+              "startIndex": 112,
+              "endIndex": 121,
               "textRun": {
                 "content": "underline",
                 "textStyle": {"underline": true}
               }
             },
             {
-              "startIndex": 106,
-              "endIndex": 107,
-              "textRun": {"content": "\n", "textStyle": {}}
-            }
-          ],
-          "paragraphStyle": {
-            "namedStyleType": "NORMAL_TEXT",
-            "direction": "LEFT_TO_RIGHT",
-            "avoidWidowAndOrphan": true
-          }
-        }
-      },
-      {
-        "startIndex": 107,
-        "endIndex": 122,
-        "paragraph": {
-          "elements": [
-            {
-              "startIndex": 107,
-              "endIndex": 120,
-              "textRun": {
-                "content": "strikethrough",
-                "textStyle": {"strikethrough": true}
-              }
-            },
-            {
-              "startIndex": 120,
+              "startIndex": 121,
               "endIndex": 122,
-              "textRun": {"content": " \n", "textStyle": {}}
+              "textRun": {"content": "\n", "textStyle": {}}
             }
           ],
           "paragraphStyle": {
@@ -226,20 +231,46 @@
       },
       {
         "startIndex": 122,
-        "endIndex": 134,
+        "endIndex": 137,
         "paragraph": {
           "elements": [
             {
               "startIndex": 122,
-              "endIndex": 133,
+              "endIndex": 135,
+              "textRun": {
+                "content": "strikethrough",
+                "textStyle": {"strikethrough": true}
+              }
+            },
+            {
+              "startIndex": 135,
+              "endIndex": 137,
+              "textRun": {"content": " \n", "textStyle": {}}
+            }
+          ],
+          "paragraphStyle": {
+            "namedStyleType": "NORMAL_TEXT",
+            "direction": "LEFT_TO_RIGHT",
+            "avoidWidowAndOrphan": true
+          }
+        }
+      },
+      {
+        "startIndex": 137,
+        "endIndex": 149,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 137,
+              "endIndex": 148,
               "textRun": {
                 "content": "superscript",
                 "textStyle": {"baselineOffset": "SUPERSCRIPT"}
               }
             },
             {
-              "startIndex": 133,
-              "endIndex": 134,
+              "startIndex": 148,
+              "endIndex": 149,
               "textRun": {"content": "\n", "textStyle": {}}
             }
           ],
@@ -251,13 +282,13 @@
         }
       },
       {
-        "startIndex": 134,
-        "endIndex": 144,
+        "startIndex": 149,
+        "endIndex": 159,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 134,
-              "endIndex": 144,
+              "startIndex": 149,
+              "endIndex": 159,
               "textRun": {
                 "content": "subscript\n",
                 "textStyle": {"baselineOffset": "SUBSCRIPT"}
@@ -272,13 +303,13 @@
         }
       },
       {
-        "startIndex": 144,
-        "endIndex": 155,
+        "startIndex": 159,
+        "endIndex": 170,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 144,
-              "endIndex": 155,
+              "startIndex": 159,
+              "endIndex": 170,
               "textRun": {
                 "content": "boldItalic\n",
                 "textStyle": {"bold": true, "italic": true}
@@ -292,39 +323,39 @@
         }
       },
       {
-        "startIndex": 155,
-        "endIndex": 207,
+        "startIndex": 170,
+        "endIndex": 222,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 155,
-              "endIndex": 165,
+              "startIndex": 170,
+              "endIndex": 180,
               "textRun": {"content": "text with ", "textStyle": {}}
             },
             {
-              "startIndex": 165,
-              "endIndex": 182,
+              "startIndex": 180,
+              "endIndex": 197,
               "textRun": {
                 "content": "space bold after ",
                 "textStyle": {"bold": true}
               }
             },
             {
-              "startIndex": 182,
-              "endIndex": 185,
+              "startIndex": 197,
+              "endIndex": 200,
               "textRun": {"content": "and", "textStyle": {}}
             },
             {
-              "startIndex": 185,
-              "endIndex": 205,
+              "startIndex": 200,
+              "endIndex": 220,
               "textRun": {
                 "content": " space italic before",
                 "textStyle": {"italic": true}
               }
             },
             {
-              "startIndex": 205,
-              "endIndex": 207,
+              "startIndex": 220,
+              "endIndex": 222,
               "textRun": {"content": ".\n", "textStyle": {}}
             }
           ],
@@ -335,13 +366,13 @@
         }
       },
       {
-        "startIndex": 207,
-        "endIndex": 221,
+        "startIndex": 222,
+        "endIndex": 236,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 207,
-              "endIndex": 221,
+              "startIndex": 222,
+              "endIndex": 236,
               "textRun": {"content": "indented text\n", "textStyle": {}}
             }
           ],
@@ -354,13 +385,13 @@
         }
       },
       {
-        "startIndex": 221,
-        "endIndex": 226,
+        "startIndex": 236,
+        "endIndex": 241,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 221,
-              "endIndex": 225,
+              "startIndex": 236,
+              "endIndex": 240,
               "textRun": {
                 "content": "Link",
                 "textStyle": {
@@ -381,8 +412,8 @@
               }
             },
             {
-              "startIndex": 225,
-              "endIndex": 226,
+              "startIndex": 240,
+              "endIndex": 241,
               "textRun": {"content": "\n", "textStyle": {}}
             }
           ],
@@ -393,16 +424,16 @@
         }
       },
       {
-        "startIndex": 226,
-        "endIndex": 241,
+        "startIndex": 241,
+        "endIndex": 253,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 226,
-              "endIndex": 241,
+              "startIndex": 241,
+              "endIndex": 253,
               "textRun": {
                 "content": "Text bigger\n",
-                "textStyle": {"fontSize": {"magnitude": 16, "unit": "PT"}}
+                "textStyle": {"fontSize": {"magnitude": 12, "unit": "PT"}}
               }
             }
           ],
@@ -413,13 +444,13 @@
         }
       },
       {
-        "startIndex": 241,
-        "endIndex": 254,
+        "startIndex": 253,
+        "endIndex": 266,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 241,
-              "endIndex": 254,
+              "startIndex": 253,
+              "endIndex": 266,
               "textRun": {
                 "content": "Text Colored\n",
                 "textStyle": {
@@ -443,13 +474,13 @@
         }
       },
       {
-        "startIndex": 254,
-        "endIndex": 281,
+        "startIndex": 266,
+        "endIndex": 293,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 254,
-              "endIndex": 281,
+              "startIndex": 266,
+              "endIndex": 293,
               "textRun": {
                 "content": "Text with background color\n",
                 "textStyle": {
@@ -473,13 +504,13 @@
         }
       },
       {
-        "startIndex": 281,
-        "endIndex": 283,
+        "startIndex": 293,
+        "endIndex": 295,
         "paragraph": {
           "elements": [
             {
-              "startIndex": 281,
-              "endIndex": 282,
+              "startIndex": 293,
+              "endIndex": 294,
               "textRun": {
                 "content": "\t",
                 "textStyle": {
@@ -496,8 +527,8 @@
               }
             },
             {
-              "startIndex": 282,
-              "endIndex": 283,
+              "startIndex": 294,
+              "endIndex": 295,
               "textRun": {
                 "content": "\n",
                 "textStyle": {
@@ -1980,7 +2011,7 @@
       }
     }
   },
-  "revisionId": "ALm37BUnDvTuMcLeIvTTzVfAfbBO1BgiF7LVSA4pjylMvYCBnTafGB3hosJByeVcc_bmn_ASB4_z7e45BPSofQ",
+  "revisionId": "ALm37BWuYOjRtzp7FwpTjSJYDsVCiUKZnfGdmiqjvmQWRIOZlAjQkiCd-UQnXRvGt9fIr_kNDlXA4vMtk3yk6g",
   "suggestionsViewMode": "SUGGESTIONS_INLINE",
   "documentId": "1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw"
 }
