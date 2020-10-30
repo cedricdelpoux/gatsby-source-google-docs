@@ -104,7 +104,7 @@ class GoogleDocument {
       styles.push(`font-size:${em}em`)
     }
 
-    if (foregroundColor && !link) {
+    if (_get(foregroundColor, ["color", "rgbColor"]) && !link) {
       const {rgbColor} = foregroundColor.color
       const red = Math.round(rgbColor.red * 255)
       const green = Math.round(rgbColor.green * 255)
@@ -112,7 +112,7 @@ class GoogleDocument {
       styles.push(`color:rgb(${red}, ${green}, ${blue})`)
     }
 
-    if (backgroundColor && !link) {
+    if (_get(backgroundColor, ["color", "rgbColor"]) && !link) {
       const {rgbColor} = backgroundColor.color
       const red = Math.round(rgbColor.red * 255)
       const green = Math.round(rgbColor.green * 255)

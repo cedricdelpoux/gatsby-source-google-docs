@@ -480,9 +480,9 @@
           "elements": [
             {
               "startIndex": 266,
-              "endIndex": 293,
+              "endIndex": 292,
               "textRun": {
-                "content": "Text with background color\n",
+                "content": "Text with background color",
                 "textStyle": {
                   "backgroundColor": {
                     "color": {
@@ -492,6 +492,27 @@
                         "blue": 0.49019608
                       }
                     }
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 292,
+              "endIndex": 293,
+              "textRun": {
+                "content": "\n",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 0.4117647,
+                        "green": 0.32156864,
+                        "blue": 0.32156864
+                      }
+                    }
+                  },
+                  "foregroundColor": {
+                    "color": {"rgbColor": {"red": 1, "green": 1, "blue": 1}}
                   }
                 }
               }
@@ -2011,7 +2032,7 @@
       }
     }
   },
-  "revisionId": "ALm37BWuYOjRtzp7FwpTjSJYDsVCiUKZnfGdmiqjvmQWRIOZlAjQkiCd-UQnXRvGt9fIr_kNDlXA4vMtk3yk6g",
+  "revisionId": "ALm37BXrLlLRIqpjRVh28szfl1v7XB5XW_lWexNIpXL1ztkPrDUd5fCZr9i-MD8w5UKFC8pfWsvNu3EZRl2n3Q",
   "suggestionsViewMode": "SUGGESTIONS_INLINE",
   "documentId": "1vKqAsTALHsU6AviqRVqofzhfYOr29JLo4Zoemz9fRUw"
 }
