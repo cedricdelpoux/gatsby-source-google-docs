@@ -301,8 +301,12 @@ class GoogleDocument {
     let tagContentArray = []
 
     paragraph.elements.forEach((el) => {
+      if (el.pageBreak) {
+        return
+      }
+
       // <hr />
-      if (el.horizontalRule) {
+      else if (el.horizontalRule) {
         tagContentArray.push("<hr/>")
       }
 
@@ -449,9 +453,9 @@ class GoogleDocument {
     this.processCover()
 
     this.document.body.content.forEach(
-      ({paragraph, table, pageBreak, sectionBreak, tableOfContents}, i) => {
+      ({paragraph, table, sectionBreak, tableOfContents}, i) => {
         // Unsupported elements
-        if (pageBreak || sectionBreak || tableOfContents) {
+        if (sectionBreak || tableOfContents) {
           return
         }
 
