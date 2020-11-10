@@ -7,8 +7,8 @@ const {CLIENT_ID, CLIENT_SECRET, OAUTH_URL} = require("./constants")
 
 const askClientIds = async () => {
   if (process.env[CLIENT_ID] && process.env[CLIENT_SECRET]) {
-    console.log(`✅${CLIENT_ID} found in .env`)
-    console.log(`✅${CLIENT_SECRET} found in .env`)
+    console.log(`✅  ${CLIENT_ID} found in .env`)
+    console.log(`✅  ${CLIENT_SECRET} found in .env`)
     console.log("")
     return {
       clientId: process.env[CLIENT_ID],

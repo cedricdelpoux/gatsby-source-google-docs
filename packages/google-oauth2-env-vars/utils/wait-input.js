@@ -8,7 +8,7 @@ exports.waitInput = async () => {
       output: process.stdout,
     })
 
-    rl.question("🚦Type to continue", () => {
+    rl.question("🚦  Type to continue", () => {
       console.log("")
       console.log("------------------------")
       resolve()

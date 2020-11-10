@@ -13,17 +13,17 @@ exports.openUrl = async ({message, url}) => {
         {
           name: "Open in my browser",
           value: "browser",
-          short: "🌐Opened in your browser",
+          short: "🌐  Opened in your browser",
         },
         {
           name: "Copy to clipboard",
           value: "clipboard",
-          short: "📋Added to your clipboard",
+          short: "📋  Added to your clipboard",
         },
         {
           name: "Write to terminal",
           value: "terminal",
-          short: `🔗${url}`,
+          short: `🔗  ${url}`,
         },
       ],
     },

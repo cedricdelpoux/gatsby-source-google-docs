@@ -8,16 +8,16 @@ const getAuthorizationCode = async (authUrl) => {
     const app = express()
 
     app.listen(5000, async () => {
-      console.log("🤚🏻You need to authorize your application")
+      console.log("🤚  You need to authorize your application")
 
       await openUrl({message: "Authorization URL:", url: authUrl})
 
-      console.log("🛑Follow the URL to authorize your application")
+      console.log("🛑  Follow the URL to authorize your application")
     })
 
     app.get("/callback", (req, res) => {
       if (req.query.code) {
-        console.log("✅Application authorized")
+        console.log("✅  Application authorized")
         res.send(
           "Succeed! You can close this tab and go back to your terminal."
         )

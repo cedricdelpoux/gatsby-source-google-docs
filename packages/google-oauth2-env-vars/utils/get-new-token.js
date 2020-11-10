@@ -20,11 +20,11 @@ const getNewToken = async ({
     console.log("")
     if (apisToEnable) {
       for (const api of apisToEnable) {
-        console.log(`🤚🏻You need to enable "${api}" API`)
+        console.log(`🤚  You need to enable "${api}" API`)
 
         await openUrl({message: "API URL:", url: `${ENABLE_API_URL}${api}`})
 
-        console.log(`🛑Follow the URL to Enable "${api}" API`)
+        console.log(`🛑  Follow the URL to Enable "${api}" API`)
 
         await waitInput()
       }
