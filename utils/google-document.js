@@ -323,11 +323,13 @@ class GoogleDocument {
           withBold: false,
         })
 
-        headings.push({
-          tag,
-          text,
-        })
-        tagContentArray.push(text)
+        if (text) {
+          headings.push({
+            tag,
+            text,
+          })
+          tagContentArray.push(text)
+        }
       }
 
       // Texts
