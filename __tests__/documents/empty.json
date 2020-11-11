@@ -28,6 +28,25 @@
             "direction": "LEFT_TO_RIGHT"
           }
         }
+      },
+      {
+        "startIndex": 2,
+        "endIndex": 3,
+        "paragraph": {
+          "elements": [
+            {
+              "startIndex": 2,
+              "endIndex": 3,
+              "textRun": {"content": "", "textStyle": {}}
+            }
+          ],
+          "paragraphStyle": {
+            "headingId": "h.4u3anmqa57uf",
+            "namedStyleType": "HEADING_1",
+            "direction": "LEFT_TO_RIGHT",
+            "avoidWidowAndOrphan": true
+          }
+        }
       }
     ]
   },
