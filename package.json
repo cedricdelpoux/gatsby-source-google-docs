@@ -23,9 +23,9 @@
   ],
   "dependencies": {
     "@forivall/wyt": "^2.0.2",
-    "gatsby-source-filesystem": "^2.4.0",
-    "google-oauth2-env-vars": "^1.1.0",
-    "googleapis": "63.0.0",
+    "gatsby-source-filesystem": "^2.4.2",
+    "google-oauth2-env-vars": "^1.2.0",
+    "googleapis": "64.0.0",
     "json2md": "^1.9.0",
     "lodash": "^4.17.20",
     "yamljs": "^0.3.0"
@@ -40,7 +40,7 @@
     "@semantic-release/npm": "^7.0.6",
     "@semantic-release/release-notes-generator": "^9.0.1",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-react": "^7.21.5",
