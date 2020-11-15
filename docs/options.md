@@ -13,7 +13,7 @@ module.exports = {
                 // To fetch only documents to specific folders
                 // folders Ids can be found in Google Drive URLs
                 // https://drive.google.com/drive/folders/FOLDER_ID
-                folders: ["FOLDER_ID_1", "FOLDER_ID_2"]
+                folders: ["FOLDER_ID_1", "FOLDER_ID_2"],
                 //
                 // h1 -> h2, h2 -> h3, ...
                 demoteHeadings: true,
@@ -31,7 +31,7 @@ module.exports = {
                 //
                 // To ignore some folder in the tree
                 // It can be folder names or IDs
-                ignoredFolders: ["my-custom-drafts-folder"]
+                ignoredFolders: ["my-custom-drafts-folder"],
                 //
                 // Compute extra data for each document
                 updateMetadata: (metadata) => {
