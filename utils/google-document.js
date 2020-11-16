@@ -9,9 +9,9 @@ const HORIZONTAL_TAB_CHAR = "\x09"
 const GOOGLE_DOCS_INDENT = 18
 
 class GoogleDocument {
-  constructor(googleDocsDocument, file = {}, options = {}) {
+  constructor(googleDocsDocument, properties = {}, options = {}) {
     this.document = googleDocsDocument
-    this.file = file
+    this.properties = properties
     this.demoteHeadings = options.demoteHeadings || false
     this.crosslinksPaths = options.crosslinksPaths || {}
     this.cover = null
@@ -517,15 +517,16 @@ class GoogleDocument {
 
   toObject() {
     return {
+      document: this.document,
       elements: this.getUpdatedElements(),
-      file: this.file,
+      properties: this.properties,
       cover: this.cover,
     }
   }
 
   toMarkdown() {
     const frontmatter = {
-      ...this.file,
+      ...this.properties,
       cover: this.cover,
     }
     const markdownFrontmatter = `---\n${yamljs.stringify(frontmatter)}---\n`

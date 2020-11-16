@@ -25,16 +25,16 @@ async function fetchDocument(id) {
 
 /** @param {import('..').Options} pluginOptions */
 async function fetchDocuments(pluginOptions) {
-  const documentsFiles = await fetchFiles(pluginOptions)
-  const crosslinksPaths = documentsFiles.reduce(
-    (acc, file) => ({...acc, [file.id]: file.path}),
+  const documentsProperties = await fetchFiles(pluginOptions)
+  const crosslinksPaths = documentsProperties.reduce(
+    (acc, properties) => ({...acc, [properties.id]: properties.path}),
     {}
   )
 
   const googleDocuments = await Promise.all(
-    documentsFiles.map(async (file) => {
-      const document = await fetchDocument(file.id)
-      const googleDocument = new GoogleDocument(document, file, {
+    documentsProperties.map(async (properties) => {
+      const document = await fetchDocument(properties.id)
+      const googleDocument = new GoogleDocument(document, properties, {
         ...pluginOptions,
         crosslinksPaths,
       })

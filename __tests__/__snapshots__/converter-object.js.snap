@@ -4,7 +4,6 @@ exports[`Document "Breaks" to Object 1`] = `
 Object {
   "cover": null,
   "elements": Array [],
-  "file": Object {},
 }
 `;
 
@@ -46,7 +45,6 @@ Object {
       },
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -58,7 +56,6 @@ Object {
     "title": "Cover title",
   },
   "elements": Array [],
-  "file": Object {},
 }
 `;
 
@@ -66,7 +63,6 @@ exports[`Document "Empty" to Object 1`] = `
 Object {
   "cover": null,
   "elements": Array [],
-  "file": Object {},
 }
 `;
 
@@ -93,7 +89,6 @@ Object {
       },
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -114,7 +109,6 @@ Object {
       "value": "and some other text",
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -127,7 +121,6 @@ Object {
       "value": "![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw \\"\\")",
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -156,7 +149,6 @@ Object {
       "value": "[unknown url](https://docs.google.com/document/d/unknown)",
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -198,7 +190,6 @@ Object {
       ],
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -211,7 +202,6 @@ Object {
       "value": "The way to get started is to quit talking and begin doing.",
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -242,7 +232,6 @@ Object {
       },
     },
   ],
-  "file": Object {},
 }
 `;
 
@@ -335,6 +324,5 @@ Object {
       "value": "<span style='background-color:rgb(147, 196, 125)'>Text with background color</span>",
     },
   ],
-  "file": Object {},
 }
 `;

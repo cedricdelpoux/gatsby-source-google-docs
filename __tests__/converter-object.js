@@ -13,7 +13,10 @@ filenames.forEach(function (filename) {
   const googleDocument = new GoogleDocument(sourceDoc)
 
   test(`Document "${googleDocument.document.title}" to Object`, () => {
-    const documentObject = googleDocument.toObject()
-    expect(documentObject).toMatchSnapshot()
+    const {cover, elements} = googleDocument.toObject()
+    expect({
+      cover,
+      elements,
+    }).toMatchSnapshot()
   })
 })

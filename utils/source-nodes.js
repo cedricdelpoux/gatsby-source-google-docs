@@ -18,10 +18,12 @@ exports.sourceNodes = async (
 
     for (let googleDocument of googleDocuments) {
       const markdown = googleDocument.toMarkdown()
-      const {file, cover} = googleDocument.toObject()
+      const {document, elements, properties, cover} = googleDocument.toObject()
 
       createNode({
-        ...file,
+        ...properties,
+        document,
+        elements,
         cover,
         markdown,
         internal: {
