@@ -33,22 +33,13 @@ class GoogleDocument {
       return ""
     }
 
-    const contentMatch = el.textRun.content.match(
-      /^( *)(\w+(?: \w+)*)( *)(?:\n)?$/
-    )
-    let before = ""
-    let text = ""
-    let after = ""
+    const contentMatch = el.textRun.content
+      .replace(/\n$/, "")
+      .match(/^(\s*)(\S+(?:[ \t]*\S+)*)(\s*)$/)
 
-    if (contentMatch) {
-      before = contentMatch[1]
-      text = contentMatch[2]
-      after = contentMatch[3]
-    } else {
-      text = el.textRun.content
-    }
-
-    text = text.replace(/\n$/, "")
+    const before = contentMatch[1]
+    let text = contentMatch[2]
+    const after = contentMatch[3]
 
     const {
       backgroundColor,
