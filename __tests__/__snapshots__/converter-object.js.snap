@@ -92,6 +92,18 @@ Object {
 }
 `;
 
+exports[`Document "French" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "Je m'appelle **Cédric**, j'habite à Toulouse _(France)_ 🇫🇷",
+    },
+  ],
+}
+`;
+
 exports[`Document "Horizontal rule" to Object 1`] = `
 Object {
   "cover": null,
@@ -188,6 +200,30 @@ Object {
         "List item 4",
         "List item 5",
       ],
+    },
+  ],
+}
+`;
+
+exports[`Document "Poem" to Object 1`] = `
+Object {
+  "cover": null,
+  "elements": Array [
+    Object {
+      "type": "p",
+      "value": "The poem",
+    },
+    Object {
+      "type": "p",
+      "value": "    may            have",
+    },
+    Object {
+      "type": "p",
+      "value": "              strange whitespace",
+    },
+    Object {
+      "type": "p",
+      "value": "patterns.",
     },
   ],
 }

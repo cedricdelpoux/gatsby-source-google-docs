@@ -65,6 +65,15 @@ Text with a footnote[^1] and an other one[^2]
 "
 `;
 
+exports[`Document "French" to Markdown 1`] = `
+"---
+cover: null
+---
+
+Je m'appelle **Cédric**, j'habite à Toulouse _(France)_ 🇫🇷
+"
+`;
+
 exports[`Document "Horizontal rule" to Markdown 1`] = `
 "---
 cover: null
@@ -131,6 +140,24 @@ cover: null
     
  - List item 4
  - List item 5
+"
+`;
+
+exports[`Document "Poem" to Markdown 1`] = `
+"---
+cover: null
+---
+
+The poem
+
+
+    may            have
+
+
+              strange whitespace
+
+
+patterns.
 "
 `;
 
