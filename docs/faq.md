@@ -1,5 +1,48 @@
 # FAQ
 
+## How can I add a cover?
+
+Add an image in your [Google Doc first page header](https://support.google.com/docs/answer/86629).
+
+Then you can query your header cover like any Sharp node.
+
+See [example post template](../example/src/templates/page.js)
+
+## How can I add metadata to my documents?
+
+Fill the description field of your document in Google Drive with a YAML object
+
+```yaml
+template: post
+category: Category,
+tags: [tag1, tag2]
+draft: true
+path: custom-path
+date: 2019-01-01
+```
+
+## How can I manage drafts?
+
+There are two ways:
+
+-   Create `Drafts` or `drafts` folders, wherever you want in the tree, and put your documents in there
+-   Add metadata `draft: true` to your documents (See [metadata](#how-can-i-add-metadata-to-my-documents))
+
+You can also use a different folder to manage your drafts using the `ignoredFolders` option:
+
+```
+{
+  resolve: "gatsby-source-google-docs",
+  options: {
+    ignoredFolders: [
+      "my-custom-drafts-folder",
+    ],
+  }
+}
+```
+
+> You will not be able to query `breadcrumb` if all your documents are in the same folder
+
 ## How can I get a breadcrumb?
 
 Organize your documents in Google Drive with folders:
@@ -18,60 +61,23 @@ Then you can query the breadcrumb:
 
 ```graphql
 {
-  allGoogleDocs {
-    nodes {
-      document {
-        breadcrumb
-      }
+    allGoogleDocs {
+        nodes {
+            breadcrumb
+        }
     }
-  }
 }
-
 ```
 
 > `breadcrumb` field will be deleted if you don't have subtrees
 
-## How can I add a cover?
+## How can I set a custom path for one of my document?
 
-Add an image in your [Google Doc first page header](https://support.google.com/docs/answer/86629).
+[Add it using metadata](#how-can-i-add-metadata-to-my-documents)
 
-Then you can query your header cover like any Sharp node.
+## How can I set a fixed date for one of my document?
 
-```jsx
-import {graphql} from "gatsby"
-import Img from "gatsby-image"
-
-const PostTemplate = ({data: {post}}) => (
-    <>
-        {post.frontmatter.cover && (
-            <Img
-                style={{width: "200px", marginBottom: "2rem"}}
-                fluid={post.frontmatter.cover.image.childImageSharp.fluid}
-            />
-        )}
-        <div dangerouslySetInnerHTML={{__html: post.html}} />
-    </>
-)
-
-export const pageQuery = graphql`
-    query BlogPost($path: String!) {
-        post: markdownRemark(frontmatter: {path: {eq: $path}}) {
-            html
-            frontmatter {
-                cover {
-                    image {
-                        childImageSharp {
-                            fluid(maxWidth: 200, quality: 100) {
-                                ...GatsbyImageSharpFluid
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-`
-```
+[Add it using metadata](#how-can-i-add-metadata-to-my-documents)
 
 ## How can I add code blocks?
 
@@ -92,12 +98,12 @@ Add the `gatsby-remark-prismjs` plugin to your `gatsby-config.js`
 {
   resolve: "gatsby-transformer-remark",
   options: {
-    plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
+    plugins: ["gatsby-remark-prismjs"],
   },
 },
 ```
 
-> If you use inline code, you should set the `noInlineHighlight` option of `gatsby-remark-prismjs` to .true` to avoid warnings during the build about missing lang
+> If you use inline code, you should set the `noInlineHighlight` option of `gatsby-remark-prismjs` to `true` to avoid warnings during the build about missing lang
 
 Import a `prismjs` theme in your `gatsby-browser.js`
 
@@ -105,116 +111,21 @@ Import a `prismjs` theme in your `gatsby-browser.js`
 require("prismjs/themes/prism.css")
 ```
 
-## How can I manage drafts?
-
-All document into `Drafts` or `drafts` folders will be ignored.
-
-You can also use a different name using the `ignoredFolders` option:
-
-```
-{
-  resolve: "gatsby-source-google-docs",
-  options: {
-    ignoredFolders: [
-      "my-custom-drafts-folder",
-    ],
-  }
-}
-```
-
-> You will not be able to query `breadcrumb` if all your documents are in the same folder
-
-## How can I add extra data to my documents?
-
-Fill the description field of your document in Google Drive with a JSON object:
-
-```json
-{
-    "author": "Yourself",
-    "category": "yourCageory",
-    "tags": ["tag1", "tag2"],
-    "draft": true
-}
-```
-
-## How can I set a custom path for one of my document?
-
-Fill the description field of your document in Google Drive with a YAML object containing a `path` key:
-
-```yaml
-path: custom-path
-```
-
-## How can I set a fixed date for one of my document?
-
-Fill the description field of your document in Google Drive with a YAML object overriding Google `createdTime` field
-
-```yaml
-createdTime: 2019-01-01
-```
-
-## How can I add some metadata to one of my document?
-
-Fill the description field of your document in Google Drive with a YAML object
-
-```yaml
-template: post
-```
-
-## How can I query images only?
-
-```js
-query GoogleDocsImages {
-    googleDocImages: allFile(filter: {name: {glob: "google-docs-image-**"}}) {
-        edges {
-            node {
-                id
-                name
-                childImageSharp {
-                    fluid {
-                        base64
-                        tracedSVG
-                        aspectRatio
-                        src
-                        srcSet
-                        srcWebp
-                        srcSetWebp
-                        sizes
-                        originalImg
-                        originalName
-                        presentationWidth
-                        presentationHeight
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
 ## How to use `gatsby-source-google-docs` without `remark` ecosystem?
 
-You can query the JSON and Markdown used to generate the html and do your custom processing:
+You can query `elements` to generate the html and do your custom processing:
 
 ```graphql
 query {
     allGoogleDocs {
         nodes {
-            document {
-                name
-                cover
-                markdown
-                content {
-                    p
-                    ul
-                    img {
-                        source
-                        title
-                        description
-                    }
-                }
+            elements {
+                type
+                value
             }
         }
     }
 }
 ```
+
+You can also query raw `document`.
