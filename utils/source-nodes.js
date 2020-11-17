@@ -1,18 +1,21 @@
 const {fetchDocuments} = require("./google-docs")
+const {DEFAULT_OPTIONS} = require("./constants")
 
 exports.sourceNodes = async (
   {actions: {createNode}, createContentDigest, reporter},
   pluginOptions
 ) => {
+  const options = {...DEFAULT_OPTIONS, ...pluginOptions}
+
   try {
     let nodesCount = 0
-    const googleDocuments = await fetchDocuments(pluginOptions)
+    const googleDocuments = await fetchDocuments(options)
 
     const timerNodes = reporter.activityTimer(
       `source-google-docs: Creating GoogleDocs nodes`
     )
 
-    if (pluginOptions.debug) {
+    if (options.debug) {
       timerNodes.start()
     }
 
@@ -37,18 +40,18 @@ exports.sourceNodes = async (
 
       nodesCount += 1
 
-      if (pluginOptions.debug) {
+      if (options.debug) {
         timerNodes.setStatus(nodesCount)
       }
     }
 
-    if (pluginOptions.debug) {
+    if (options.debug) {
       timerNodes.end()
     }
 
     return
   } catch (e) {
-    if (pluginOptions.debug) {
+    if (options.debug) {
       reporter.panic(`source-google-docs: `, e)
     } else {
       reporter.panic(`source-google-docs: ${e.message}`)

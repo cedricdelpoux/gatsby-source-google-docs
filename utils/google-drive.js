@@ -31,8 +31,8 @@ function evenlyChunk(arr, count) {
  * @param {Record<string, unknown>=} options.fieldsDefault
  * @param {Record<string, string>=} options.fieldsMapper
  */
-const updateFile = ({file, fieldsDefault = {}, fieldsMapper = {}}) => {
-  const breadcrumb = file.path
+const updateFile = ({file, path, options}) => {
+  const breadcrumb = path
     .split("/")
     // Remove empty strings
     .filter((element) => element)
@@ -43,22 +43,22 @@ const updateFile = ({file, fieldsDefault = {}, fieldsMapper = {}}) => {
     // Remove folder name and use it as name
     file.name = breadcrumb.pop()
     // Path need to be updated
-    file.path =
+    path =
       breadcrumb.length > 0
         ? `/${breadcrumb.join("/")}/${file.name}`
         : `/${file.name}`
   }
 
   // Default values
-  Object.keys(fieldsDefault).forEach((key) => {
+  Object.keys(options.fieldsDefault).forEach((key) => {
     Object.assign(file, {
-      [key]: fieldsDefault[key],
+      [key]: options.fieldsDefault[key],
     })
   })
 
   // Fields transformation
-  Object.keys(fieldsMapper).forEach((oldKey) => {
-    const newKey = fieldsMapper[oldKey]
+  Object.keys(options.fieldsMapper).forEach((oldKey) => {
+    const newKey = options.fieldsMapper[oldKey]
 
     Object.assign(file, {
       [newKey]: file[oldKey],
@@ -81,7 +81,11 @@ const updateFile = ({file, fieldsDefault = {}, fieldsMapper = {}}) => {
     }
   }
 
-  return {...file, breadcrumb}
+  if (options.updateMetadata && typeof options.updateMetadata === "function") {
+    file = options.updateMetadata(file)
+  }
+
+  return {...file, path, breadcrumb}
 }
 
 async function getGoogleDrive() {
@@ -113,23 +117,15 @@ const BATCH_SIZE = 100
  * @param {import('..').Options & FetchDocumentsOptions} options
  * @returns {Promise<(import('..').DocumentFile & { path: string })[]>}
  */
-async function fetchDocumentsFiles({
-  drive,
-  debug,
-  parents,
-  fields,
-  ignoredFolders = [],
-}) {
+async function fetchDocumentsFiles({drive, parents, options}) {
   if (parents.length > BATCH_SIZE) {
     return _flatten(
       await Promise.all(
         evenlyChunk(parents, BATCH_SIZE).map((parents) =>
           fetchDocumentsFiles({
             drive,
-            debug,
             parents,
-            fields,
-            ignoredFolders,
+            options,
           })
         )
       )
@@ -137,7 +133,7 @@ async function fetchDocumentsFiles({
   }
 
   const waited = await rateLimit()
-  if (debug) {
+  if (options.debug) {
     const waitedText =
       waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
     // eslint-disable-next-line no-console
@@ -159,9 +155,10 @@ async function fetchDocumentsFiles({
       parentQuery ? `(${parentQuery}) and ` : ""
     }(mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
     fields: `nextPageToken,files(id, mimeType, name, description, createdTime, modifiedTime, starred, parents${
-      fields ? `, ${fields.join(", ")}` : ""
+      options.fields.length > 0 ? `, ${options.fields.join(", ")}` : ""
     })`,
   }
+
   const res = await drive.files.list(query)
 
   /** @param {typeof res.data.files} files */
@@ -175,7 +172,12 @@ async function fetchDocumentsFiles({
         const parentIds = file.parents && new Set(file.parents)
         const parent = parentIds && parents.find((p) => parentIds.has(p.id))
         const parentPath = (parent && parent.path) || ""
-        return {...file, path: `${parentPath}/${_kebabCase(file.name)}`}
+
+        return updateFile({
+          file,
+          path: `${parentPath}/${_kebabCase(file.name)}`,
+          options,
+        })
       })
   let documents = collectDocuments(res.data.files)
 
@@ -190,8 +192,8 @@ async function fetchDocumentsFiles({
       (folder) =>
         !(
           folder.name.toLowerCase() === "drafts" ||
-          ignoredFolders.includes(folder.name) ||
-          ignoredFolders.includes(folder.id)
+          options.ignoredFolders.includes(folder.name) ||
+          options.ignoredFolders.includes(folder.id)
         )
     )
     return nonIgnoredRawFolders.map((folder) => {
@@ -213,10 +215,8 @@ async function fetchDocumentsFiles({
     }
     const documentsInFolders = await fetchDocumentsFiles({
       drive,
-      debug,
       parents: nextParents,
-      fields,
-      ignoredFolders,
+      options,
     })
     return [...documents, ...documentsInFolders]
   }
@@ -230,10 +230,8 @@ async function fetchDocumentsFiles({
     nextParents = nextParents.slice(BATCH_SIZE)
     const results = await fetchDocumentsFiles({
       drive,
-      debug,
       parents: parentBatch,
-      fields,
-      ignoredFolders,
+      options,
     })
     documentsInFolders = [...documentsInFolders, ...results]
   }
@@ -254,10 +252,8 @@ async function fetchDocumentsFiles({
       }
       const finalDocumentsInFolders = await fetchDocumentsFiles({
         drive,
-        debug,
         parents: nextParents,
-        fields,
-        ignoredFolders,
+        options,
       })
       return [...documents, ...documentsInFolders, ...finalDocumentsInFolders]
     }
@@ -272,28 +268,13 @@ async function fetchDocumentsFiles({
 }
 
 /** @param {import('..').Options} pluginOptions */
-async function fetchFiles({folders = [null], ...options}) {
+async function fetchFiles({folders, ...options}) {
   const drive = await getGoogleDrive()
 
-  const documentsFiles = (
-    await fetchDocumentsFiles({
-      drive,
-      parents: folders.map((id) => ({id, breadcrumb: [], path: ""})),
-      ...options,
-    })
-  ).map((file) => {
-    let updatedFile = updateFile({file, ...options})
-
-    const updateMetadata =
-      options.updateMetadata && typeof options.updateMetadata === "function"
-        ? options.updateMetadata
-        : null
-
-    if (updateMetadata) {
-      updatedFile = updateMetadata(updatedFile)
-    }
-
-    return updatedFile
+  const documentsFiles = await fetchDocumentsFiles({
+    drive,
+    parents: folders.map((id) => ({id, breadcrumb: [], path: ""})),
+    options,
   })
 
   return documentsFiles
