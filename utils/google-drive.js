@@ -57,6 +57,10 @@ const updateFile = ({file, path, options}) => {
   })
 
   // Fields transformation
+  Object.assign(file, {
+    date: file.createdTime,
+    draft: false,
+  })
   Object.keys(options.fieldsMapper).forEach((oldKey) => {
     const newKey = options.fieldsMapper[oldKey]
 
@@ -179,6 +183,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
           options,
         })
       })
+      .filter((file) => file.draft === false)
   let documents = collectDocuments(res.data.files)
 
   /** @param {typeof res.data.files} files */
