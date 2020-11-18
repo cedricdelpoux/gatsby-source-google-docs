@@ -49,6 +49,13 @@ const updateFile = ({file, path, options}) => {
         : `/${file.name}`
   }
 
+  Object.assign(file, {
+    date: file.createdTime,
+    draft: false,
+    path,
+    breadcrumb,
+  })
+
   // Default values
   Object.keys(options.fieldsDefault).forEach((key) => {
     Object.assign(file, {
@@ -57,10 +64,6 @@ const updateFile = ({file, path, options}) => {
   })
 
   // Fields transformation
-  Object.assign(file, {
-    date: file.createdTime,
-    draft: false,
-  })
   Object.keys(options.fieldsMapper).forEach((oldKey) => {
     const newKey = options.fieldsMapper[oldKey]
 
@@ -89,7 +92,7 @@ const updateFile = ({file, path, options}) => {
     file = options.updateMetadata(file)
   }
 
-  return {...file, path, breadcrumb}
+  return file
 }
 
 async function getGoogleDrive() {
