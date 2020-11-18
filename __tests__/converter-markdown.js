@@ -13,7 +13,7 @@ filenames.forEach(function (filename) {
   const googleDocument = new GoogleDocument(sourceDoc)
 
   test(`Document "${googleDocument.document.title}" to Markdown`, () => {
-    const documentObject = googleDocument.toMarkdown()
-    expect(documentObject).toMatchSnapshot()
+    const markdown = googleDocument.toMarkdown()
+    expect(markdown).toMatchSnapshot()
   })
 })

@@ -3,17 +3,14 @@ const documentTexts = require("./documents/texts.json")
 const {GoogleDocument} = require("../utils/google-document")
 
 test(`"DemoteHeading" option`, () => {
-  const googleDocument = new GoogleDocument(
-    documentTexts,
-    {},
-    {demoteHeadings: true}
-  )
+  const options = {demoteHeadings: true}
+  const googleDocument = new GoogleDocument(documentTexts, {}, options)
   expect(googleDocument.toMarkdown()).toMatchSnapshot()
 })
 
 test(`Crosslinks between documents`, () => {
   const options = {
-    crosslinksPaths: {
+    internalLinks: {
       [documentLinks.documentId]: "/relative-path",
       ["unknow"]: "/404",
     },
