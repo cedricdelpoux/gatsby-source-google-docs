@@ -26,7 +26,7 @@ async function fetchDocument(id) {
 /** @param {import('..').Options} pluginOptions */
 async function fetchDocuments(pluginOptions) {
   const documentsProperties = await fetchFiles(pluginOptions)
-  const crosslinksPaths = documentsProperties.reduce(
+  const internalLinks = documentsProperties.reduce(
     (acc, properties) => ({...acc, [properties.id]: properties.path}),
     {}
   )
@@ -36,7 +36,7 @@ async function fetchDocuments(pluginOptions) {
       const document = await fetchDocument(properties.id)
       const googleDocument = new GoogleDocument(document, properties, {
         ...pluginOptions,
-        crosslinksPaths,
+        internalLinks,
       })
 
       if (process.env.NODE_ENV === "DOCUMENT_TO_TESTS") {

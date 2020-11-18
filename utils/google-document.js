@@ -13,13 +13,17 @@ class GoogleDocument {
     this.document = googleDocsDocument
     this.properties = properties
     this.demoteHeadings = options.demoteHeadings || false
-    this.crosslinksPaths = options.crosslinksPaths || {}
+    this.internalLinks = options.internalLinks || {}
     this.cover = null
     this.elements = []
     this.headings = []
     this.footnotes = {}
     this.bodyFontSize = this.getBodyFontSize()
-    this.formatText = this.formatText.bind(this) // Keep the class scope in loops
+
+    // Keep the class scope in loops
+    this.formatText = this.formatText.bind(this)
+    this.normalizeElement = this.normalizeElement.bind(this)
+
     this.process()
   }
 
@@ -442,6 +446,27 @@ class GoogleDocument {
     this.elements.push(...footnotes)
   }
 
+  processDemoteHeadings() {
+    this.headings.forEach((heading) => {
+      const levelevel = Number(heading.tag.substring(1))
+      const newLevel = levelevel < 6 ? levelevel + 1 : levelevel
+      this.elements[heading.index] = {type: "h" + newLevel, value: heading.text}
+    })
+  }
+
+  processInternalLinks() {
+    if (Object.keys(this.internalLinks).length > 0) {
+      const elementsStringified = JSON.stringify(this.elements)
+
+      const elementsStringifiedWithRelativePaths = elementsStringified.replace(
+        /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
+        (match, id) => this.internalLinks[id] || match
+      )
+
+      this.elements = JSON.parse(elementsStringifiedWithRelativePaths)
+    }
+  }
+
   process() {
     this.processCover()
 
@@ -478,50 +503,25 @@ class GoogleDocument {
 
     // Footnotes
     this.processFootnotes()
-  }
-
-  getDemoteHeadingsElements() {
-    const elements = [...this.elements]
-
-    this.headings.forEach((heading) => {
-      const levelevel = Number(heading.tag.substring(1))
-      const newLevel = levelevel < 6 ? levelevel + 1 : levelevel
-      elements[heading.index] = {type: "h" + newLevel, value: heading.text}
-    })
-
-    return elements
-  }
-
-  getUpdatedElements() {
-    let elements = [...this.elements]
 
     // h1 -> h2, h2 -> h3, ...
     if (this.demoteHeadings === true) {
-      elements = this.getDemoteHeadingsElements()
+      this.processDemoteHeadings()
     }
 
-    // Replace absolute Google Docs Documents urls by relative paths
-    if (Object.keys(this.crosslinksPaths).length > 0) {
-      let elementsStringify = JSON.stringify(elements)
-
-      elementsStringify = elementsStringify.replace(
-        /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
-        (match, id) => this.crosslinksPaths[id] || match
-      )
-
-      elements = JSON.parse(elementsStringify)
-    }
-
-    return elements
+    this.processInternalLinks()
   }
 
-  toObject() {
-    return {
-      document: this.document,
-      elements: this.getUpdatedElements(),
-      properties: this.properties,
-      cover: this.cover,
+  normalizeElement(element) {
+    if (element.type && element.value) {
+      return {[element.type]: this.normalizeElement(element.value)}
     }
+
+    if (Array.isArray(element)) {
+      return element.map(this.normalizeElement)
+    }
+
+    return element
   }
 
   toMarkdown() {
@@ -529,21 +529,9 @@ class GoogleDocument {
       ...this.properties,
       cover: this.cover,
     }
+    const json = this.elements.map(this.normalizeElement)
+    const markdownContent = json2md(json)
     const markdownFrontmatter = `---\n${yamljs.stringify(frontmatter)}---\n`
-    const toJson2md = (element) => {
-      if (element.type && element.value) {
-        return {[element.type]: toJson2md(element.value)}
-      }
-
-      if (Array.isArray(element)) {
-        return element.map(toJson2md)
-      }
-
-      return element
-    }
-
-    const json2mdContent = this.getUpdatedElements().map(toJson2md)
-    const markdownContent = json2md(json2mdContent)
 
     return `${markdownFrontmatter}${markdownContent}`
   }
