@@ -2,7 +2,6 @@ exports.createSchemaCustomization = ({actions}) => {
   const {createTypes} = actions
   const typeDefs = `
     type Cover {
-      image: File!
       title: String
       alt: String
     }
