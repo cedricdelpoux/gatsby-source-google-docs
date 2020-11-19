@@ -156,8 +156,6 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       : parents.map((p) => `'${p.id}' in parents`).join(" or ")
 
   const query = {
-    includeTeamDriveItems: true,
-    supportsAllDrives: true,
     q: `${
       parentQuery ? `(${parentQuery}) and ` : ""
     }(mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
