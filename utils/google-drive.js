@@ -25,6 +25,25 @@ function evenlyChunk(arr, count) {
   return _chunk(arr, Math.ceil(arr.length / chunks))
 }
 
+const getMetadataFromDescription = (description) => {
+  const metadata = {}
+
+  if (description) {
+    try {
+      // Try to convert description from YAML
+      const descriptionObject = yamljs.parse(description)
+      if (typeof descriptionObject !== "string") {
+        Object.assign(metadata, descriptionObject)
+      }
+    } catch (e) {
+      // Description field is not valid YAML
+      // Do not throw an error
+    }
+  }
+
+  return metadata
+}
+
 /**
  * @param {object} options
  * @param {Partial<import('..').Metadata>} options.metadata
@@ -75,18 +94,8 @@ const updateFile = ({file, path, options}) => {
   })
 
   // Transform description into metadata if description is YAML
-  if (file.description) {
-    try {
-      // Try to convert description from YAML
-      const descriptionObject = yamljs.parse(file.description)
-      if (typeof descriptionObject !== "string") {
-        file = {...file, ...descriptionObject}
-      }
-    } catch (e) {
-      // Description field is not valid YAML
-      // Do not throw an error
-    }
-  }
+  const metadata = getMetadataFromDescription(file.description)
+  Object.assign(file, metadata)
 
   if (options.updateMetadata && typeof options.updateMetadata === "function") {
     file = options.updateMetadata(file)
@@ -178,6 +187,8 @@ async function fetchDocumentsFiles({drive, parents, options}) {
         const parent = parentIds && parents.find((p) => parentIds.has(p.id))
         const parentPath = (parent && parent.path) || ""
 
+        Object.assign(file, parent.metadata)
+
         return updateFile({
           file,
           path: `${parentPath}/${_kebabCase(file.name)}`,
@@ -189,20 +200,17 @@ async function fetchDocumentsFiles({drive, parents, options}) {
 
   /** @param {typeof res.data.files} files */
   const collectParents = (files) => {
-    const rawFolders = files.filter(
-      /** @returns {file is import("..").RawFolder} */
-      (file) => file.mimeType === MIME_TYPE_FOLDER
-    )
+    const folders = files.filter((file) => {
+      const isFolder = file.mimeType === MIME_TYPE_FOLDER
+      const isIgnored =
+        file.name.toLowerCase() === "drafts" ||
+        options.ignoredFolders.includes(file.name) ||
+        options.ignoredFolders.includes(file.id)
 
-    const nonIgnoredRawFolders = rawFolders.filter(
-      (folder) =>
-        !(
-          folder.name.toLowerCase() === "drafts" ||
-          options.ignoredFolders.includes(folder.name) ||
-          options.ignoredFolders.includes(folder.id)
-        )
-    )
-    return nonIgnoredRawFolders.map((folder) => {
+      return isFolder && !isIgnored
+    })
+
+    return folders.map((folder) => {
       const parentIds = folder.parents && new Set(folder.parents)
       const parent = parentIds && parents.find((p) => parentIds.has(p.id))
       const parentPath = (parent && parent.path) || ""
@@ -210,6 +218,10 @@ async function fetchDocumentsFiles({drive, parents, options}) {
         id: folder.id,
         breadcrumb: [...((parent && parent.breadcrumb) || []), folder.name],
         path: `${parentPath}/${_kebabCase(folder.name)}`,
+        metadata: {
+          ...parent.metadata,
+          ...getMetadataFromDescription(folder.description),
+        },
       }
     })
   }
@@ -277,6 +289,11 @@ async function fetchDocumentsFiles({drive, parents, options}) {
 async function fetchFiles({folder, ...options}) {
   const drive = await getGoogleDrive()
 
+  const res = await drive.files.get({
+    fileId: folder,
+    fields: "description",
+  })
+
   const documentsFiles = await fetchDocumentsFiles({
     drive,
     parents: [
@@ -284,6 +301,7 @@ async function fetchFiles({folder, ...options}) {
         id: folder,
         breadcrumb: [],
         path: "",
+        metadata: getMetadataFromDescription(res.data.description),
       },
     ],
     options,

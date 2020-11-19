@@ -1,25 +1,34 @@
 # Changelog
 
-## 2.0.0 (2020-10-20)
+## 2.0.0 (2020-11-19)
 
 -   Added
-    -   Script `gatsby-source-google-docs-token` for token generation
-    -   New documentation
-    -   Gatsby Cloud compatibility
-    -   Crosslinks between documents
-    -   Underline support
-    -   Blockquote support
-    -   Superscript support
-    -   Subscript support
-    -   Code Blocks support
-    -   Inline Code support
-    -   Footnotes support
-    -   Font size support
-    -   Foreground color support
-    -   Background color support
-    -   YAML Google Drive descriptions support
-    -   `demoteHeadings` option
-    -   `folder` option
+
+    -   Features:
+
+        -   Script `gatsby-source-google-docs-token` for token generation
+        -   Gatsby Cloud compatibility
+        -   Crosslinks between documents
+        -   metadata from YAML Google Drive descriptions
+
+    -   Formats
+
+        -   Underline support
+        -   Blockquote support
+        -   Superscript support
+        -   Subscript support
+        -   Code Blocks support
+        -   Inline Code support
+        -   Footnotes support
+        -   Font size support
+        -   Foreground color support
+        -   Background color support
+
+    -   Options:
+
+        -   `folder`
+        -   `demoteHeadings`
+
 -   Updated
     -   Simpler token behavior
 -   Deleted
