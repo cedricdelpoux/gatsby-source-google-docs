@@ -274,12 +274,18 @@ async function fetchDocumentsFiles({drive, parents, options}) {
 }
 
 /** @param {import('..').Options} pluginOptions */
-async function fetchFiles({folders, ...options}) {
+async function fetchFiles({folder, ...options}) {
   const drive = await getGoogleDrive()
 
   const documentsFiles = await fetchDocumentsFiles({
     drive,
-    parents: folders.map((id) => ({id, breadcrumb: [], path: ""})),
+    parents: [
+      {
+        id: folder,
+        breadcrumb: [],
+        path: "",
+      },
+    ],
     options,
   })
 

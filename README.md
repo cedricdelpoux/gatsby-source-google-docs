@@ -63,7 +63,13 @@ gatsby-source-google-docs-token
 ```js
 module.exports = {
     plugins: [
-        "gatsby-source-google-docs",
+        {
+            resolve: "gatsby-source-google-docs",
+            options: {
+                // https://drive.google.com/drive/folders/FOLDER_ID
+                folder: "FOLDER_ID",
+            },
+        },
         {
             resolve: "gatsby-transformer-remark",
             options: {

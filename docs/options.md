@@ -6,14 +6,14 @@ module.exports = {
         {
             resolve: "gatsby-source-google-docs",
             options: {
+                // https://drive.google.com/drive/folders/FOLDER_ID
+                folder: "FOLDER_ID",
                 //---
                 // All the following options are OPTIONAL
                 //---
                 //
                 // To fetch only documents to specific folders
                 // folders Ids can be found in Google Drive URLs
-                // https://drive.google.com/drive/folders/FOLDER_ID
-                folders: ["FOLDER_ID_1", "FOLDER_ID_2"],
                 //
                 // h1 -> h2, h2 -> h3, ...
                 demoteHeadings: true,
@@ -35,17 +35,19 @@ module.exports = {
                 //
                 // Compute extra data for each document
                 updateMetadata: (metadata) => {
-                  const isPost = metadata.breadcrumb && metadata.breadcrumb[1] === "posts"
-                  const category = isPost ? metadata.breadcrumb[2] : null
-                  const path = metadata.path.replace(`/${category}`, "")
-                  return {...metadata, path, category}
+                    const isPost =
+                        metadata.breadcrumb &&
+                        metadata.breadcrumb[1] === "posts"
+                    const category = isPost ? metadata.breadcrumb[2] : null
+                    const path = metadata.path.replace(`/${category}`, "")
+                    return {...metadata, path, category}
                 },
                 //
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
                 debug: true,
-            }
-        }
-    ]
+            },
+        },
+    ],
 }
 ```

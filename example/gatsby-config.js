@@ -9,7 +9,7 @@ module.exports = {
       resolve: require.resolve(`..`),
       options: {
         debug: true,
-        folders: [process.env.GOOGLE_DOCS_FOLDER],
+        folder: process.env.GOOGLE_DOCS_FOLDER,
         demoteHeadings: true,
       },
     },

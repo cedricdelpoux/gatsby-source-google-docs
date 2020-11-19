@@ -7,6 +7,20 @@ exports.sourceNodes = async (
 ) => {
   const options = {...DEFAULT_OPTIONS, ...pluginOptions}
 
+  if (!options.folder) {
+    if (options.folders && options.folders.length > 0) {
+      reporter.warn(
+        `source-google-docs: "folders" option will be deprecated in the next version, please use "folder" option instead`
+      )
+      Object.assign(options, {
+        folder: options.folders[0],
+      })
+    } else {
+      reporter.warn(`source-google-docs: Missing "folder" option`)
+      return
+    }
+  }
+
   try {
     let nodesCount = 0
     const googleDocuments = await fetchDocuments(options)

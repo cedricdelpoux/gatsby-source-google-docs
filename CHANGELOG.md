@@ -19,10 +19,12 @@
     -   Background color support
     -   YAML Google Drive descriptions support
     -   `demoteHeadings` option
+    -   `folder` option
 -   Updated
     -   Simpler token behavior
 -   Deleted
     -   `config` option
+    -   `folders` option
 
 ## 1.14.0 (2019-09-16)
 
