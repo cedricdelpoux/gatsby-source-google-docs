@@ -66,6 +66,10 @@ const updateFile = ({file, path, options}) => {
       breadcrumb.length > 0
         ? `/${breadcrumb.join("/")}/${file.name}`
         : `/${file.name}`
+
+    Object.assign(file, {
+      index: true,
+    })
   }
 
   Object.assign(file, {
