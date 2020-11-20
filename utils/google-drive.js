@@ -154,7 +154,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
     // eslint-disable-next-line no-console
     console.info(
-      `source-google-docs: Fetching children of ${parents.length} folders, depth ${parents[0].breadcrumb.length}` +
+      `source-google-docs: Fetching documents from depth ${parents[0].breadcrumb.length}` +
         waitedText
     )
   }

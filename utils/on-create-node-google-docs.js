@@ -1,5 +1,7 @@
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
+const {addImageUrlParameters} = require("./add-image-url-parameters")
+
 const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/
 
 exports.onCreateNodeGoogleDocs = async ({
@@ -10,6 +12,7 @@ exports.onCreateNodeGoogleDocs = async ({
   createNodeId,
   createContentDigest,
   reporter,
+  pluginOptions,
 }) => {
   createNodeField({
     node,
@@ -23,7 +26,7 @@ exports.onCreateNodeGoogleDocs = async ({
       const url = node.cover.image
 
       fileNode = await createRemoteFileNode({
-        url,
+        url: addImageUrlParameters(url, pluginOptions),
         parentNodeId: node.id,
         createNode,
         createNodeId,
@@ -41,7 +44,7 @@ exports.onCreateNodeGoogleDocs = async ({
       delete node.cover.image
       node.cover.image___NODE = fileNode.id
 
-      // fileNode.id is usefull to link MarkdownRemark cover nodes
+      // fileNode.id is useful to link MarkdownRemark cover nodes
       await cache.set(fileNode.relativePath, fileNode.id)
     }
   }
@@ -55,7 +58,7 @@ exports.onCreateNodeGoogleDocs = async ({
         let fileNode
         try {
           fileNode = await createRemoteFileNode({
-            url,
+            url: addImageUrlParameters(url, pluginOptions),
             parentNodeId: node.id,
             createNode,
             createNodeId,

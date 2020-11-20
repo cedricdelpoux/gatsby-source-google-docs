@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2020-11-19)
+## 2.0.0 (2020-11-20)
 
 -   Added
 
@@ -28,9 +28,12 @@
 
         -   `folder`
         -   `demoteHeadings`
+        -   `imagesMaxWidth`
+        -   `imagesMaxHeight`
+        -   `imagesCrop`
 
 -   Updated
-    -   Simpler token behavior
+    -   Simpler token behaviour
 -   Deleted
     -   `config` option
     -   `folders` option

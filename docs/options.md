@@ -33,6 +33,11 @@ module.exports = {
                 // It can be folder names or IDs
                 ignoredFolders: ["my-custom-drafts-folder"],
                 //
+                // To reduce images size
+                imagesMaxWidth: 512,
+                imagesMaxHeight: 512,
+                imagesCrop: false
+                //
                 // Compute extra data for each document
                 updateMetadata: (metadata) => {
                     const isPost =
