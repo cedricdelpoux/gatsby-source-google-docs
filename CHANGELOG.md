@@ -33,7 +33,7 @@
         -   `imagesCrop`
 
 -   Updated
-    -   Simpler token behaviour
+    -   Breadcrumb is now an array of `{name, path}`
 -   Deleted
     -   `config` option
     -   `folders` option

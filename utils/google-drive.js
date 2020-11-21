@@ -44,39 +44,40 @@ const getMetadataFromDescription = (description) => {
   return metadata
 }
 
+const generatePath = (breadcrumb, file) => {
+  const filePath = file ? "/" + _kebabCase(file.name) : ""
+  return breadcrumb.length > 0
+    ? "/" + breadcrumb.map(_kebabCase).join("/") + filePath
+    : filePath
+}
+
 /**
  * @param {object} options
  * @param {Partial<import('..').Metadata>} options.metadata
  * @param {Record<string, unknown>=} options.fieldsDefault
  * @param {Record<string, string>=} options.fieldsMapper
  */
-const updateFile = ({file, path, options}) => {
-  const breadcrumb = path
-    .split("/")
-    // Remove empty strings
-    .filter((element) => element)
+const updateFile = ({file, parent, options}) => {
+  const breadcrumb = [...parent.breadcrumb]
 
+  // Handle "index" documents
   if (file.name === "index" && breadcrumb.length > 0) {
-    // Remove "index"
-    breadcrumb.pop()
     // Remove folder name and use it as name
-    file.name = breadcrumb.pop()
-    // Path need to be updated
-    path =
-      breadcrumb.length > 0
-        ? `/${breadcrumb.join("/")}/${file.name}`
-        : `/${file.name}`
-
     Object.assign(file, {
+      name: breadcrumb.pop(),
       index: true,
     })
   }
 
   Object.assign(file, {
+    ...parent.metadata,
     date: file.createdTime,
     draft: false,
-    path,
-    breadcrumb,
+    breadcrumb: breadcrumb.map((item, i) => ({
+      name: item,
+      path: generatePath(breadcrumb.slice(0, i + 1)),
+    })),
+    path: generatePath(breadcrumb, file),
   })
 
   // Default values
@@ -189,13 +190,9 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       .map((file) => {
         const parentIds = file.parents && new Set(file.parents)
         const parent = parentIds && parents.find((p) => parentIds.has(p.id))
-        const parentPath = (parent && parent.path) || ""
-
-        Object.assign(file, parent.metadata)
-
         return updateFile({
+          parent,
           file,
-          path: `${parentPath}/${_kebabCase(file.name)}`,
           options,
         })
       })
@@ -217,11 +214,9 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     return folders.map((folder) => {
       const parentIds = folder.parents && new Set(folder.parents)
       const parent = parentIds && parents.find((p) => parentIds.has(p.id))
-      const parentPath = (parent && parent.path) || ""
       return {
         id: folder.id,
-        breadcrumb: [...((parent && parent.breadcrumb) || []), folder.name],
-        path: `${parentPath}/${_kebabCase(folder.name)}`,
+        breadcrumb: [...parent.breadcrumb, folder.name],
         metadata: {
           ...parent.metadata,
           ...getMetadataFromDescription(folder.description),
@@ -304,7 +299,6 @@ async function fetchFiles({folder, ...options}) {
       {
         id: folder,
         breadcrumb: [],
-        path: "",
         metadata: getMetadataFromDescription(res.data.description),
       },
     ],

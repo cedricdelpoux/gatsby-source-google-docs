@@ -6,9 +6,14 @@ exports.createSchemaCustomization = ({actions}) => {
       alt: String
     }
 
+    type BreadcrumbItem {
+      name: String!
+      path: String!
+    }
+
     type GoogleDocs implements Node {
       cover: Cover
-      breadcrumb: [String!]!
+      breadcrumb: [BreadcrumbItem!]!
     }
   `
   createTypes(typeDefs)
