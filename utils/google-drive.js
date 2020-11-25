@@ -61,10 +61,10 @@ const updateFile = ({file, parent, options}) => {
   const breadcrumb = [...parent.breadcrumb]
 
   // Handle "index" documents
-  if (file.name === "index" && breadcrumb.length > 0) {
+  if (file.name === "index") {
     // Remove folder name and use it as name
     Object.assign(file, {
-      name: breadcrumb.pop(),
+      name: breadcrumb.length > 0 ? breadcrumb.pop() : "",
       index: true,
     })
   }
@@ -214,12 +214,21 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     return folders.map((folder) => {
       const parentIds = folder.parents && new Set(folder.parents)
       const parent = parentIds && parents.find((p) => parentIds.has(p.id))
+      const folderMetadata = getMetadataFromDescription(folder.description)
+      const breadcrumb = [...parent.breadcrumb]
+
+      if (folderMetadata.ghost) {
+        delete folderMetadata.ghost
+      } else {
+        breadcrumb.push(folder.name)
+      }
+
       return {
         id: folder.id,
-        breadcrumb: [...parent.breadcrumb, folder.name],
+        breadcrumb,
         metadata: {
           ...parent.metadata,
-          ...getMetadataFromDescription(folder.description),
+          ...folderMetadata,
         },
       }
     })
