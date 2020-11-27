@@ -23,10 +23,10 @@
   ],
   "dependencies": {
     "@forivall/wyt": "^2.0.2",
-    "gatsby-source-filesystem": "^2.5.0",
+    "gatsby-source-filesystem": "^2.6.1",
     "google-oauth2-env-vars": "^1.2.0",
     "googleapis": "65.0.0",
-    "json2md": "^1.9.0",
+    "json2md": "^1.9.1",
     "lodash": "^4.17.20",
     "yamljs": "^0.3.0"
   },
