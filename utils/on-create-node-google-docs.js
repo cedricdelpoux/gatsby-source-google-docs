@@ -35,7 +35,6 @@ exports.onCreateNodeGoogleDocs = async ({
         cache,
         store,
         name: "google-docs-image-" + createNodeId(url),
-        // ext: ".png",
         reporter,
       })
     } catch (e) {
@@ -68,7 +67,6 @@ exports.onCreateNodeGoogleDocs = async ({
             cache,
             store,
             name: "google-docs-image-" + createNodeId(url),
-            ext: ".png",
             reporter,
           })
         } catch (e) {
