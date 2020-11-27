@@ -1,6 +1,6 @@
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
-const {addImageUrlParameters} = require("./add-image-url-parameters")
+const {getImageUrlParameters} = require("./get-image-url-parameters")
 
 const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/
 
@@ -20,20 +20,22 @@ exports.onCreateNodeGoogleDocs = async ({
     value: node.path,
   })
 
+  const imageUrlParams = getImageUrlParameters(pluginOptions)
+
   if (node.cover && GOOGLE_IMAGE_REGEX.test(node.cover.image)) {
     let fileNode
     try {
-      const url = node.cover.image
+      const url = node.cover.image + imageUrlParams
 
       fileNode = await createRemoteFileNode({
-        url: addImageUrlParameters(url, pluginOptions),
+        url,
         parentNodeId: node.id,
         createNode,
         createNodeId,
         cache,
         store,
         name: "google-docs-image-" + createNodeId(url),
-        ext: ".png",
+        // ext: ".png",
         reporter,
       })
     } catch (e) {
@@ -52,13 +54,14 @@ exports.onCreateNodeGoogleDocs = async ({
   const googleUrls = node.markdown.match(
     new RegExp(GOOGLE_IMAGE_REGEX.source, "g")
   )
+
   if (Array.isArray(googleUrls)) {
     const filesNodes = await Promise.all(
       googleUrls.map(async (url) => {
         let fileNode
         try {
           fileNode = await createRemoteFileNode({
-            url: addImageUrlParameters(url, pluginOptions),
+            url: url + imageUrlParams,
             parentNodeId: node.id,
             createNode,
             createNodeId,
@@ -79,8 +82,9 @@ exports.onCreateNodeGoogleDocs = async ({
     filesNodes
       .filter((fileNode) => fileNode)
       .forEach((fileNode) => {
+        const imageUrl = fileNode.url.replace(imageUrlParams, "")
         node.markdown = node.markdown.replace(
-          new RegExp(fileNode.url, "g"),
+          new RegExp(imageUrl, "g"),
           fileNode.relativePath
         )
       })
