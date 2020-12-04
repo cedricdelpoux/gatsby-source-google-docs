@@ -1,5 +1,0 @@
-sites:
-  - name: YOUR SITE NAME
-    source: https://github.com/YOUR-REPO
-    url: "https://YOUR-URL.com"
-    description: SHORT DESC

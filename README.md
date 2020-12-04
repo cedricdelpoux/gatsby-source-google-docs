@@ -84,10 +84,10 @@ module.exports = {
 
 ## Showcase
 
-You are using `gatsby-source-google-docs` for your website?
-Thank you!
+You are using `gatsby-source-google-docs` for your website? Thank you!
+Please add the link bellow:
 
-Please add your website to the [Showcase](./showcase.yml)
+-   [cedricdelpoux](https://cedricdelpoux.fr/en)
 
 ## Documentation
 
