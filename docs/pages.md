@@ -2,26 +2,27 @@
 
 ## Create template
 
-Create a `src/templates/post.js` file where you will define your post template:
+Create a `src/templates/page.js` file where you will define your page template:
 
 ```js
-export default ({data: {post}}) => (
+export default ({
+    data: {
+        googleDocs: {
+            name: title,
+            childMarkdownRemark: {html},
+        },
+    },
+}) => (
     <>
-        <h1>{post.document.name}</h1>
-        <p>{post.document.createdTime}</p>
-        <div
-            dangerouslySetInnerHTML={{__html: post.childMarkdownRemark.html}}
-        />
+        <h1>{title}</h1>
+        <div dangerouslySetInnerHTML={{__html: html}} />
     </>
 )
 
-export const query = graphql`
-    query($path: String) {
-        post: googleDocs(document: {path: {eq: $path}}) {
-            document {
-                name
-                createdTime
-            }
+export const pageQuery = graphql`
+    query Page($path: String!) {
+        googleDocs(fields: {slug: {eq: $path}}) {
+            name
             childMarkdownRemark {
                 html
             }
@@ -30,7 +31,7 @@ export const query = graphql`
 `
 ```
 
-## Create a page for each post
+## Create a page for GoogleDocs document
 
 Add this to `gatsby-node.js`
 
@@ -43,18 +44,16 @@ exports.createPages = async ({graphql, actions}) =>
             {
                 allGoogleDocs {
                     nodes {
-                        document {
-                            path
-                        }
+                        path
                     }
                 }
             }
         `
-    ).then(result => {
-        result.data.allGoogleDocs.nodes.forEach(({document}, index) => {
-            actions.createPage({
-                path: document.path,
-                component: path.resolve(`./src/templates/post.js`),
+    ).then((result) => {
+        result.data.allGoogleDocs.nodes.forEach(({path}) => {
+            createPage({
+                path,
+                component: resolve(`src/templates/page.js`),
             })
         })
     })
