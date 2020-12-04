@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2020-11-20)
+## 2.0.0 (2020-12-04)
 
 -   Added
 
@@ -23,6 +23,8 @@
         -   Font size support
         -   Foreground color support
         -   Background color support
+        -   Horizontal tabulations
+        -   Vertical tabulations
 
     -   Options:
 
