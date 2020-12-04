@@ -345,6 +345,10 @@ Object {
     },
     Object {
       "type": "p",
+      "value": "verticalindent",
+    },
+    Object {
+      "type": "p",
       "value": "[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)",
     },
     Object {
