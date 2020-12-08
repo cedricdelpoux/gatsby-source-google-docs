@@ -14,6 +14,13 @@ class GoogleDocument {
     this.properties = properties
     this.demoteHeadings = options.demoteHeadings || false
     this.internalLinks = options.internalLinks || {}
+    this.skipImages = options.skipImages || false
+    this.skipFootnotes = options.skipFootnotes || false
+    this.skipHeadings = options.skipHeadings || false
+    this.skipQuotes = options.skipQuotes || false
+    this.skipLists = options.skipLists || false
+    this.skipCodes = options.skipCodes || false
+    this.skipTables = options.skipTables || false
     this.cover = null
     this.elements = []
     this.headings = []
@@ -27,10 +34,18 @@ class GoogleDocument {
     this.process()
   }
 
-  formatText(el, {withBold = true} = {}) {
+  formatText(el, {withBold = true, inlineImages = false} = {}) {
     if (el.inlineObjectElement) {
       const image = this.getImage(el)
-      return `![${image.alt}](${image.source} "${image.title}")`
+      if (image) {
+        if (inlineImages) {
+          return `![${image.alt}](${image.source} "${image.title}")`
+        }
+        this.elements.push({
+          type: "img",
+          value: image,
+        })
+      }
     }
 
     if (!el.textRun || !el.textRun.content || !el.textRun.content.trim()) {
@@ -62,6 +77,8 @@ class GoogleDocument {
       weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
 
     if (inlineCode) {
+      if (this.skipCodes) return text
+
       return "`" + text + "`"
     }
 
@@ -86,7 +103,7 @@ class GoogleDocument {
       text = `_${text}_`
     }
 
-    if (bold & withBold) {
+    if (bold && withBold) {
       text = `**${text}**`
     }
 
@@ -141,6 +158,8 @@ class GoogleDocument {
   }
 
   getImage(el) {
+    if (this.skipImages) return
+
     const {inlineObjects} = this.document
 
     if (!inlineObjects || !el.inlineObjectElement) {
@@ -235,6 +254,8 @@ class GoogleDocument {
   }
 
   processList(paragraph, index) {
+    if (this.skipLists) return
+
     const prevListId = _get(this.document, [
       "body",
       "content",
@@ -245,7 +266,9 @@ class GoogleDocument {
     ])
     const isPrevList = prevListId === paragraph.bullet.listId
     const prevList = _get(this.elements, [this.elements.length - 1, "value"])
-    const text = this.stringifyContent(paragraph.elements.map(this.formatText))
+    const text = this.stringifyContent(
+      paragraph.elements.map((el) => this.formatText(el, {inlineImages: true}))
+    )
 
     if (isPrevList && Array.isArray(prevList)) {
       const {nestingLevel} = paragraph.bullet
@@ -307,6 +330,8 @@ class GoogleDocument {
 
       // Footnotes
       else if (el.footnoteReference) {
+        if (this.skipFootnotes) return
+
         tagContentArray.push(`[^${el.footnoteReference.footnoteNumber}]`)
         this.footnotes[el.footnoteReference.footnoteId] =
           el.footnoteReference.footnoteNumber
@@ -314,6 +339,8 @@ class GoogleDocument {
 
       // Headings
       else if (tag !== "p") {
+        if (this.skipHeadings) return
+
         const text = this.formatText(el, {
           withBold: false,
         })
@@ -362,6 +389,8 @@ class GoogleDocument {
   }
 
   processQuote(table) {
+    if (this.skipQuotes) return
+
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
     const quote = this.getTableCellContent(firstCell.content)
@@ -371,6 +400,8 @@ class GoogleDocument {
   }
 
   processCode(table) {
+    if (this.skipCodes) return
+
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
     const codeContent = firstCell.content
@@ -403,6 +434,8 @@ class GoogleDocument {
   }
 
   processTable(table) {
+    if (this.skipTables) return
+
     const [thead, ...tbody] = table.tableRows
 
     this.elements.push({
@@ -419,6 +452,8 @@ class GoogleDocument {
   }
 
   processFootnotes() {
+    if (this.skipFootnotes) return
+
     const footnotes = []
     const documentFootnotes = this.document.footnotes
 
@@ -527,11 +562,14 @@ class GoogleDocument {
   toMarkdown() {
     const frontmatter = {
       ...this.properties,
-      cover: this.cover,
+      ...(this.cover ? {cover: this.cover} : {}),
     }
     const json = this.elements.map(this.normalizeElement)
     const markdownContent = json2md(json)
-    const markdownFrontmatter = `---\n${yamljs.stringify(frontmatter)}---\n`
+    const markdownFrontmatter =
+      Object.keys(frontmatter).length > 0
+        ? `---\n${yamljs.stringify(frontmatter)}---\n`
+        : ""
 
     return `${markdownFrontmatter}${markdownContent}`
   }
