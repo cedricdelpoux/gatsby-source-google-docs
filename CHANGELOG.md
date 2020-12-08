@@ -33,6 +33,13 @@
         -   `imagesMaxWidth`
         -   `imagesMaxHeight`
         -   `imagesCrop`
+        -   `skipCodes`
+        -   `skipFootnotes`
+        -   `skipHeadings`
+        -   `skipImages`
+        -   `skipLists`
+        -   `skipQuotes`
+        -   `skipTables`
 
 -   Updated
     -   Breadcrumb is now an array of `{name, path}`
