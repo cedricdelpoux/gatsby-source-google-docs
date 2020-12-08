@@ -4,6 +4,7 @@ exports.createSchemaCustomization = ({actions}) => {
     type Cover {
       title: String
       alt: String
+      image: File
     }
 
     type BreadcrumbItem {
