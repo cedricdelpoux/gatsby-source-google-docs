@@ -126,10 +126,7 @@ const updateFile = ({file, folder, options}) => {
   const metadata = getMetadataFromDescription(file.description)
   Object.assign(file, metadata)
 
-  if (options.updateMetadata && typeof options.updateMetadata === "function") {
-    file = options.updateMetadata(file)
-  }
-
+  // Breadcrumb, slug, path
   Object.assign(file, getTreeMetadata(folder.tree, file))
 
   return file

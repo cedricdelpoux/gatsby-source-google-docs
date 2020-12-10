@@ -7,7 +7,6 @@ module.exports = {
     demoteHeadings: false,
     ignoredFolders: [],
     folders: [null],
-    updateMetadata: (metadata) => metadata,
     skipCodes: false,
     skipFootnotes: false,
     skipHeadings: false,

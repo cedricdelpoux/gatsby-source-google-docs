@@ -27,10 +27,6 @@ export interface Options {
    */
   ignoredFolders?: string[]
   /**
-   * Compute extra data for each document
-   */
-  updateMetadata?: (metadata: any) => any
-  /**
    * For a better stack trace and more information
    * Usefull when you open a issue to report a bug
    */

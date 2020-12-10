@@ -51,8 +51,9 @@
 
 -   Deleted
     -   Options:
-        `config`
-        `fieldsMapper`
+        -   `config`
+        -   `fieldsMapper`
+        -   `updateMetadata`
 
 ## 1.14.0 (2019-09-16)
 

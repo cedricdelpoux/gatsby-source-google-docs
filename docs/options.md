@@ -43,16 +43,6 @@ module.exports = {
                 imagesMaxHeight: 512,
                 imagesCrop: false
                 //
-                // Compute extra data for each document
-                updateMetadata: (metadata) => {
-                    const isPost =
-                        metadata.breadcrumb &&
-                        metadata.breadcrumb[1] === "posts"
-                    const category = isPost ? metadata.breadcrumb[2] : null
-                    const path = metadata.path.replace(`/${category}`, "")
-                    return {...metadata, path, category}
-                },
-                //
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
                 debug: true,
