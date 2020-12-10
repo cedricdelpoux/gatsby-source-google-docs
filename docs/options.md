@@ -18,16 +18,12 @@ module.exports = {
                 // h1 -> h2, h2 -> h3, ...
                 demoteHeadings: true,
                 //
+                // To add default metadata
+                defaults: {template: "page"},
+                //
                 // You could need to fetch additional documents fields to your nodes
                 // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
                 fields: ["ownedByMe", "shared"],
-                //
-                // To rename fields
-                // Be careful, some documentation instructions could be different
-                fieldsMapper: {createdTime: "date", name: "title"},
-                //
-                // To add default fields values
-                fieldsDefault: {draft: false},
                 //
                 // To ignore some folder in the tree
                 // It can be folder names or IDs

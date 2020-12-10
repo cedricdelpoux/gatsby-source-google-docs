@@ -28,11 +28,11 @@
 
     -   Options:
 
-        -   `folder`
         -   `demoteHeadings`
         -   `imagesMaxWidth`
         -   `imagesMaxHeight`
         -   `imagesCrop`
+        -   `nesting`
         -   `skipCodes`
         -   `skipFootnotes`
         -   `skipHeadings`
@@ -42,10 +42,17 @@
         -   `skipTables`
 
 -   Updated
+
     -   Breadcrumb is now an array of `{name, path}`
+
+    -   Options:
+        -   `folders` -> `folder`
+        -   `fieldsDefault` -> `defaults`
+
 -   Deleted
-    -   `config` option
-    -   `folders` option
+    -   Options:
+        `config`
+        `fieldsMapper`
 
 ## 1.14.0 (2019-09-16)
 

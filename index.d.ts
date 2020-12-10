@@ -18,14 +18,9 @@ export interface Options {
    */
   fields?: string[]
   /**
-   * To rename fields
-   * Be careful, some documentation instructions could be different
-   */
-  fieldsMapper?: Record<string, string>
-  /**
    * To add default fields values
    */
-  fieldsDefault?: Record<string, unknown>
+  defaults?: Record<string, unknown>
   /**
    * To ignore some folder in the tree
    * It can be folder names or IDs

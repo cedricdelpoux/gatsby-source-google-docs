@@ -103,8 +103,7 @@ const getTreeMetadata = (tree, file) => {
 /**
  * @param {object} options
  * @param {Partial<import('..').Metadata>} options.metadata
- * @param {Record<string, unknown>=} options.fieldsDefault
- * @param {Record<string, string>=} options.fieldsMapper
+ * @param {Record<string, unknown>=} options.defaults
  */
 const updateFile = ({file, folder, options}) => {
   Object.assign(file, {
@@ -114,25 +113,14 @@ const updateFile = ({file, folder, options}) => {
   })
 
   // Default values
-  Object.keys(options.fieldsDefault).forEach((key) => {
+  Object.keys(options.defaults).forEach((key) => {
     Object.assign(file, {
-      [key]: options.fieldsDefault[key],
+      [key]: options.defaults[key],
     })
   })
 
   // Folder metadata
   Object.assign(file, folder.metadata)
-
-  // Fields transformation
-  Object.keys(options.fieldsMapper).forEach((oldKey) => {
-    const newKey = options.fieldsMapper[oldKey]
-
-    Object.assign(file, {
-      [newKey]: file[oldKey],
-    })
-
-    delete file[oldKey]
-  })
 
   // Transform description into metadata if description is YAML
   const metadata = getMetadataFromDescription(file.description)

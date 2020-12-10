@@ -3,8 +3,7 @@ module.exports = {
   DEFAULT_OPTIONS: {
     debug: false,
     fields: [],
-    fieldsDefault: {},
-    fieldsMapper: {},
+    defaults: {},
     demoteHeadings: false,
     ignoredFolders: [],
     folders: [null],
