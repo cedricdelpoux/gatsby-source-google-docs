@@ -198,13 +198,10 @@ async function fetchDocumentsFiles({drive, parents, options}) {
   }
 
   const waited = await rateLimit()
-  if (options.debug) {
-    const waitedText =
-      waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
-    // eslint-disable-next-line no-console
+  if (options.debug && waited > 1000) {
+    const waitingTime = (waited / 1000).toFixed(1)
     console.info(
-      `source-google-docs: Fetching documents from depth ${nestingLevel}` +
-        waitedText
+      `source-google-docs: rate limit reach. waiting ${waitingTime}s`
     )
   }
 

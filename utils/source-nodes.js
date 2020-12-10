@@ -21,17 +21,16 @@ exports.sourceNodes = async (
     }
   }
 
+  const timer = reporter.activityTimer(`source-google-docs: `)
+
+  timer.start()
+
   try {
-    let nodesCount = 0
+    timer.setStatus("fetching")
+
     const googleDocuments = await fetchDocuments(options)
 
-    const timerNodes = reporter.activityTimer(
-      `source-google-docs: Creating GoogleDocs nodes`
-    )
-
-    if (options.debug) {
-      timerNodes.start()
-    }
+    timer.setStatus("creating nodes")
 
     for (let googleDocument of googleDocuments) {
       const {document, properties, cover} = googleDocument
@@ -50,17 +49,11 @@ exports.sourceNodes = async (
         },
         dir: process.cwd(), // To make gatsby-remark-images works
       })
-
-      nodesCount += 1
-
-      if (options.debug) {
-        timerNodes.setStatus(nodesCount)
-      }
     }
 
-    if (options.debug) {
-      timerNodes.end()
-    }
+    timer.setStatus(googleDocuments.length + " nodes created")
+
+    timer.end()
 
     return
   } catch (e) {
