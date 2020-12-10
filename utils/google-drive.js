@@ -177,6 +177,12 @@ const BATCH_SIZE = 100
  * @returns {Promise<(import('..').DocumentFile & { path: string })[]>}
  */
 async function fetchDocumentsFiles({drive, parents, options}) {
+  const nestingLevel = parents[0].tree.length
+
+  if (nestingLevel > options.nesting) {
+    return []
+  }
+
   if (parents.length > BATCH_SIZE) {
     return _flatten(
       await Promise.all(
@@ -197,7 +203,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
     // eslint-disable-next-line no-console
     console.info(
-      `source-google-docs: Fetching documents from depth ${parents[0].tree.length}` +
+      `source-google-docs: Fetching documents from depth ${nestingLevel}` +
         waitedText
     )
   }
