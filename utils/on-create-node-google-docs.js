@@ -14,6 +14,8 @@ exports.onCreateNodeGoogleDocs = async ({
   reporter,
   pluginOptions,
 }) => {
+  if (pluginOptions.skipImages) return
+
   const imageUrlParams = getImageUrlParameters(pluginOptions)
 
   if (node.cover && GOOGLE_IMAGE_REGEX.test(node.cover.image)) {
