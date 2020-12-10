@@ -6,7 +6,7 @@ const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0
 
 exports.onCreateNodeGoogleDocs = async ({
   node,
-  actions: {createNode, createNodeField},
+  actions: {createNode},
   store,
   cache,
   createNodeId,
@@ -14,12 +14,6 @@ exports.onCreateNodeGoogleDocs = async ({
   reporter,
   pluginOptions,
 }) => {
-  createNodeField({
-    node,
-    name: `slug`,
-    value: node.path,
-  })
-
   const imageUrlParams = getImageUrlParameters(pluginOptions)
 
   if (node.cover && GOOGLE_IMAGE_REGEX.test(node.cover.image)) {

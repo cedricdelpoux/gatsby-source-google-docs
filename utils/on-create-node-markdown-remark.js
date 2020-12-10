@@ -1,14 +1,4 @@
-exports.onCreateNodeMarkdownRemark = async ({
-  node,
-  cache,
-  actions: {createNodeField},
-}) => {
-  createNodeField({
-    node,
-    name: `slug`,
-    value: node.path,
-  })
-
+exports.onCreateNodeMarkdownRemark = async ({node, cache}) => {
   if (node.frontmatter.cover) {
     const fileNodeId = await cache.get(node.frontmatter.cover.image)
 
