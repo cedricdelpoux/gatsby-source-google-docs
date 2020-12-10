@@ -23,6 +23,7 @@ exports.onCreateNode = async (
       node,
       actions,
       cache,
+      pluginOptions,
     })
   }
 }
