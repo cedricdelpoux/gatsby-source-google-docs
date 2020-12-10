@@ -14,10 +14,10 @@ Fill the description field of your document in Google Drive with a YAML object
 
 ```yaml
 template: post
-category: Category,
+category: Category
 tags: [tag1, tag2]
 draft: true
-path: custom-path
+slug: custom-slug
 date: 2019-01-01
 ```
 
@@ -49,12 +49,10 @@ Organize your documents in Google Drive with folders:
 
 ```
 /
-  ↳ Category 1
-    ↳ Drafts
-        ↳ Draft Post 1
-    ↳ Post 1
-  ↳ Category 2
-    ↳ Post 2
+  ↳ Folder 1
+    ↳ Folder 2
+      ↳ Folder 3
+        ↳ Document 1
 ```
 
 Then you can query the breadcrumb:
@@ -63,15 +61,16 @@ Then you can query the breadcrumb:
 {
     allGoogleDocs {
         nodes {
-            breadcrumb
+            breadcrumb {
+                name
+                slug
+            }
         }
     }
 }
 ```
 
-> `breadcrumb` field will be deleted if you don't have subtrees
-
-## How can I set a custom path for one of my document?
+## How can I set a custom slug for one of my document?
 
 [Add it using metadata](#how-can-i-add-metadata-to-my-documents)
 

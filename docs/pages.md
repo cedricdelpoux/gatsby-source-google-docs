@@ -21,7 +21,7 @@ export default ({
 
 export const pageQuery = graphql`
     query Page($path: String!) {
-        googleDocs(fields: {slug: {eq: $path}}) {
+        googleDocs(slug: {eq: $path}) {
             name
             childMarkdownRemark {
                 html
@@ -44,15 +44,15 @@ exports.createPages = async ({graphql, actions}) =>
             {
                 allGoogleDocs {
                     nodes {
-                        path
+                        slug
                     }
                 }
             }
         `
     ).then((result) => {
-        result.data.allGoogleDocs.nodes.forEach(({path}) => {
+        result.data.allGoogleDocs.nodes.forEach(({slug}) => {
             createPage({
-                path,
+                path: slug,
                 component: resolve(`src/templates/page.js`),
             })
         })

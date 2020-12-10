@@ -44,11 +44,60 @@ const getMetadataFromDescription = (description) => {
   return metadata
 }
 
-const generatePath = (breadcrumb, file) => {
-  const filePath = file ? "/" + _kebabCase(file.name) : ""
-  return breadcrumb.length > 0
-    ? "/" + breadcrumb.map(_kebabCase).join("/") + filePath
-    : filePath
+const getTreeMetadata = (tree, file) => {
+  let name = file.name
+  let breadcrumb = []
+  let slug = ""
+  let path = ""
+
+  tree.forEach((item) => {
+    const nameSlugified = _kebabCase(item.name)
+
+    path += `/${nameSlugified}`
+
+    if (item.skip !== true) {
+      slug += `/${nameSlugified}`
+      breadcrumb.push({
+        name: item.name,
+        slug,
+      })
+    }
+  })
+
+  // /folder/index -> /folder
+  if (file.index) {
+    const folder = breadcrumb.pop()
+    if (folder && file.name === "index") {
+      name = folder.name
+    }
+  } else {
+    const nameSlugified = _kebabCase(name)
+
+    path += `/${nameSlugified}`
+    slug += `/${nameSlugified}`
+  }
+
+  // Metadata slug from "description"
+  if (file.slug) {
+    slug = file.slug
+  }
+
+  // Root
+  if (slug === "") {
+    slug = "/"
+  }
+
+  breadcrumb.push({
+    name,
+    slug,
+  })
+
+  return {
+    name,
+    breadcrumb,
+    path,
+    slug,
+  }
 }
 
 /**
@@ -57,27 +106,11 @@ const generatePath = (breadcrumb, file) => {
  * @param {Record<string, unknown>=} options.fieldsDefault
  * @param {Record<string, string>=} options.fieldsMapper
  */
-const updateFile = ({file, parent, options}) => {
-  const breadcrumb = [...parent.breadcrumb]
-
-  // Handle "index" documents
-  if (file.name === "index") {
-    // Remove folder name and use it as name
-    Object.assign(file, {
-      name: breadcrumb.length > 0 ? breadcrumb.pop() : "",
-      index: true,
-    })
-  }
-
+const updateFile = ({file, folder, options}) => {
   Object.assign(file, {
-    ...parent.metadata,
+    index: file.name === "index",
     date: file.createdTime,
     draft: false,
-    breadcrumb: breadcrumb.map((item, i) => ({
-      name: item,
-      path: generatePath(breadcrumb.slice(0, i + 1)),
-    })),
-    path: generatePath(breadcrumb, file),
   })
 
   // Default values
@@ -86,6 +119,9 @@ const updateFile = ({file, parent, options}) => {
       [key]: options.fieldsDefault[key],
     })
   })
+
+  // Folder metadata
+  Object.assign(file, folder.metadata)
 
   // Fields transformation
   Object.keys(options.fieldsMapper).forEach((oldKey) => {
@@ -105,6 +141,8 @@ const updateFile = ({file, parent, options}) => {
   if (options.updateMetadata && typeof options.updateMetadata === "function") {
     file = options.updateMetadata(file)
   }
+
+  Object.assign(file, getTreeMetadata(folder.tree, file))
 
   return file
 }
@@ -159,7 +197,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       waited > 1000 ? ` (waited ${(waited / 1000).toFixed(1)}s)` : ""
     // eslint-disable-next-line no-console
     console.info(
-      `source-google-docs: Fetching documents from depth ${parents[0].breadcrumb.length}` +
+      `source-google-docs: Fetching documents from depth ${parents[0].tree.length}` +
         waitedText
     )
   }
@@ -189,9 +227,9 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       )
       .map((file) => {
         const parentIds = file.parents && new Set(file.parents)
-        const parent = parentIds && parents.find((p) => parentIds.has(p.id))
+        const folder = parentIds && parents.find((p) => parentIds.has(p.id))
         return updateFile({
-          parent,
+          folder,
           file,
           options,
         })
@@ -214,21 +252,26 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     return folders.map((folder) => {
       const parentIds = folder.parents && new Set(folder.parents)
       const parent = parentIds && parents.find((p) => parentIds.has(p.id))
-      const folderMetadata = getMetadataFromDescription(folder.description)
-      const breadcrumb = [...parent.breadcrumb]
+      const metadata = getMetadataFromDescription(folder.description)
+      const tree = [
+        ...parent.tree,
+        {
+          name: folder.name,
+          skip: metadata.skip || false,
+        },
+      ]
 
-      if (folderMetadata.ghost) {
-        delete folderMetadata.ghost
-      } else {
-        breadcrumb.push(folder.name)
+      // we don't want to spread "skip" folder metadata to documents
+      if (metadata.skip) {
+        delete metadata.skip
       }
 
       return {
         id: folder.id,
-        breadcrumb,
+        tree,
         metadata: {
           ...parent.metadata,
-          ...folderMetadata,
+          ...metadata,
         },
       }
     })
@@ -307,7 +350,7 @@ async function fetchFiles({folder, ...options}) {
     parents: [
       {
         id: folder,
-        breadcrumb: [],
+        tree: [],
         metadata: getMetadataFromDescription(res.data.description),
       },
     ],
