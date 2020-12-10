@@ -10,8 +10,8 @@ module.exports = {
       options: {
         debug: true,
         folder: process.env.GOOGLE_DOCS_FOLDER,
-        imagesMaxWidth: process.env.NODE_ENV === "development" ? 512 : 1024,
         demoteHeadings: true,
+        skipImages: process.env.NODE_ENV === "development" ? true : false,
       },
     },
     {
