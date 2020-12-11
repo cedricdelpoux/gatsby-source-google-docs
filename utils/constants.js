@@ -2,7 +2,6 @@ module.exports = {
   ENV_TOKEN_VAR: "GOOGLE_DOCS_TOKEN",
   DEFAULT_OPTIONS: {
     debug: false,
-    fields: [],
     defaults: {},
     demoteHeadings: true,
     ignore: [],

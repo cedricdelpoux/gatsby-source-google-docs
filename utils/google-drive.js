@@ -199,9 +199,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     q: `${
       parentQuery ? `(${parentQuery}) and ` : ""
     }(mimeType='${MIME_TYPE_FOLDER}' or mimeType='${MIME_TYPE_DOCUMENT}') and trashed = false`,
-    fields: `nextPageToken,files(id, mimeType, name, description, createdTime, modifiedTime, starred, parents${
-      options.fields.length > 0 ? `, ${options.fields.join(", ")}` : ""
-    })`,
+    fields: `nextPageToken,files(id, mimeType, name, description, createdTime, modifiedTime, starred, parents)`,
   }
 
   const res = await drive.files.list(query)
