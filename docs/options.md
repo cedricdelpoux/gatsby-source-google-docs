@@ -29,22 +29,25 @@ module.exports = {
                 //
                 // To demote headings
                 // h1 -> h2, h2 -> h3, ...
-                demoteHeadings: false,
+                demoteHeadings: true,
                 //
                 // To add default metadata
-                defaults: {template: "page"},
+                defaults: {},
+                // Example: {template: "page"}
                 //
                 // You could need to fetch additional documents fields to your nodes
                 //
                 // Max nested folder depth
-                depth: undefined, // ex: 3
+                depth: undefined,
+                // Example : 3
                 //
                 // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
                 fields: ["ownedByMe", "shared"],
                 //
                 // To ignore some folder in the tree
                 // It can be folder names or IDs
-                ignore: ["my-custom-drafts-folder"],
+                ignore: [],
+                // Example: ["my-custom-drafts-folder"]
                 //
                 // To skip types
                 skip: {
@@ -58,15 +61,17 @@ module.exports = {
                 },
                 //
                 // To reduce images size or change format
-                images: {
-                    maxWidth: 512,
-                    maxHeight: 512,
-                    crop: false,
-                },
+                images: {},
+                // Example:
+                // {
+                //     maxWidth: 512,
+                //     maxHeight: 512,
+                //     crop: false,
+                // }
                 //
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug
-                debug: true,
+                debug: false,
             },
         },
     ],

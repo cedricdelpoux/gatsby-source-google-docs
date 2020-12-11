@@ -4,7 +4,7 @@ module.exports = {
     debug: false,
     fields: [],
     defaults: {},
-    demoteHeadings: false,
+    demoteHeadings: true,
     ignore: [],
     folders: [null],
     skip: {
