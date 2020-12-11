@@ -15,5 +15,7 @@ module.exports = {
     skipQuotes: false,
     skipTables: false,
     depth: undefined,
+    createPages: false,
   },
+  DEFAULT_TEMPLATE: "page",
 }

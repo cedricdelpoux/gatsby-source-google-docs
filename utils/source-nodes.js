@@ -21,7 +21,7 @@ exports.sourceNodes = async (
     }
   }
 
-  const timer = reporter.activityTimer(`source-google-docs: `)
+  const timer = reporter.activityTimer(`source-google-docs`)
 
   timer.start()
 
@@ -58,9 +58,9 @@ exports.sourceNodes = async (
     return
   } catch (e) {
     if (options.debug) {
-      reporter.panic(`source-google-docs: `, e)
+      reporter.panic(`source-google-docs: sourceNodes`, e)
     } else {
-      reporter.panic(`source-google-docs: ${e.message}`)
+      reporter.panic(`source-google-docs: sourceNodes ${e.message}`)
     }
   }
 }

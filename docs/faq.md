@@ -13,11 +13,12 @@ See [example post template](../example/src/templates/page.js)
 Fill the description field of your document in Google Drive with a YAML object
 
 ```yaml
+locale: fr
 template: post
-category: Category
+category: Category Name
 tags: [tag1, tag2]
 draft: true
-slug: custom-slug
+slug: /custom-slug
 date: 2019-01-01
 ```
 

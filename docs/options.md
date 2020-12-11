@@ -12,11 +12,24 @@ module.exports = {
                 // All the following options are OPTIONAL
                 //---
                 //
-                // To fetch only documents to specific folders
-                // folders Ids can be found in Google Drive URLs
+                // Enable automatic pages creation
+                createPages: false,
+                // Examples:
+                // --------
+                // createPages: true,
                 //
+                // You also can specify a different default template
+                // And extra fields that are needed in pages context
+                // createPages: {
+                //     template: "page",
+                //     context: ["locale"], // See FAQ to add metadata
+                // },
+                //
+                //---
+                //
+                // To demote headings
                 // h1 -> h2, h2 -> h3, ...
-                demoteHeadings: true,
+                demoteHeadings: false,
                 //
                 // To add default metadata
                 defaults: {template: "page"},

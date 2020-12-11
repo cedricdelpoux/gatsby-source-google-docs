@@ -68,12 +68,22 @@ module.exports = {
             options: {
                 // https://drive.google.com/drive/folders/FOLDER_ID
                 folder: "FOLDER_ID",
+                // Create pages with default template `src/templates/pages.js`
+                // More about "createPages" options in "pages" documentation
+                createPages: true,
             },
         },
+        "gatsby-plugin-sharp",
+        "gatsby-transformer-sharp",
         {
             resolve: "gatsby-transformer-remark",
             options: {
-                plugins: ["gatsby-remark-images"],
+                plugins: [
+                    "gatsby-remark-images",
+                    // You need some transformations?
+                    // Checkout https://www.gatsbyjs.com/plugins/?=gatsby-remark
+                    // and pick-up some plugins
+                ],
             },
         },
     ],

@@ -1,4 +1,4 @@
-exports.createSchemaCustomization = ({actions}) => {
+exports.createSchema = ({actions}) => {
   const {createTypes} = actions
   const typeDefs = `
     type Cover {
@@ -13,8 +13,11 @@ exports.createSchemaCustomization = ({actions}) => {
     }
 
     type GoogleDocs implements Node {
-      cover: Cover
+      slug: String!
+      path: String!
       breadcrumb: [BreadcrumbItem!]!
+      template: String
+      cover: Cover
     }
   `
   createTypes(typeDefs)

@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2020-12-04)
+## 2.0.0 (2020-12-11)
 
 -   Added
 
@@ -28,6 +28,7 @@
 
     -   Options:
 
+        -   `createPages`
         -   `demoteHeadings`
         -   `imagesMaxWidth`
         -   `imagesMaxHeight`
