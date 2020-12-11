@@ -8,7 +8,7 @@ module.exports = {
     depth: undefined,
     folder: undefined,
     ignore: [],
-    images: {},
+    imagesOptions: {},
     skipCodes: false,
     skipFootnotes: false,
     skipHeadings: false,

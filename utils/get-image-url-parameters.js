@@ -3,11 +3,11 @@ const isSizeValid = (number) =>
   number && Number.isInteger(number) && number > 0 && number < numberMax
 
 const getImageUrlParameters = (pluginOptions) => {
-  const {images} = pluginOptions
+  const {imagesOptions} = pluginOptions
 
-  if (!images) return ""
+  if (!imagesOptions) return ""
 
-  const {maxWidth, maxHeight, crop} = images
+  const {maxWidth, maxHeight, crop} = imagesOptions
   const widthParam = isSizeValid(maxWidth) && `w${maxWidth}`
   const heightParam = isSizeValid(maxHeight) && `h${maxHeight}`
   const cropParam = crop && crop === true && "c"

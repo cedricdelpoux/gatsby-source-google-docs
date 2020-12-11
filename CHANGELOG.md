@@ -32,7 +32,7 @@
         -   `demoteHeadings`
         -   `depth`
         -   `ignore`
-        -   `images`
+        -   `imagesOptions`
         -   `skipCodes`
         -   `skipFootnotes`
         -   `skipHeadings`
