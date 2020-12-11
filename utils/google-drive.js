@@ -164,7 +164,7 @@ const BATCH_SIZE = 100
 async function fetchDocumentsFiles({drive, parents, options}) {
   const folderDepth = parents[0].tree.length
 
-  if (folderDepth > options.depth) {
+  if (folderDepth > options.folderDepth) {
     return []
   }
 
