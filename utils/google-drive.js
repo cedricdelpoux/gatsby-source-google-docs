@@ -229,8 +229,8 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       const isFolder = file.mimeType === MIME_TYPE_FOLDER
       const isIgnored =
         file.name.toLowerCase() === "drafts" ||
-        options.ignore.includes(file.name) ||
-        options.ignore.includes(file.id)
+        options.exclude.includes(file.name) ||
+        options.exclude.includes(file.id)
 
       return isFolder && !isIgnored
     })

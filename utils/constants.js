@@ -7,7 +7,7 @@ module.exports = {
     demoteHeadings: true,
     folder: undefined,
     folderDepth: undefined,
-    ignore: [],
+    exclude: [],
     imagesOptions: {},
     skipCodes: false,
     skipFootnotes: false,

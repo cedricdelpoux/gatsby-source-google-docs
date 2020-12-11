@@ -22,10 +22,10 @@ export interface Options {
    */
   defaults?: Record<string, unknown>
   /**
-   * To ignore some folder in the tree
+   * To exclude some folder in the tree
    * It can be folder names or IDs
    */
-  ignore?: string[]
+  exclude?: string[]
   /**
    * For a better stack trace and more information
    * Usefull when you open a issue to report a bug

@@ -44,9 +44,9 @@ module.exports = {
                 // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
                 fields: ["ownedByMe", "shared"],
                 //
-                // To ignore some folder in the tree
+                // To exclude some folder in the tree
                 // It can be folder names or IDs
-                ignore: [],
+                exclude: [],
                 // Example: ["my-custom-drafts-folder"]
                 //
                 // To skip types

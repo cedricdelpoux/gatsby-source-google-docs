@@ -30,9 +30,9 @@
 
         -   `createPages`
         -   `demoteHeadings`
+        -   `exclude`
         -   `folder`
         -   `folderDepth`
-        -   `ignore`
         -   `imagesOptions`
         -   `skipCodes`
         -   `skipFootnotes`
