@@ -5,7 +5,6 @@ module.exports = {
     debug: false,
     demoteHeadings: true,
     folder: undefined,
-    folderDepth: undefined,
     imagesOptions: undefined,
     skipCodes: false,
     skipFootnotes: false,

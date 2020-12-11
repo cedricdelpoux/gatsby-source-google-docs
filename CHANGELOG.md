@@ -32,7 +32,6 @@
         -   `demoteHeadings`
         -   `exclude`
         -   `folder`
-        -   `folderDepth`
         -   `imagesOptions`
         -   `skipCodes`
         -   `skipFootnotes`

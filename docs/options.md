@@ -33,10 +33,6 @@ module.exports = {
                 //
                 // You could need to fetch additional documents fields to your nodes
                 //
-                // Max nested folder depth
-                folderDepth: undefined,
-                // Example : 3
-                //
                 // To skip types
                 skipCodes: false,
                 skipFootnotes: false,
