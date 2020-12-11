@@ -5,9 +5,9 @@ export default ({data: {allGoogleDocs}}) => {
   return (
     <div>
       <ul>
-        {allGoogleDocs.nodes.map(({path, name}) => (
-          <li key={path}>
-            <Link to={path}>{name}</Link>
+        {allGoogleDocs.nodes.map(({slug, name}) => (
+          <li key={slug}>
+            <Link to={slug}>{`${name} (${slug})`}</Link>
           </li>
         ))}
       </ul>
@@ -17,9 +17,9 @@ export default ({data: {allGoogleDocs}}) => {
 
 export const pageQuery = graphql`
   query IndexQuery {
-    allGoogleDocs(sort: {fields: createdTime, order: DESC}) {
+    allGoogleDocs(sort: {fields: slug}) {
       nodes {
-        path
+        slug
         name
       }
     }
