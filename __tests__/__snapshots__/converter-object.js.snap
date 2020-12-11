@@ -280,23 +280,23 @@ Object {
   "cover": null,
   "elements": Array [
     Object {
-      "type": "h1",
+      "type": "h2",
       "value": "Title level 1",
     },
     Object {
-      "type": "h2",
+      "type": "h3",
       "value": "Title level 2",
     },
     Object {
-      "type": "h3",
+      "type": "h4",
       "value": "Title level 3",
     },
     Object {
-      "type": "h4",
+      "type": "h5",
       "value": "Title level 4",
     },
     Object {
-      "type": "h5",
+      "type": "h6",
       "value": "Title level 5",
     },
     Object {
@@ -304,11 +304,11 @@ Object {
       "value": "Title level 6",
     },
     Object {
-      "type": "h1",
+      "type": "h2",
       "value": "Title",
     },
     Object {
-      "type": "h2",
+      "type": "h3",
       "value": "Subtitle",
     },
     Object {

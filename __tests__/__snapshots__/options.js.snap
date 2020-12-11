@@ -1,6 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`"DemoteHeading" option 1`] = `
+exports[`"DemoteHeading" option disabled 1`] = `
+"# Title level 1
+
+## Title level 2
+
+### Title level 3
+
+#### Title level 4
+
+##### Title level 5
+
+###### Title level 6
+
+# Title
+
+## Subtitle
+
+
+**bold**
+
+
+_italic_
+
+
+<ins>underline</ins>
+
+
+~~strikethrough~~
+
+
+<sup>superscript</sup>
+
+
+<sub>subscript</sub>
+
+
+**_boldItalic_**
+
+
+text with **space bold after** and _space italic before_.
+
+
+		indented text
+
+
+verticalindent
+
+
+[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
+
+
+<span style='font-size:1.09em'>Text bigger</span>
+
+
+<span style='color:rgb(106, 168, 79)'>Text Colored</span>
+
+
+<span style='background-color:rgb(147, 196, 125)'>Text with background color</span>
+"
+`;
+
+exports[`"DemoteHeading" option enabled 1`] = `
 "## Title level 1
 
 ### Title level 2

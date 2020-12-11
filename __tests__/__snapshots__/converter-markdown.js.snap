@@ -140,21 +140,21 @@ Col 1 line 2 | Col 2 line 2 | Col 3 line 2 |
 `;
 
 exports[`Document "Texts" to Markdown 1`] = `
-"# Title level 1
+"## Title level 1
 
-## Title level 2
+### Title level 2
 
-### Title level 3
+#### Title level 3
 
-#### Title level 4
+##### Title level 4
 
-##### Title level 5
+###### Title level 5
 
 ###### Title level 6
 
-# Title
+## Title
 
-## Subtitle
+### Subtitle
 
 
 **bold**

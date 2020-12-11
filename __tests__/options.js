@@ -8,8 +8,14 @@ const documentCodes = require("./documents/codes.json")
 const documentTables = require("./documents/tables.json")
 const {GoogleDocument} = require("../utils/google-document")
 
-test(`"DemoteHeading" option`, () => {
+test(`"DemoteHeading" option enabled`, () => {
   const options = {demoteHeadings: true}
+  const googleDocument = new GoogleDocument({document: documentTexts, options})
+  expect(googleDocument.toMarkdown()).toMatchSnapshot()
+})
+
+test(`"DemoteHeading" option disabled`, () => {
+  const options = {demoteHeadings: false}
   const googleDocument = new GoogleDocument({document: documentTexts, options})
   expect(googleDocument.toMarkdown()).toMatchSnapshot()
 })
