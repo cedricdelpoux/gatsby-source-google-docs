@@ -47,15 +47,17 @@ module.exports = {
                 ignoredFolders: ["my-custom-drafts-folder"],
                 //
                 // To skip types
-                skipCodes: false,
-                skipFootnotes: false,
-                skipHeadings: false,
-                skipImages: false,
-                skipLists: false,
-                skipQuotes: false,
-                skipTables: false,
+                skip: {
+                    codes: false,
+                    footnotes: false,
+                    headings: false,
+                    images: false,
+                    lists: false,
+                    quotes: false,
+                    tables: false,
+                },
                 //
-                // To reduce images size
+                // To reduce images size or change format
                 images: {
                     maxWidth: 512,
                     maxHeight: 512,

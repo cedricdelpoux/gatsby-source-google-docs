@@ -32,13 +32,7 @@
         -   `demoteHeadings`
         -   `images`
         -   `depth`
-        -   `skipCodes`
-        -   `skipFootnotes`
-        -   `skipHeadings`
-        -   `skipImages`
-        -   `skipLists`
-        -   `skipQuotes`
-        -   `skipTables`
+        -   `skip`
 
 -   Updated
 

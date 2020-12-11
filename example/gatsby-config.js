@@ -10,7 +10,9 @@ module.exports = {
         folder: process.env.GOOGLE_DOCS_FOLDER,
         createPages: true,
         demoteHeadings: true,
-        skipImages: process.env.NODE_ENV === "development" ? true : false,
+        skip: {
+          images: process.env.NODE_ENV === "development" ? true : false,
+        },
       },
     },
     "gatsby-plugin-sharp",

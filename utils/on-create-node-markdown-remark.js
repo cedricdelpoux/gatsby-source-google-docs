@@ -1,5 +1,5 @@
 exports.onCreateNodeMarkdownRemark = async ({node, cache, pluginOptions}) => {
-  if (pluginOptions.skipImages) return
+  if (pluginOptions.skip.images) return
 
   if (node.frontmatter.cover) {
     const fileNodeId = await cache.get(node.frontmatter.cover.image)

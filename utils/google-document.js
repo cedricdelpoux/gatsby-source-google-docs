@@ -2,30 +2,25 @@ const json2md = require("json2md")
 const yamljs = require("yamljs")
 const _get = require("lodash/get")
 const _repeat = require("lodash/repeat")
+const _merge = require("lodash/merge")
 
 const {isCodeBlocks, isQuote} = require("./google-document-types")
+const {DEFAULT_OPTIONS} = require("./constants")
 
 const HORIZONTAL_TAB_CHAR = "\x09"
 const GOOGLE_DOCS_INDENT = 18
 
 class GoogleDocument {
-  constructor(googleDocsDocument, properties = {}, options = {}) {
-    this.document = googleDocsDocument
+  constructor({document, properties = {}, options = {}, links = {}}) {
+    this.document = document
+    this.links = links
     this.properties = properties
-    this.demoteHeadings = options.demoteHeadings || false
-    this.internalLinks = options.internalLinks || {}
-    this.skipImages = options.skipImages || false
-    this.skipFootnotes = options.skipFootnotes || false
-    this.skipHeadings = options.skipHeadings || false
-    this.skipQuotes = options.skipQuotes || false
-    this.skipLists = options.skipLists || false
-    this.skipCodes = options.skipCodes || false
-    this.skipTables = options.skipTables || false
+    this.options = _merge(DEFAULT_OPTIONS, options)
+
     this.cover = null
     this.elements = []
     this.headings = []
     this.footnotes = {}
-    this.bodyFontSize = this.getBodyFontSize()
 
     // Keep the class scope in loops
     this.formatText = this.formatText.bind(this)
@@ -77,7 +72,7 @@ class GoogleDocument {
       weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
 
     if (inlineCode) {
-      if (this.skipCodes) return text
+      if (this.options.skip.codes) return text
 
       return "`" + text + "`"
     }
@@ -158,7 +153,7 @@ class GoogleDocument {
   }
 
   getImage(el) {
-    if (this.skipImages) return
+    if (this.options.skip.images) return
 
     const {inlineObjects} = this.document
 
@@ -254,7 +249,7 @@ class GoogleDocument {
   }
 
   processList(paragraph, index) {
-    if (this.skipLists) return
+    if (this.options.skip.lists) return
 
     const prevListId = _get(this.document, [
       "body",
@@ -330,7 +325,7 @@ class GoogleDocument {
 
       // Footnotes
       else if (el.footnoteReference) {
-        if (this.skipFootnotes) return
+        if (this.options.skip.footnotes) return
 
         tagContentArray.push(`[^${el.footnoteReference.footnoteNumber}]`)
         this.footnotes[el.footnoteReference.footnoteId] =
@@ -339,7 +334,7 @@ class GoogleDocument {
 
       // Headings
       else if (tag !== "p") {
-        if (this.skipHeadings) return
+        if (this.options.skip.headings) return
 
         const text = this.formatText(el, {
           withBold: false,
@@ -389,7 +384,7 @@ class GoogleDocument {
   }
 
   processQuote(table) {
-    if (this.skipQuotes) return
+    if (this.options.skip.quotes) return
 
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
@@ -400,7 +395,7 @@ class GoogleDocument {
   }
 
   processCode(table) {
-    if (this.skipCodes) return
+    if (this.options.skip.codes) return
 
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
@@ -434,7 +429,7 @@ class GoogleDocument {
   }
 
   processTable(table) {
-    if (this.skipTables) return
+    if (this.options.skip.tables) return
 
     const [thead, ...tbody] = table.tableRows
 
@@ -452,7 +447,7 @@ class GoogleDocument {
   }
 
   processFootnotes() {
-    if (this.skipFootnotes) return
+    if (this.options.skip.footnotes) return
 
     const footnotes = []
     const documentFootnotes = this.document.footnotes
@@ -490,12 +485,12 @@ class GoogleDocument {
   }
 
   processInternalLinks() {
-    if (Object.keys(this.internalLinks).length > 0) {
+    if (Object.keys(this.links).length > 0) {
       const elementsStringified = JSON.stringify(this.elements)
 
       const elementsStringifiedWithRelativePaths = elementsStringified.replace(
         /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
-        (match, id) => this.internalLinks[id] || match
+        (match, id) => this.links[id] || match
       )
 
       this.elements = JSON.parse(elementsStringifiedWithRelativePaths)
@@ -503,6 +498,8 @@ class GoogleDocument {
   }
 
   process() {
+    this.bodyFontSize = this.getBodyFontSize()
+
     this.processCover()
 
     this.document.body.content.forEach(
@@ -540,7 +537,7 @@ class GoogleDocument {
     this.processFootnotes()
 
     // h1 -> h2, h2 -> h3, ...
-    if (this.demoteHeadings === true) {
+    if (this.options.demoteHeadings === true) {
       this.processDemoteHeadings()
     }
 

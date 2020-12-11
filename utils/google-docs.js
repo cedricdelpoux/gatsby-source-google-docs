@@ -34,8 +34,10 @@ async function fetchDocuments(pluginOptions) {
   const googleDocuments = await Promise.all(
     documentsProperties.map(async (properties) => {
       const document = await fetchDocument(properties.id)
-      const googleDocument = new GoogleDocument(document, properties, {
-        ...pluginOptions,
+      const googleDocument = new GoogleDocument({
+        document,
+        properties,
+        pluginOptions,
         internalLinks,
       })
 

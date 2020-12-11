@@ -9,8 +9,8 @@ const filenames = fs.readdirSync(documentsPath)
 filenames.forEach(function (filename) {
   const filepath = path.join(documentsPath, filename)
   const file = fs.readFileSync(filepath, "utf8")
-  const sourceDoc = JSON.parse(file)
-  const googleDocument = new GoogleDocument(sourceDoc)
+  const document = JSON.parse(file)
+  const googleDocument = new GoogleDocument({document})
 
   test(`Document "${googleDocument.document.title}" to Object`, () => {
     const {cover, elements} = googleDocument
