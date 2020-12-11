@@ -5,7 +5,6 @@ module.exports = {
     defaults: {},
     demoteHeadings: true,
     ignore: [],
-    folders: [null],
     skip: {
       codes: false,
       footnotes: false,
