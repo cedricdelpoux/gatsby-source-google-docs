@@ -56,9 +56,11 @@ module.exports = {
                 skipTables: false,
                 //
                 // To reduce images size
-                imagesMaxWidth: 512,
-                imagesMaxHeight: 512,
-                imagesCrop: false,
+                images: {
+                    maxWidth: 512,
+                    maxHeight: 512,
+                    crop: false,
+                },
                 //
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug

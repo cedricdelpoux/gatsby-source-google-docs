@@ -30,9 +30,7 @@
 
         -   `createPages`
         -   `demoteHeadings`
-        -   `imagesMaxWidth`
-        -   `imagesMaxHeight`
-        -   `imagesCrop`
+        -   `images`
         -   `depth`
         -   `skipCodes`
         -   `skipFootnotes`
