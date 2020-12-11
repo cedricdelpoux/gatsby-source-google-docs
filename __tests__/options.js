@@ -36,9 +36,7 @@ test(`Crosslinks between documents`, () => {
 
 test(`Skip headings`, () => {
   const options = {
-    skip: {
-      headings: true,
-    },
+    skipHeadings: true,
   }
   const googleDocument = new GoogleDocument({document: documentTexts, options})
   const documentObject = googleDocument.toMarkdown()
@@ -47,9 +45,7 @@ test(`Skip headings`, () => {
 
 test(`Skip images`, () => {
   const options = {
-    skip: {
-      images: true,
-    },
+    skipImages: true,
   }
   const googleDocument = new GoogleDocument({document: documentImages, options})
   const documentObject = googleDocument.toMarkdown()
@@ -58,9 +54,7 @@ test(`Skip images`, () => {
 
 test(`Skip footnotes`, () => {
   const options = {
-    skip: {
-      footnotes: true,
-    },
+    skipFootnotes: true,
   }
   const googleDocument = new GoogleDocument({
     document: documentFootnotes,
@@ -72,9 +66,7 @@ test(`Skip footnotes`, () => {
 
 test(`Skip lists`, () => {
   const options = {
-    skip: {
-      lists: true,
-    },
+    skipLists: true,
   }
   const googleDocument = new GoogleDocument({document: documentLists, options})
   const documentObject = googleDocument.toMarkdown()
@@ -83,9 +75,7 @@ test(`Skip lists`, () => {
 
 test(`Skip quotes`, () => {
   const options = {
-    skip: {
-      quotes: true,
-    },
+    skipQuotes: true,
   }
   const googleDocument = new GoogleDocument({document: documentQuotes, options})
   const documentObject = googleDocument.toMarkdown()
@@ -94,9 +84,7 @@ test(`Skip quotes`, () => {
 
 test(`Skip codes`, () => {
   const options = {
-    skip: {
-      codes: true,
-    },
+    skipCodes: true,
   }
   const googleDocument = new GoogleDocument({document: documentCodes, options})
   const documentObject = googleDocument.toMarkdown()
@@ -105,9 +93,7 @@ test(`Skip codes`, () => {
 
 test(`Skip tables`, () => {
   const options = {
-    skip: {
-      tables: true,
-    },
+    skipTables: true,
   }
   const googleDocument = new GoogleDocument({document: documentTables, options})
   const documentObject = googleDocument.toMarkdown()

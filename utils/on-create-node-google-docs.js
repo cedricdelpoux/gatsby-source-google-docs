@@ -1,3 +1,4 @@
+const _get = require("lodash/get")
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
 const {getImageUrlParameters} = require("./get-image-url-parameters")
@@ -14,7 +15,7 @@ exports.onCreateNodeGoogleDocs = async ({
   reporter,
   pluginOptions,
 }) => {
-  if (pluginOptions.skip.images) return
+  if (_get(pluginOptions, "skipImages") === true) return
 
   const imageUrlParams = getImageUrlParameters(pluginOptions)
 

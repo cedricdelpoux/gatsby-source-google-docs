@@ -72,7 +72,7 @@ class GoogleDocument {
       weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
 
     if (inlineCode) {
-      if (this.options.skip.codes) return text
+      if (this.options.skipCodes) return text
 
       return "`" + text + "`"
     }
@@ -153,7 +153,7 @@ class GoogleDocument {
   }
 
   getImage(el) {
-    if (this.options.skip.images) return
+    if (this.options.skipImages) return
 
     const {inlineObjects} = this.document
 
@@ -249,7 +249,7 @@ class GoogleDocument {
   }
 
   processList(paragraph, index) {
-    if (this.options.skip.lists) return
+    if (this.options.skipLists) return
 
     const prevListId = _get(this.document, [
       "body",
@@ -325,7 +325,7 @@ class GoogleDocument {
 
       // Footnotes
       else if (el.footnoteReference) {
-        if (this.options.skip.footnotes) return
+        if (this.options.skipFootnotes) return
 
         tagContentArray.push(`[^${el.footnoteReference.footnoteNumber}]`)
         this.footnotes[el.footnoteReference.footnoteId] =
@@ -334,7 +334,7 @@ class GoogleDocument {
 
       // Headings
       else if (tag !== "p") {
-        if (this.options.skip.headings) return
+        if (this.options.skipHeadings) return
 
         const text = this.formatText(el, {
           withBold: false,
@@ -384,7 +384,7 @@ class GoogleDocument {
   }
 
   processQuote(table) {
-    if (this.options.skip.quotes) return
+    if (this.options.skipQuotes) return
 
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
@@ -395,7 +395,7 @@ class GoogleDocument {
   }
 
   processCode(table) {
-    if (this.options.skip.codes) return
+    if (this.options.skipCodes) return
 
     const firstRow = table.tableRows[0]
     const firstCell = firstRow.tableCells[0]
@@ -429,7 +429,7 @@ class GoogleDocument {
   }
 
   processTable(table) {
-    if (this.options.skip.tables) return
+    if (this.options.skipTables) return
 
     const [thead, ...tbody] = table.tableRows
 
@@ -447,7 +447,7 @@ class GoogleDocument {
   }
 
   processFootnotes() {
-    if (this.options.skip.footnotes) return
+    if (this.options.skipFootnotes) return
 
     const footnotes = []
     const documentFootnotes = this.document.footnotes

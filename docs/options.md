@@ -50,15 +50,13 @@ module.exports = {
                 // Example: ["my-custom-drafts-folder"]
                 //
                 // To skip types
-                skip: {
-                    codes: false,
-                    footnotes: false,
-                    headings: false,
-                    images: false,
-                    lists: false,
-                    quotes: false,
-                    tables: false,
-                },
+                skipCodes: false,
+                skipFootnotes: false,
+                skipHeadings: false,
+                skipImages: false,
+                skipLists: false,
+                skipQuotes: false,
+                skipTables: false,
                 //
                 // To reduce images size or change format
                 images: {},

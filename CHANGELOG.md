@@ -30,10 +30,16 @@
 
         -   `createPages`
         -   `demoteHeadings`
-        -   `images`
         -   `depth`
-        -   `skip`
         -   `ignore`
+        -   `images`
+        -   `skipCodes`
+        -   `skipFootnotes`
+        -   `skipHeadings`
+        -   `skipImages`
+        -   `skipLists`
+        -   `skipQuotes`
+        -   `skipTables`
 
 -   Updated
 
