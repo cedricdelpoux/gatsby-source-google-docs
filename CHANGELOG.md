@@ -33,6 +33,7 @@
         -   `images`
         -   `depth`
         -   `skip`
+        -   `ignore`
 
 -   Updated
 

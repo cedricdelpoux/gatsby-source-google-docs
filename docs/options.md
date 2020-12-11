@@ -44,7 +44,7 @@ module.exports = {
                 //
                 // To ignore some folder in the tree
                 // It can be folder names or IDs
-                ignoredFolders: ["my-custom-drafts-folder"],
+                ignore: ["my-custom-drafts-folder"],
                 //
                 // To skip types
                 skip: {

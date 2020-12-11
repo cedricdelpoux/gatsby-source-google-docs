@@ -29,13 +29,13 @@ There are two ways:
 -   Create `Drafts` or `drafts` folders, wherever you want in the tree, and put your documents in there
 -   Add metadata `draft: true` to your documents (See [metadata](#how-can-i-add-metadata-to-my-documents))
 
-You can also use a different folder to manage your drafts using the `ignoredFolders` option:
+You can also use a different folder to manage your drafts using the `ignore` option:
 
 ```
 {
   resolve: "gatsby-source-google-docs",
   options: {
-    ignoredFolders: [
+    ignore: [
       "my-custom-drafts-folder",
     ],
   }
