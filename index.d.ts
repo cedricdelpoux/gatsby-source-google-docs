@@ -18,10 +18,6 @@ export interface Options {
   /** h1 -> h2, h2 -> h3, ... */
   demoteHeadings?: boolean
   /**
-   * To add default fields values
-   */
-  defaults?: Record<string, unknown>
-  /**
    * To exclude some folder in the tree
    * It can be folder names or IDs
    */

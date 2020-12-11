@@ -3,7 +3,6 @@ module.exports = {
   DEFAULT_OPTIONS: {
     createPages: false,
     debug: false,
-    defaults: {},
     demoteHeadings: true,
     folder: undefined,
     folderDepth: undefined,

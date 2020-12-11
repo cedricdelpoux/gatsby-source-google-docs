@@ -105,22 +105,13 @@ const getTreeMetadata = (tree, file) => {
  * @param {Partial<import('..').Metadata>} options.metadata
  * @param {Record<string, unknown>=} options.defaults
  */
-const updateFile = ({file, folder, options}) => {
+const updateFile = ({file, folder}) => {
   Object.assign(file, {
+    ...folder.metadata,
     index: file.name === "index",
     date: file.createdTime,
     draft: false,
   })
-
-  // Default values
-  Object.keys(options.defaults).forEach((key) => {
-    Object.assign(file, {
-      [key]: options.defaults[key],
-    })
-  })
-
-  // Folder metadata
-  Object.assign(file, folder.metadata)
 
   // Transform description into metadata if description is YAML
   const metadata = getMetadataFromDescription(file.description)
@@ -217,7 +208,6 @@ async function fetchDocumentsFiles({drive, parents, options}) {
         return updateFile({
           folder,
           file,
-          options,
         })
       })
       .filter((file) => file.draft === false)

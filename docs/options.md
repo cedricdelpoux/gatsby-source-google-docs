@@ -31,18 +31,11 @@ module.exports = {
                 // h1 -> h2, h2 -> h3, ...
                 demoteHeadings: true,
                 //
-                // To add default metadata
-                defaults: {},
-                // Example: {template: "page"}
-                //
                 // You could need to fetch additional documents fields to your nodes
                 //
                 // Max nested folder depth
                 folderDepth: undefined,
                 // Example : 3
-                //
-                // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
-                fields: ["ownedByMe", "shared"],
                 //
                 // To exclude some folder in the tree
                 // It can be folder names or IDs

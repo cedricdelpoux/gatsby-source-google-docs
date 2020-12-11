@@ -46,14 +46,12 @@
 
     -   Breadcrumb is now an array of `{name, path}`
 
-    -   Options:
-        -   `folders` -> `folder`
-        -   `fieldsDefault` -> `defaults`
-
 -   Deleted
     -   Options:
         -   `config`
         -   `fieldsMapper`
+        -   `fieldsDefault`
+        -   `folders`
         -   `updateMetadata`
 
 ## 1.14.0 (2019-09-16)
