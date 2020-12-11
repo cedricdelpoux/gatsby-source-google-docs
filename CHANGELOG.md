@@ -32,7 +32,7 @@
         -   `imagesMaxWidth`
         -   `imagesMaxHeight`
         -   `imagesCrop`
-        -   `nesting`
+        -   `depth`
         -   `skipCodes`
         -   `skipFootnotes`
         -   `skipHeadings`

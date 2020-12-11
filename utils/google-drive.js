@@ -162,9 +162,9 @@ const BATCH_SIZE = 100
  * @returns {Promise<(import('..').DocumentFile & { path: string })[]>}
  */
 async function fetchDocumentsFiles({drive, parents, options}) {
-  const nestingLevel = parents[0].tree.length
+  const folderDepth = parents[0].tree.length
 
-  if (nestingLevel > options.nesting) {
+  if (folderDepth > options.depth) {
     return []
   }
 

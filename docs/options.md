@@ -22,6 +22,10 @@ module.exports = {
                 defaults: {template: "page"},
                 //
                 // You could need to fetch additional documents fields to your nodes
+                //
+                // Max nested folder depth
+                depth: undefined, // ex: 3
+                //
                 // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
                 fields: ["ownedByMe", "shared"],
                 //
@@ -41,7 +45,7 @@ module.exports = {
                 // To reduce images size
                 imagesMaxWidth: 512,
                 imagesMaxHeight: 512,
-                imagesCrop: false
+                imagesCrop: false,
                 //
                 // For a better stack trace and more information
                 // Usefull when you open a issue to report a bug

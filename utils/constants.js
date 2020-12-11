@@ -14,6 +14,6 @@ module.exports = {
     skipLists: false,
     skipQuotes: false,
     skipTables: false,
-    nesting: undefined,
+    depth: undefined,
   },
 }
