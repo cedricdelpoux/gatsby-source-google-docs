@@ -149,7 +149,7 @@ class GoogleDocument {
       (style) => style.namedStyleType === "NORMAL_TEXT"
     )
 
-    return normalTextStyle.textStyle.fontSize.magnitude
+    return _get(normalTextStyle, "textStyle.fontSize.magnitude", fontSize)
   }
 
   getImage(el) {

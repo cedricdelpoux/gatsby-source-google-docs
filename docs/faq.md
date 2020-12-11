@@ -10,39 +10,23 @@ See [example post template](../example/src/templates/page.js)
 
 ## How can I add metadata to my documents?
 
-Fill the description field of your document in Google Drive with a YAML object
+Fill the document (or folder) `description` field in Google Drive with a `YAML` object
 
 ```yaml
 locale: fr
 template: post
 category: Category Name
 tags: [tag1, tag2]
-draft: true
 slug: /custom-slug
 date: 2019-01-01
 ```
 
 ## How can I manage drafts?
 
-There are two ways:
+1.  Create a folder, wherever you want in the tree, and put your documents in there
+2.  Add `exclude: true` metadata to this folder (See [metadata](#how-can-i-add-metadata-to-my-documents))
 
--   Create `Drafts` or `drafts` folders, wherever you want in the tree, and put your documents in there
--   Add metadata `draft: true` to your documents (See [metadata](#how-can-i-add-metadata-to-my-documents))
-
-You can also use a different folder to manage your drafts using the `exclude` option:
-
-```
-{
-  resolve: "gatsby-source-google-docs",
-  options: {
-    exclude: [
-      "my-custom-drafts-folder",
-    ],
-  }
-}
-```
-
-> You will not be able to query `breadcrumb` if all your documents are in the same folder
+> You also can add `exclude: true` metadata to specific documents directly.
 
 ## How can I get a breadcrumb?
 
@@ -110,22 +94,3 @@ Import a `prismjs` theme in your `gatsby-browser.js`
 ```js
 require("prismjs/themes/prism.css")
 ```
-
-## How to use `gatsby-source-google-docs` without `remark` ecosystem?
-
-You can query `elements` to generate the html and do your custom processing:
-
-```graphql
-query {
-    allGoogleDocs {
-        nodes {
-            elements {
-                type
-                value
-            }
-        }
-    }
-}
-```
-
-You can also query raw `document`.

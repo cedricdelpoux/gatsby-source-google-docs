@@ -9,7 +9,6 @@ module.exports = {
         debug: true,
         folder: process.env.GOOGLE_DOCS_FOLDER,
         createPages: true,
-        demoteHeadings: true,
         skipImages: process.env.NODE_ENV === "development" ? true : false,
       },
     },

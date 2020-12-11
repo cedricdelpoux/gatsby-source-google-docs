@@ -107,10 +107,10 @@ const getTreeMetadata = (tree, file) => {
  */
 const updateFile = ({file, folder}) => {
   Object.assign(file, {
-    ...folder.metadata,
+    exclude: false,
     index: file.name === "index",
     date: file.createdTime,
-    draft: false,
+    ...folder.metadata,
   })
 
   // Transform description into metadata if description is YAML
@@ -210,47 +210,40 @@ async function fetchDocumentsFiles({drive, parents, options}) {
           file,
         })
       })
-      .filter((file) => file.draft === false)
+      .filter((file) => !file.exclude)
   let documents = collectDocuments(res.data.files)
 
   /** @param {typeof res.data.files} files */
   const collectParents = (files) => {
-    const folders = files.filter((file) => {
-      const isFolder = file.mimeType === MIME_TYPE_FOLDER
-      const isIgnored =
-        file.name.toLowerCase() === "drafts" ||
-        options.exclude.includes(file.name) ||
-        options.exclude.includes(file.id)
+    return files
+      .filter((file) => file.mimeType === MIME_TYPE_FOLDER)
+      .map((folder) => {
+        const parentIds = folder.parents && new Set(folder.parents)
+        const parent = parentIds && parents.find((p) => parentIds.has(p.id))
+        const metadata = getMetadataFromDescription(folder.description)
+        const tree = [
+          ...parent.tree,
+          {
+            name: folder.name,
+            skip: metadata.skip || false,
+          },
+        ]
 
-      return isFolder && !isIgnored
-    })
+        // we don't want to spread "skip" folder metadata to documents
+        if (metadata.skip) {
+          delete metadata.skip
+        }
 
-    return folders.map((folder) => {
-      const parentIds = folder.parents && new Set(folder.parents)
-      const parent = parentIds && parents.find((p) => parentIds.has(p.id))
-      const metadata = getMetadataFromDescription(folder.description)
-      const tree = [
-        ...parent.tree,
-        {
-          name: folder.name,
-          skip: metadata.skip || false,
-        },
-      ]
-
-      // we don't want to spread "skip" folder metadata to documents
-      if (metadata.skip) {
-        delete metadata.skip
-      }
-
-      return {
-        id: folder.id,
-        tree,
-        metadata: {
-          ...parent.metadata,
-          ...metadata,
-        },
-      }
-    })
+        return {
+          id: folder.id,
+          tree,
+          metadata: {
+            ...parent.metadata,
+            ...metadata,
+          },
+        }
+      })
+      .filter((folder) => !folder.exclude)
   }
   let nextParents = collectParents(res.data.files)
 

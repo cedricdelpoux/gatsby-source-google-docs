@@ -37,11 +37,6 @@ module.exports = {
                 folderDepth: undefined,
                 // Example : 3
                 //
-                // To exclude some folder in the tree
-                // It can be folder names or IDs
-                exclude: [],
-                // Example: ["my-custom-drafts-folder"]
-                //
                 // To skip types
                 skipCodes: false,
                 skipFootnotes: false,
@@ -52,7 +47,7 @@ module.exports = {
                 skipTables: false,
                 //
                 // To reduce images size or change format
-                images: {},
+                imagesOptions: undefined,
                 // Example:
                 // {
                 //     maxWidth: 512,
