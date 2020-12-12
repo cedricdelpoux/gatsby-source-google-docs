@@ -60,9 +60,9 @@ exports.sourceNodes = async (
     return
   } catch (e) {
     if (options.debug) {
-      reporter.panic(`source-google-docs: sourceNodes`, e)
+      reporter.panic("source-google-docs: ", e)
     } else {
-      reporter.panic(`source-google-docs: sourceNodes ${e.message}`)
+      reporter.panic(`source-google-docs: ${e.message}`)
     }
   }
 }
