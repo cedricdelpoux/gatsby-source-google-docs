@@ -1,9 +1,9 @@
 const {existsSync: exists} = require("fs")
 const {resolve} = require("path")
 
-const {DEFAULT_TEMPLATE} = require("./constants")
+const {DEFAULT_TEMPLATE} = require("./constants.js")
 
-const getTemplatePath = (template) => resolve(`src/templates/${template}.js`)
+const getComponentPath = (template) => resolve(`src/templates/${template}.js`)
 
 exports.createPages = async (
   {graphql, actions: {createPage}, reporter},
@@ -11,8 +11,7 @@ exports.createPages = async (
 ) => {
   if (!pluginOptions.createPages) return
 
-  const fields = pluginOptions.createPages.context || []
-  const defaultTemplate = pluginOptions.createPages.template || DEFAULT_TEMPLATE
+  const fields = pluginOptions.pageContext || []
 
   const result = await graphql(
     `
@@ -34,20 +33,30 @@ exports.createPages = async (
 
   try {
     const {allGoogleDocs} = result.data
+    const defaultComponent = exists(getComponentPath(DEFAULT_TEMPLATE))
+      ? getComponentPath(DEFAULT_TEMPLATE)
+      : null
 
     if (allGoogleDocs) {
       allGoogleDocs.nodes.forEach(({slug, template, ...context}) => {
-        let component = getTemplatePath(defaultTemplate)
+        let component = defaultComponent
 
-        if (template && exists(getTemplatePath(template))) {
-          component = getTemplatePath(template)
+        if (template && exists(getComponentPath(template))) {
+          component = getComponentPath(template)
         }
 
-        if (!exists(component)) {
-          reporter.warn(
-            `source-google-docs: skipping "${slug}" page. template "${component}" does not exist`
+        if (!component) {
+          const defaultTemplateError = `Default template "${DEFAULT_TEMPLATE}" not found.`
+
+          if (template) {
+            throw new Error(
+              `template "${template}" not found. ${defaultTemplateError}`
+            )
+          }
+
+          throw new Error(
+            `missing template for "${slug}". ${defaultTemplateError}`
           )
-          return
         }
 
         createPage({
@@ -58,6 +67,6 @@ exports.createPages = async (
       })
     }
   } catch (e) {
-    reporter.panic(`source-google-docs: createPages`, e)
+    reporter.panic(`source-google-docs: ` + e.message)
   }
 }
