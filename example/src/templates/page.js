@@ -18,6 +18,11 @@ export default ({
         <button>{"Home"}</button>
       </Link>
       <h1>{name}</h1>
+      {/*
+          To add a cover:
+          Add an image in your Google Doc first page header
+          https://support.google.com/docs/answer/86629
+      */}
       {cover && (
         <Img
           style={{width: "500px", marginBottom: "2rem"}}

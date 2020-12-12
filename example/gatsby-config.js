@@ -6,10 +6,15 @@ module.exports = {
       // resolve: "gatsby-source-google-docs",
       resolve: require.resolve(`..`),
       options: {
-        debug: true,
         folder: process.env.GOOGLE_DOCS_FOLDER,
+        // --------
+        // Optional
+        // --------
+        debug: false,
         createPages: true,
+        pageContext: [],
         skipImages: process.env.NODE_ENV === "development" ? true : false,
+        imagesOptions: {width: 512, height: 512, crop: true},
       },
     },
     "gatsby-plugin-sharp",
