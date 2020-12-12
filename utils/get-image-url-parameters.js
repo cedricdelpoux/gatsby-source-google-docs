@@ -7,9 +7,9 @@ const getImageUrlParameters = (pluginOptions) => {
 
   if (!imagesOptions) return ""
 
-  const {maxWidth, maxHeight, crop} = imagesOptions
-  const widthParam = isSizeValid(maxWidth) && `w${maxWidth}`
-  const heightParam = isSizeValid(maxHeight) && `h${maxHeight}`
+  const {width, height, crop} = imagesOptions
+  const widthParam = isSizeValid(width) && `w${width}`
+  const heightParam = isSizeValid(height) && `h${height}`
   const cropParam = crop && crop === true && "c"
   const optionsArray = [widthParam, heightParam, cropParam].filter(Boolean)
 
