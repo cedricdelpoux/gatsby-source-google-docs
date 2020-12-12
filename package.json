@@ -18,8 +18,7 @@
   "main": "index.js",
   "files": [
     "gatsby-node.js",
-    "utils",
-    "docs"
+    "utils"
   ],
   "dependencies": {
     "@forivall/wyt": "^2.0.2",

@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2020-12-11)
+## 2.0.0 (2020-12-12)
 
 -   Added
 
@@ -29,8 +29,8 @@
     -   Options:
 
         -   `createPages`
+        -   `pageContext`
         -   `demoteHeadings`
-        -   `exclude`
         -   `folder`
         -   `imagesOptions`
         -   `skipCodes`
