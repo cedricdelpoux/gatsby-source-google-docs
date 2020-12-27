@@ -113,17 +113,17 @@ class GoogleDocument {
 
     if (_get(foregroundColor, ["color", "rgbColor"]) && !link) {
       const {rgbColor} = foregroundColor.color
-      const red = Math.round(rgbColor.red * 255)
-      const green = Math.round(rgbColor.green * 255)
-      const blue = Math.round(rgbColor.blue * 255)
+      const red = Math.round((rgbColor.red || 0) * 255)
+      const green = Math.round((rgbColor.green || 0) * 255)
+      const blue = Math.round((rgbColor.blue || 0) * 255)
       styles.push(`color:rgb(${red}, ${green}, ${blue})`)
     }
 
     if (_get(backgroundColor, ["color", "rgbColor"]) && !link) {
       const {rgbColor} = backgroundColor.color
-      const red = Math.round(rgbColor.red * 255)
-      const green = Math.round(rgbColor.green * 255)
-      const blue = Math.round(rgbColor.blue * 255)
+      const red = Math.round((rgbColor.red || 0) * 255)
+      const green = Math.round((rgbColor.green || 0) * 255)
+      const blue = Math.round((rgbColor.blue || 0) * 255)
       styles.push(`background-color:rgb(${red}, ${green}, ${blue})`)
     }
 

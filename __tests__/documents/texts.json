@@ -482,6 +482,36 @@
                   }
                 }
               }
+            },
+            {
+              "startIndex": 253,
+              "endIndex": 266,
+              "textRun": {
+                "content": "red\n",
+                "textStyle": {
+                  "foregroundColor": {"color": {"rgbColor": {"red": 1}}}
+                }
+              }
+            },
+            {
+              "startIndex": 253,
+              "endIndex": 266,
+              "textRun": {
+                "content": "green\n",
+                "textStyle": {
+                  "foregroundColor": {"color": {"rgbColor": {"green": 1}}}
+                }
+              }
+            },
+            {
+              "startIndex": 253,
+              "endIndex": 266,
+              "textRun": {
+                "content": "blue\n",
+                "textStyle": {
+                  "foregroundColor": {"color": {"rgbColor": {"blue": 1}}}
+                }
+              }
             }
           ],
           "paragraphStyle": {
@@ -507,6 +537,54 @@
                         "red": 0.5764706,
                         "green": 0.76862746,
                         "blue": 0.49019608
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 266,
+              "endIndex": 292,
+              "textRun": {
+                "content": "red",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "red": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 266,
+              "endIndex": 292,
+              "textRun": {
+                "content": "green",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "green": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "startIndex": 266,
+              "endIndex": 292,
+              "textRun": {
+                "content": "blue",
+                "textStyle": {
+                  "backgroundColor": {
+                    "color": {
+                      "rgbColor": {
+                        "blue": 1
                       }
                     }
                   }
