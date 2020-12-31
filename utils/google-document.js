@@ -47,13 +47,16 @@ class GoogleDocument {
       return ""
     }
 
-    const contentMatch = el.textRun.content
-      .replace(/\n$/, "")
-      .match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/)
+    let before = ""
+    let text = el.textRun.content.replace(/\n$/, "")
+    let after = ""
 
-    const before = contentMatch[1]
-    let text = contentMatch[2]
-    const after = contentMatch[3]
+    const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/)
+    if (contentMatch) {
+      before = contentMatch[1]
+      text = contentMatch[2]
+      after = contentMatch[3]
+    }
 
     const {
       backgroundColor,
