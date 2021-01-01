@@ -22,7 +22,25 @@ module.exports = {
     {
       resolve: "gatsby-transformer-remark",
       options: {
-        plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
+        plugins: [
+          "gatsby-remark-images",
+          {
+            resolve: "gatsby-remark-strava",
+            options: {
+              debug: true,
+              stravaClientId: process.env.STRAVA_CLIENT_ID,
+              stravaClientSecret: process.env.STRAVA_CLIENT_SECRET,
+              stravaToken: process.env.STRAVA_TOKEN,
+            },
+          },
+          {
+            resolve: "gatsby-remark-youtube",
+            options: {
+              debug: true,
+            },
+          },
+          "gatsby-remark-prismjs",
+        ],
       },
     },
   ],

@@ -17,6 +17,8 @@
     "gatsby-plugin-sharp": "^2.6.37",
     "gatsby-remark-images": "^3.3.31",
     "gatsby-remark-prismjs": "^3.5.14",
+    "gatsby-remark-strava": "^1.2.0",
+    "gatsby-remark-youtube": "^1.0.0",
     "gatsby-source-filesystem": "^2.3.31",
     "gatsby-transformer-remark": "^2.8.36",
     "gatsby-transformer-sharp": "^2.5.16",
