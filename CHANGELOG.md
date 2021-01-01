@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2020-12-12)
+## 2.0.0 (2021-01-01)
 
 -   Added
 
@@ -9,7 +9,8 @@
         -   Script `gatsby-source-google-docs-token` for token generation
         -   Gatsby Cloud compatibility
         -   Crosslinks between documents
-        -   metadata from YAML Google Drive descriptions
+        -   Metadata from YAML Google Drive descriptions
+        -   Shared drives support
 
     -   Formats
 
