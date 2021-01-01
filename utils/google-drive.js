@@ -308,6 +308,7 @@ async function fetchFiles({folder, ...options}) {
   const res = await drive.files.get({
     fileId: folder,
     fields: "description",
+    supportsAllDrives: true,
   })
 
   const documentsFiles = await fetchDocumentsFiles({
