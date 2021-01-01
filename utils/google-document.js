@@ -21,6 +21,7 @@ class GoogleDocument {
     this.elements = []
     this.headings = []
     this.footnotes = {}
+    this.related = []
 
     // Keep the class scope in loops
     this.formatText = this.formatText.bind(this)
@@ -493,7 +494,10 @@ class GoogleDocument {
 
       const elementsStringifiedWithRelativePaths = elementsStringified.replace(
         /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
-        (match, id) => this.links[id] || match
+        (match, id) => {
+          this.related.push(id)
+          return this.links[id] || match
+        }
       )
 
       this.elements = JSON.parse(elementsStringifiedWithRelativePaths)

@@ -35,7 +35,7 @@ exports.sourceNodes = async (
     timer.setStatus("creating nodes")
 
     for (let googleDocument of googleDocuments) {
-      const {document, properties, cover} = googleDocument
+      const {document, properties, cover, related} = googleDocument
       const markdown = googleDocument.toMarkdown()
 
       createNode({
@@ -43,6 +43,7 @@ exports.sourceNodes = async (
         document,
         cover,
         markdown,
+        related___NODE: related,
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",

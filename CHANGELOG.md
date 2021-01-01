@@ -9,6 +9,7 @@
         -   Script `gatsby-source-google-docs-token` for token generation
         -   Gatsby Cloud compatibility
         -   Crosslinks between documents
+        -   Related content
         -   Metadata from YAML Google Drive descriptions
         -   Shared drives support
 
