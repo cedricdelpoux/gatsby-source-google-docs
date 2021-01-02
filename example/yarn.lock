@@ -6239,6 +6239,20 @@ gatsby-recipes@^0.5.1:
     xstate "^4.9.1"
     yoga-layout-prebuilt "^1.9.6"
 
+"gatsby-remark-gif@file:.yalc/gatsby-remark-gif":
+  version "1.0.0"
+  dependencies:
+    is-relative-url "^3.0.0"
+    unist-util-visit "^2.0.3"
+
+gatsby-remark-gifs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gatsby-remark-gifs/-/gatsby-remark-gifs-1.0.0.tgz#c23e389ddebdf43cc40951d5cf9137167e1d0684"
+  integrity sha512-8kg9LlDZ15tCHODnlULV6mW2JIJtnj3swGjaEL8uCTsqanJLznNS/r8ja7PMRYwXmY6+2GEixl7zr1gNTtV/xg==
+  dependencies:
+    is-relative-url "^3.0.0"
+    unist-util-visit "^2.0.3"
+
 gatsby-remark-images@^3.3.31:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/gatsby-remark-images/-/gatsby-remark-images-3.7.1.tgz#c07c240c3be5d6bc1116ac621e6f5d49ed0e03c0"

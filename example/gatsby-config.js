@@ -24,6 +24,7 @@ module.exports = {
       options: {
         plugins: [
           "gatsby-remark-images",
+          "gatsby-remark-gifs",
           {
             resolve: "gatsby-remark-strava",
             options: {
