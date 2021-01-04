@@ -495,8 +495,12 @@ class GoogleDocument {
       const elementsStringifiedWithRelativePaths = elementsStringified.replace(
         /https:\/\/docs.google.com\/document\/(?:u\/\d+\/)?d\/([a-zA-Z0-9_-]+)(?:\/edit|\/preview)?/g,
         (match, id) => {
-          this.related.push(id)
-          return this.links[id] || match
+          if (this.links[id]) {
+            this.related.push(id)
+            return this.links[id]
+          }
+
+          return match
         }
       )
 
