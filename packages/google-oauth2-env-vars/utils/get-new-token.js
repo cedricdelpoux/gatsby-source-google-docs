@@ -25,9 +25,9 @@ const getNewToken = async ({
 
         await openUrl({message: "API URL:", url: `${ENABLE_API_URL}${api}`})
 
-        console.log(`🛑  Follow the URL to Enable "${api}" API`)
+        console.log(`🛑  Follow the URL and enable "${api}" API`)
 
-        await waitInput()
+        await waitInput("API enabled?")
       }
     }
 
