@@ -3,14 +3,14 @@ const express = require("express")
 
 const {openUrl} = require("./open-url")
 
-const getAuthorizationCode = async (authUrl) => {
+const getAuthorizationCode = async ({url, port}) => {
   return new Promise((resolve, reject) => {
     const app = express()
 
-    app.listen(5000, async () => {
+    app.listen(port, async () => {
       console.log("🤚  You need to authorize your application")
 
-      await openUrl({message: "Authorization URL:", url: authUrl})
+      await openUrl({message: "Authorization URL:", url})
 
       console.log("🛑  Follow the URL to authorize your application")
     })

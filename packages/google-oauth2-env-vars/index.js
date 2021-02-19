@@ -4,13 +4,19 @@ const {askClientIds} = require("./utils/ask-client-ids")
 const {getNewToken} = require("./utils/get-new-token")
 const {initAuth} = require("./utils/init-auth")
 
-const {CLIENT_ID, CLIENT_SECRET, TOKEN_FIELDS} = require("./utils/constants")
+const {
+  CLIENT_ID,
+  CLIENT_SECRET,
+  DEFAULT_PORT,
+  TOKEN_FIELDS,
+} = require("./utils/constants")
 
 class GoogleOAuth2 {
   constructor(options = {}) {
     this.tokenName = options.token || null
     this.scope = options.scope || null
     this.apisToEnable = options.apis || []
+    this.port = options.port || DEFAULT_PORT
   }
 
   isTokenValid(token) {
@@ -30,6 +36,7 @@ class GoogleOAuth2 {
       scope: this.scope,
       tokenName: this.tokenName,
       apisToEnable: this.apisToEnable,
+      port: this.port,
     })
 
     return token

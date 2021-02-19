@@ -12,6 +12,7 @@ const getNewToken = async ({
   scope,
   tokenName,
   apisToEnable,
+  port,
 }) => {
   try {
     console.log("------------------------")
@@ -33,7 +34,7 @@ const getNewToken = async ({
     const client = new google.auth.OAuth2(
       clientId,
       clientSecret,
-      "http://localhost:5000/callback"
+      `http://localhost:${port}/callback`
     )
 
     const authUrl = client.generateAuthUrl({
@@ -41,7 +42,7 @@ const getNewToken = async ({
       scope,
       prompt: "consent",
     })
-    const code = await getAuthorizationCode(authUrl)
+    const code = await getAuthorizationCode({url: authUrl, port})
 
     const {tokens} = await client.getToken(code)
 

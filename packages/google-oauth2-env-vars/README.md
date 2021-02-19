@@ -38,6 +38,11 @@ const googleOAuth2 = new GoogleOAuth2({
   scope: ["https://www.googleapis.com/auth/photoslibrary.readonly"],
   // APIs to enable in Google console
   apis: ["photoslibrary.googleapis.com"],
+  //
+  // Optional
+  //
+  // Port for node server
+  port: 5000, // DEFAULT
 })
 
 const envVars = await googleOAuth2.generateEnvVars()
