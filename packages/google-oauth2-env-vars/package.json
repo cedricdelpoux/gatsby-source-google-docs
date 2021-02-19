@@ -1,6 +1,6 @@
 {
   "name": "google-oauth2-env-vars",
-  "version": "1.1.1",
+  "version": "1.3.0",
   "description": "Generate and cache Google OAuth 2.0 tokens in .env files",
   "repository": "https://github.com/cedricdelpoux/google-oauth2-env-vars",
   "author": {
