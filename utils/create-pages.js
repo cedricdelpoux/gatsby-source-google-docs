@@ -3,7 +3,10 @@ const {resolve} = require("path")
 
 const {DEFAULT_TEMPLATE} = require("./constants.js")
 
-const getComponentPath = (template) => resolve(`src/templates/${template}.js`)
+const getComponentPath = (template) =>
+  template.includes(".")
+    ? resolve(`src/templates/${template}`)
+    : resolve(`src/templates/${template}.js`)
 
 exports.createPages = async (
   {graphql, actions: {createPage}, reporter},
