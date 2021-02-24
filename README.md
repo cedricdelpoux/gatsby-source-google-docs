@@ -274,7 +274,7 @@ Checkout the [example template](./example/src/templates/page.js) et adapt it to 
 
 <p><details><summary>How to create pages manualy?</summary>
 
-If you prefer to create pages manualy, checkout the [createPages API](./src/urils/create-pages.js) et adapt it to your needs.
+If you prefer to create pages manualy, checkout the [createPages API](./src/utils/create-pages.js) et adapt it to your needs.
 
 </details></p>
 
