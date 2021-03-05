@@ -108,6 +108,7 @@ const getTreeMetadata = (tree, file) => {
 const updateFile = ({file, folder}) => {
   Object.assign(file, {
     exclude: false,
+    page: true,
     index: file.name === "index",
     date: file.createdTime,
     ...folder.metadata,
