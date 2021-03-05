@@ -239,7 +239,7 @@ Object {
   "elements": Array [
     Object {
       "type": "blockquote",
-      "value": "The way to get started is to quit talking and begin doing.",
+      "value": "\\"The way to get started is to quit talking and begin doing.\\"",
     },
   ],
 }

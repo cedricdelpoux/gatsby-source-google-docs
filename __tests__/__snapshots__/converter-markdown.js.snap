@@ -127,7 +127,7 @@ patterns.
 `;
 
 exports[`Document "Quotes" to Markdown 1`] = `
-"> The way to get started is to quit talking and begin doing.
+"> \\"The way to get started is to quit talking and begin doing.\\"
 "
 `;
 
