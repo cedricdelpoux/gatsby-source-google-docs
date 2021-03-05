@@ -19,7 +19,7 @@ exports.createPages = async (
   const result = await graphql(
     `
       {
-        allGoogleDocs {
+        allGoogleDocs(filter: {page: {ne: false}}) {
           nodes {
             slug
             template

@@ -268,6 +268,8 @@ require("prismjs/themes/prism.css")
 Using `createPages: true` option, pages will be created automatically.
 You need to create templates and define wich template to use using `YAML` metadata.
 
+> You can set `page: false` metadata for a document to prevent a page creation
+
 Checkout the [example template](./example/src/templates/page.js) and adapt it to your needs.
 
 > You can use `pageContext` option if you need extra data into the context of your pages.
