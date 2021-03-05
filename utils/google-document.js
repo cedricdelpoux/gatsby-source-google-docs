@@ -49,7 +49,7 @@ class GoogleDocument {
     }
 
     let before = ""
-    let text = el.textRun.content.replace(/\n$/, "")
+    let text = el.textRun.content.replace(/\n$/, "").replace(/“|”/g, '"')
     let after = ""
 
     const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/)
