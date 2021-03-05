@@ -247,28 +247,28 @@ require("prismjs/themes/prism.css")
 
 </details></p>
 
-| Option         | Required | Type    | Default | Example      |
-| -------------- | -------- | ------- | ------- | ------------ |
-| folder         | true     | String  | -       | "1Tn1dCbIc"  |
-| createPages    | false    | Boolean | false   | true         |
-| pageContext    | false    | Array   | []      | ["locale"]   |
-| demoteHeadings | false    | Boolean | true    | false        |
-| imagesOptions  | false    | Object  | -       | {width: 512} |
-| skipCodes      | false    | Boolean | false   | true         |
-| skipFootnotes  | false    | Boolean | false   | true         |
-| skipHeadings   | false    | Boolean | false   | true         |
-| skipImages     | false    | Boolean | false   | true         |
-| skipLists      | false    | Boolean | false   | true         |
-| skipQuotes     | false    | Boolean | false   | true         |
-| skipTables     | false    | Boolean | false   | true         |
-| debug          | false    | Boolean | false   | true         |
+| Option         | Required | Type    | Default | Example        |
+| -------------- | -------- | ------- | ------- | -------------- |
+| folder         | `true`   | String  | `null`  | `"1Tn1dCbIc"`  |
+| createPages    | `false`  | Boolean | `false` | `true`         |
+| pageContext    | `false`  | Array   | `[]`    | `["locale"]`   |
+| demoteHeadings | `false`  | Boolean | `true`  | `false`        |
+| imagesOptions  | `false`  | Object  | `null`  | `{width: 512}` |
+| skipCodes      | `false`  | Boolean | `false` | `true`         |
+| skipFootnotes  | `false`  | Boolean | `false` | `true`         |
+| skipHeadings   | `false`  | Boolean | `false` | `true`         |
+| skipImages     | `false`  | Boolean | `false` | `true`         |
+| skipLists      | `false`  | Boolean | `false` | `true`         |
+| skipQuotes     | `false`  | Boolean | `false` | `true`         |
+| skipTables     | `false`  | Boolean | `false` | `true`         |
+| debug          | `false`  | Boolean | `false` | `true`         |
 
 ### Create templates and pages
 
 Using `createPages: true` option, pages will be created automatically.
 You need to create templates and define wich template to use using `YAML` metadata.
 
-Checkout the [example template](./example/src/templates/page.js) et adapt it to your needs.
+Checkout the [example template](./example/src/templates/page.js) and adapt it to your needs.
 
 > You can use `pageContext` option if you need extra data into the context of your pages.
 
