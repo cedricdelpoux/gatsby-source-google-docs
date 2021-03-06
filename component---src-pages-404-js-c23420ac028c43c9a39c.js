@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{w2l6:function(e,n,t){"use strict";t.r(n);var a=t("Wbzz"),l=t("ERkP"),u=t.n(l);n.default=function(){return u.a.createElement("main",null,u.a.createElement(a.Link,{to:"/"},u.a.createElement("button",null,"Home")),u.a.createElement("h1",null,"404"))}}}]);
+//# sourceMappingURL=component---src-pages-404-js-c23420ac028c43c9a39c.js.map
