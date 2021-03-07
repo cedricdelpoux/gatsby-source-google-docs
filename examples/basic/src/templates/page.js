@@ -1,6 +1,5 @@
-import {graphql, Link} from "gatsby"
+import {Link, graphql} from "gatsby"
 import Img from "gatsby-image"
-
 import React from "react"
 
 export default ({
@@ -13,24 +12,19 @@ export default ({
   },
 }) => {
   return (
-    <main>
+    <>
       <Link to="/">
         <button>{"Home"}</button>
       </Link>
       <h1>{name}</h1>
       {/*
-          To add a cover:
-          Add an image in your Google Doc first page header
-          https://support.google.com/docs/answer/86629
+        To add a cover:
+        Add an image in your Google Doc first page header
+        https://support.google.com/docs/answer/86629
       */}
-      {cover && (
-        <Img
-          style={{width: "500px", marginBottom: "2rem"}}
-          fluid={cover.image.childImageSharp.fluid}
-        />
-      )}
+      {cover && <Img fluid={cover.image.childImageSharp.fluid} />}
       <div dangerouslySetInnerHTML={{__html: html}} />
-    </main>
+    </>
   )
 }
 

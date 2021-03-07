@@ -1,4 +1,4 @@
-import {graphql, Link} from "gatsby"
+import {Link, graphql} from "gatsby"
 import React from "react"
 
 export default ({data: {allGoogleDocs}}) => {
