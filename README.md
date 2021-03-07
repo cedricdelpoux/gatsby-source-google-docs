@@ -31,7 +31,7 @@
 
 </details></p>
 
-## Main features
+## Features
 
 -   **Google Docs** formatting options (headings, bullets, tables, images...)
 -   `MDX` support to use `<ReactComponents />` in your documents
@@ -47,13 +47,12 @@
 
 To preview what you can do, please checkout [the documentation website](https://cedricdelpoux.github.io/gatsby-source-google-docs/).
 
--   💯 100% content of this site is from Google Docs
--   👨🏻‍💻 Source code [here](/examples/website)
--   🗂 Source content [here](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
+-   👨🏻‍💻 [Source code](/examples/website)
+-   🗂 [Google Docs content](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
 
-Please suggest edits from Google Docs to improve it.
+> 💯 100% content of the website is from Google Docs. Please suggest edits to improve it.
 
-## Install
+## Installation
 
 Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby-plugin-mdx` for [advanced usage](/examples/website))
 
@@ -65,7 +64,7 @@ yarn add gatsby-source-google-docs gatsby-transformer-remark
 -   `gatsby-transformer-remark` transform **Markdown** to **HTML**
 -   `gatsby-plugin-mdx` transform **Markdown** to **MDX**
 
-## Generate a token
+## Token generation
 
 The package needs 3 `.env` variables.
 
@@ -108,7 +107,7 @@ Go to your [Google Drive](https://drive.google.com/drive/), create a folder and 
         ↳ 📝 Accueil `template: home`
 ```
 
-<p><details><summary>🤡 How to add metadata?</summary>
+<p><details><summary>🤡 How to enhance documents with metadata?</summary>
 
 -   Fill the document (or folder) `description` field in Google Drive with a `YAML` object
 
@@ -314,6 +313,15 @@ Checkout the [example template](./example/src/templates/page.js) and adapt it to
 If you prefer to create pages manualy, checkout the [createPages API](./src/utils/create-pages.js) et adapt it to your needs.
 
 </details></p>
+
+### Trigger production builds
+
+-   Go to [Google Drive example folder](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
+-   Create a copy of **Trigger Gatsby Build** file using `Right Click -> Create a copy`
+-   Open your copy and update the **Build Webhook URL** in `A2`
+-   Click the **Deploy** button to trigger a new build
+
+> This method works with any hosting services: Gatsby Cloud, Netlify...
 
 ## Showcase
 
