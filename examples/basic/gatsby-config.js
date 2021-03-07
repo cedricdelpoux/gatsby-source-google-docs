@@ -7,6 +7,7 @@ module.exports = {
       options: {
         folder: process.env.GOOGLE_DOCS_FOLDER,
         createPages: true,
+        keepDefaultStyle: true,
       },
     },
     "gatsby-plugin-sharp",

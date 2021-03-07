@@ -8,6 +8,12 @@ const documentCodes = require("./documents/codes.json")
 const documentTables = require("./documents/tables.json")
 const {GoogleDocument} = require("../utils/google-document")
 
+test(`"KeepDefaultStyle" option`, () => {
+  const options = {keepDefaultStyle: true}
+  const googleDocument = new GoogleDocument({document: documentTexts, options})
+  expect(googleDocument.toMarkdown()).toMatchSnapshot()
+})
+
 test(`"DemoteHeading" option enabled`, () => {
   const options = {demoteHeadings: true}
   const googleDocument = new GoogleDocument({document: documentTexts, options})

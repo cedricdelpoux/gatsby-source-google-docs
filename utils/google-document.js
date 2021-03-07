@@ -15,7 +15,7 @@ class GoogleDocument {
     this.document = document
     this.links = links
     this.properties = properties
-    this.options = _merge(DEFAULT_OPTIONS, options)
+    this.options = _merge({}, DEFAULT_OPTIONS, options)
 
     this.cover = null
     this.elements = []
@@ -30,7 +30,7 @@ class GoogleDocument {
     this.process()
   }
 
-  formatText(el, {withBold = true, inlineImages = false} = {}) {
+  formatText(el, {inlineImages = false, namedStyleType = "NORMAL_TEXT"} = {}) {
     if (el.inlineObjectElement) {
       const image = this.getImage(el)
       if (image) {
@@ -48,16 +48,19 @@ class GoogleDocument {
       return ""
     }
 
-    let before = ""
-    let text = el.textRun.content.replace(/\n$/, "").replace(/“|”/g, '"')
-    let after = ""
+    let text = el.textRun.content
+      .replace(/\n$/, "") // Remove new lines
+      .replace(/“|”/g, '"') // Replace smart quotes by double quotes
+    const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/) // Match "text", "before" and "after"
+    const before = contentMatch[1]
+    const after = contentMatch[3]
+    text = contentMatch[2]
 
-    const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/)
-    if (contentMatch) {
-      before = contentMatch[1]
-      text = contentMatch[2]
-      after = contentMatch[3]
-    }
+    const defaultStyle = this.getTextStyle(namedStyleType)
+    const textStyle = el.textRun.textStyle
+    const style = this.options.keepDefaultStyle
+      ? _merge({}, defaultStyle, textStyle)
+      : textStyle
 
     const {
       backgroundColor,
@@ -69,13 +72,11 @@ class GoogleDocument {
       link,
       strikethrough,
       underline,
-      weightedFontFamily,
-    } = el.textRun.textStyle
+      weightedFontFamily: {fontFamily} = {},
+    } = style
 
-    const inlineCode =
-      weightedFontFamily && weightedFontFamily.fontFamily === "Consolas"
-
-    if (inlineCode) {
+    const isInlineCode = fontFamily === "Consolas"
+    if (isInlineCode) {
       if (this.options.skipCodes) return text
 
       return "`" + text + "`"
@@ -102,7 +103,7 @@ class GoogleDocument {
       text = `_${text}_`
     }
 
-    if (bold && withBold) {
+    if (bold) {
       text = `**${text}**`
     }
 
@@ -112,7 +113,9 @@ class GoogleDocument {
 
     if (fontSize) {
       const em = (fontSize.magnitude / this.bodyFontSize).toFixed(2)
-      styles.push(`font-size:${em}em`)
+      if (em !== "1.00") {
+        styles.push(`font-size:${em}em`)
+      }
     }
 
     if (_get(foregroundColor, ["color", "rgbColor"]) && !link) {
@@ -120,7 +123,9 @@ class GoogleDocument {
       const red = Math.round((rgbColor.red || 0) * 255)
       const green = Math.round((rgbColor.green || 0) * 255)
       const blue = Math.round((rgbColor.blue || 0) * 255)
-      styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+      if (red !== 0 || green !== 0 || blue !== 0) {
+        styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+      }
     }
 
     if (_get(backgroundColor, ["color", "rgbColor"]) && !link) {
@@ -142,18 +147,13 @@ class GoogleDocument {
     return before + text + after
   }
 
-  getBodyFontSize() {
-    let fontSize = 11
-
+  getTextStyle(type) {
     const documentStyles = _get(this.document, ["namedStyles", "styles"])
 
-    if (!documentStyles) return fontSize
+    if (!documentStyles) return {}
 
-    const normalTextStyle = documentStyles.find(
-      (style) => style.namedStyleType === "NORMAL_TEXT"
-    )
-
-    return _get(normalTextStyle, "textStyle.fontSize.magnitude", fontSize)
+    const style = documentStyles.find((style) => style.namedStyleType === type)
+    return style.textStyle
   }
 
   getImage(el) {
@@ -294,7 +294,6 @@ class GoogleDocument {
   }
 
   processParagraph(paragraph, index) {
-    const headings = []
     const tags = {
       HEADING_1: "h1",
       HEADING_2: "h2",
@@ -306,8 +305,9 @@ class GoogleDocument {
       SUBTITLE: "h2",
       TITLE: "h1",
     }
-    const tagType = paragraph.paragraphStyle.namedStyleType
-    const tag = tags[tagType]
+    const namedStyleType = paragraph.paragraphStyle.namedStyleType
+    const tag = tags[namedStyleType]
+    const isHeading = tag.startsWith("h")
 
     // Lists
     if (paragraph.bullet) {
@@ -337,18 +337,14 @@ class GoogleDocument {
       }
 
       // Headings
-      else if (tag !== "p") {
+      else if (isHeading) {
         if (this.options.skipHeadings) return
 
         const text = this.formatText(el, {
-          withBold: false,
+          namedStyleType,
         })
 
         if (text) {
-          headings.push({
-            tag,
-            text,
-          })
           tagContentArray.push(text)
         }
       }
@@ -382,9 +378,9 @@ class GoogleDocument {
       value: content,
     })
 
-    headings.forEach((heading) => {
-      this.headings.push({...heading, index: this.elements.length - 1})
-    })
+    if (isHeading) {
+      this.headings.push({tag, text: content, index: this.elements.length - 1})
+    }
   }
 
   processQuote(table) {
@@ -509,7 +505,10 @@ class GoogleDocument {
   }
 
   process() {
-    this.bodyFontSize = this.getBodyFontSize()
+    this.bodyFontSize = _get(
+      this.getTextStyle("NORMAL_TEXT"),
+      "fontSize.magnitude"
+    )
 
     this.processCover()
 

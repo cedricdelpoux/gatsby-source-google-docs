@@ -197,21 +197,22 @@ You also can add metadata (`locale`, `date`, `template`, ...) to your documents.
 
 ### Add the plugin to your `gatsby-config.js` file
 
-| Option         | Required | Type    | Default | Example        |
-| -------------- | -------- | ------- | ------- | -------------- |
-| folder         | `true`   | String  | `null`  | `"1Tn1dCbIc"`  |
-| createPages    | `false`  | Boolean | `false` | `true`         |
-| pageContext    | `false`  | Array   | `[]`    | `["locale"]`   |
-| demoteHeadings | `false`  | Boolean | `true`  | `false`        |
-| imagesOptions  | `false`  | Object  | `null`  | `{width: 512}` |
-| skipCodes      | `false`  | Boolean | `false` | `true`         |
-| skipFootnotes  | `false`  | Boolean | `false` | `true`         |
-| skipHeadings   | `false`  | Boolean | `false` | `true`         |
-| skipImages     | `false`  | Boolean | `false` | `true`         |
-| skipLists      | `false`  | Boolean | `false` | `true`         |
-| skipQuotes     | `false`  | Boolean | `false` | `true`         |
-| skipTables     | `false`  | Boolean | `false` | `true`         |
-| debug          | `false`  | Boolean | `false` | `true`         |
+| Option           | Required | Type    | Default | Example        |
+| ---------------- | -------- | ------- | ------- | -------------- |
+| folder           | `true`   | String  | `null`  | `"1Tn1dCbIc"`  |
+| createPages      | `false`  | Boolean | `false` | `true`         |
+| pageContext      | `false`  | Array   | `[]`    | `["locale"]`   |
+| demoteHeadings   | `false`  | Boolean | `true`  | `false`        |
+| imagesOptions    | `false`  | Object  | `null`  | `{width: 512}` |
+| keepDefaultStyle | `false`  | Boolean | `false` | `true`         |
+| skipCodes        | `false`  | Boolean | `false` | `true`         |
+| skipFootnotes    | `false`  | Boolean | `false` | `true`         |
+| skipHeadings     | `false`  | Boolean | `false` | `true`         |
+| skipImages       | `false`  | Boolean | `false` | `true`         |
+| skipLists        | `false`  | Boolean | `false` | `true`         |
+| skipQuotes       | `false`  | Boolean | `false` | `true`         |
+| skipTables       | `false`  | Boolean | `false` | `true`         |
+| debug            | `false`  | Boolean | `false` | `true`         |
 
 ```js
 module.exports = {

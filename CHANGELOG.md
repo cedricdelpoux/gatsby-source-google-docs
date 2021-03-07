@@ -35,6 +35,7 @@
         -   `pageContext`
         -   `demoteHeadings`
         -   `folder`
+        -   `keepDefaultStyle`
         -   `imagesOptions`
         -   `skipCodes`
         -   `skipFootnotes`

@@ -122,6 +122,67 @@ verticalindent
 "
 `;
 
+exports[`"KeepDefaultStyle" option 1`] = `
+"## <span style='font-size:1.45em;color:rgb(28, 69, 135)'>**Title level 1**</span>
+
+### <span style='font-size:1.18em;color:rgb(61, 133, 198)'>**Title level 2**</span>
+
+#### <span style='font-size:1.09em;color:rgb(109, 158, 235)'>**Title level 3**</span>
+
+##### <span style='color:rgb(102, 102, 102)'><ins>Title level 4</ins></span>
+
+###### <span style='color:rgb(102, 102, 102)'>Title level 5</span>
+
+###### <span style='color:rgb(102, 102, 102)'>_Title level 6_</span>
+
+## <span style='font-size:1.91em'>Title</span>
+
+### <span style='font-size:1.18em;color:rgb(102, 102, 102)'>_Subtitle_</span>
+
+
+**bold**
+
+
+_italic_
+
+
+<ins>underline</ins>
+
+
+~~strikethrough~~
+
+
+<sup>superscript</sup>
+
+
+<sub>subscript</sub>
+
+
+**_boldItalic_**
+
+
+text with **space bold after** and _space italic before_.
+
+
+		indented text
+
+
+verticalindent
+
+
+[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
+
+
+<span style='font-size:1.09em'>Text bigger</span>
+
+
+<span style='color:rgb(106, 168, 79)'>Text Colored</span><span style='color:rgb(255, 0, 0)'>red</span><span style='color:rgb(0, 255, 0)'>green</span><span style='color:rgb(0, 0, 255)'>blue</span>
+
+
+<span style='background-color:rgb(147, 196, 125)'>Text with background color</span><span style='background-color:rgb(255, 0, 0)'>red</span><span style='background-color:rgb(0, 255, 0)'>green</span><span style='background-color:rgb(0, 0, 255)'>blue</span>
+"
+`;
+
 exports[`Crosslinks between documents 1`] = `
 "
 [to self](/relative-path)

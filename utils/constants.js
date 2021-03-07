@@ -6,6 +6,7 @@ module.exports = {
     demoteHeadings: true,
     folder: undefined,
     imagesOptions: undefined,
+    keepDefaultStyle: false,
     pageContext: [],
     skipCodes: false,
     skipFootnotes: false,

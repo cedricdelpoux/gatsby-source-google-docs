@@ -7,7 +7,7 @@ exports.sourceNodes = async (
   {actions: {createNode}, createContentDigest, reporter},
   pluginOptions
 ) => {
-  const options = _merge(DEFAULT_OPTIONS, pluginOptions)
+  const options = _merge({}, DEFAULT_OPTIONS, pluginOptions)
 
   if (!options.folder) {
     if (options.folders && options.folders.length > 0) {
