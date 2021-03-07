@@ -41,7 +41,7 @@ async function fetchDocuments(pluginOptions) {
         links,
       })
 
-      if (process.env.NODE_ENV === "DOCUMENT_TO_TESTS") {
+      if (process.env.NODE_ENV === "DOCS_TO_TESTS") {
         writeDocumentToTests(googleDocument)
       }
 
@@ -49,7 +49,7 @@ async function fetchDocuments(pluginOptions) {
     })
   )
 
-  if (process.env.NODE_ENV === "DOCUMENT_TO_TESTS") {
+  if (process.env.NODE_ENV === "DOCS_TO_TESTS") {
     process.exit()
   }
 

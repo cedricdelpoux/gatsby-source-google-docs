@@ -6,7 +6,6 @@
     "clean": "gatsby clean",
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "dev": "gatsby develop",
-    "docs2test": "NODE_ENV=DOCUMENT_TO_TESTS yarn dev",
     "serve": "gatsby serve",
     "token": "../utils/generate-token.js"
   },

@@ -7,6 +7,7 @@ exports.writeDocumentToTests = (googleDocument) => {
     path.join(
       process.cwd(),
       "..",
+      "..",
       "__tests__",
       "documents",
       `${_kebabCase(googleDocument.document.title)}.json`

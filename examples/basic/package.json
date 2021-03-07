@@ -4,7 +4,7 @@
   "scripts": {
     "build": "gatsby build",
     "dev": "gatsby develop",
-    "docs2test": "NODE_ENV=DOCUMENT_TO_TESTS yarn dev",
+    "docs2test": "NODE_ENV=DOCS_TO_TESTS yarn dev",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "token": "../../utils/generate-token.js"
