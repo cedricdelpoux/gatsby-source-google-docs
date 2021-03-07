@@ -34,13 +34,14 @@
 ## Main features
 
 -   **Google Docs** formatting options (headings, bullets, tables, images...)
--   `gatsby-image` support
 -   `MDX` support to use `<ReactComponents />` in your documents
+-   `gatsby-image` support
+-   Code blocs support
+-   **Gatsby Cloud** support
 -   Slug generation from **Google Drive** tree
 -   Crosslinks between pages
 -   Related content
 -   Custom metadata to enhance documents
--   **Gatsby Cloud** support
 
 ## Documentation
 
