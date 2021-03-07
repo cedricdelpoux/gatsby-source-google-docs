@@ -6,8 +6,9 @@
 
     -   Features:
 
+        -   MDX support
         -   Script `gatsby-source-google-docs-token` for token generation
-        -   Gatsby Cloud compatibility
+        -   Gatsby Cloud support
         -   Crosslinks between documents
         -   Related content
         -   Metadata from YAML Google Drive descriptions

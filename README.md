@@ -28,14 +28,33 @@
 -   🛩 Offline redaction
 -   🔥 No need for external CMS
 -   ✅ No more content in your source code
--   🗂 Automatic breadcrumb generation
--   🤡 Custom metadata fields
 
 </details></p>
 
+## Main features
+
+-   **Google Docs** formatting options (headings, bullets, tables, images...)
+-   `gatsby-image` support
+-   `MDX` support to use `<ReactComponents />` in your documents
+-   Slug generation from **Google Drive** tree
+-   Crosslinks between pages
+-   Related content
+-   Custom metadata to enhance documents
+-   **Gatsby Cloud** support
+
+## Documentation
+
+To preview what you can do, please checkout [the documentation website](https://cedricdelpoux.github.io/gatsby-source-google-docs/).
+
+-   💯 100% content of this site is from Google Docs
+-   👨🏻‍💻 Source code [here](/examples/website)
+-   🗂 Source content [here](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
+
+Please suggest edits from Google Docs to improve it.
+
 ## Install
 
-Download `gatsby-source-google-docs` and `gatsby-transformer-remark`
+Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby-plugin-mdx` for [advanced usage](/examples/website))
 
 ```shell
 yarn add gatsby-source-google-docs gatsby-transformer-remark
@@ -43,6 +62,7 @@ yarn add gatsby-source-google-docs gatsby-transformer-remark
 
 -   `gatsby-source-google-docs` transform **Google Docs** to **Markdown**
 -   `gatsby-transformer-remark` transform **Markdown** to **HTML**
+-   `gatsby-plugin-mdx` transform **Markdown** to **MDX**
 
 ## Generate a token
 
@@ -58,7 +78,7 @@ GOOGLE_DOCS_TOKEN={"access_token":"ya...J0","refresh_token":"1..mE","scope":"htt
 
 </details></p>
 
-`gatsby-source-google-docs` expose a script to generate them.
+`gatsby-source-google-docs` expose a script to generate it.
 
 -   Open a terminal at the root of your project
 -   Type the following command
@@ -100,12 +120,22 @@ slug: /custom-slug
 date: 2019-01-01
 ```
 
+> There are special metadata
+>
+> -   For folders:
+>     -   `exclude: true`: Exclude the folder and its documents
+>     -   `skip: true`: Remove the folder from slug but keep its documents
+> -   For documents:
+>     -   `index:true`: Use document as the folder index
+>     -   `page: false`: Prevent page creation when `createPages` option is set to `true`
+
 -   Spread metadata into the tree using folders metadata.
 
 > ⬆️ For the tree example above:
 >
 > -   Every node will have `template: page` defined as default excepts if you redefine it later.
 > -   You need to create 3 different templates: `page` (default), `home`, `post`. [Checkout the example template](./example/src/templates/page.js)
+> -   "en" folder will be removed from slug because of `skip: true`
 
 -   Exclude folders and documents using `exclude: true`. Perfect to keep drafts documents. One you want to publish a page, juste move the document one level up.
 
@@ -166,6 +196,22 @@ You also can add metadata (`locale`, `date`, `template`, ...) to your documents.
 
 ### Add the plugin to your `gatsby-config.js` file
 
+| Option         | Required | Type    | Default | Example        |
+| -------------- | -------- | ------- | ------- | -------------- |
+| folder         | `true`   | String  | `null`  | `"1Tn1dCbIc"`  |
+| createPages    | `false`  | Boolean | `false` | `true`         |
+| pageContext    | `false`  | Array   | `[]`    | `["locale"]`   |
+| demoteHeadings | `false`  | Boolean | `true`  | `false`        |
+| imagesOptions  | `false`  | Object  | `null`  | `{width: 512}` |
+| skipCodes      | `false`  | Boolean | `false` | `true`         |
+| skipFootnotes  | `false`  | Boolean | `false` | `true`         |
+| skipHeadings   | `false`  | Boolean | `false` | `true`         |
+| skipImages     | `false`  | Boolean | `false` | `true`         |
+| skipLists      | `false`  | Boolean | `false` | `true`         |
+| skipQuotes     | `false`  | Boolean | `false` | `true`         |
+| skipTables     | `false`  | Boolean | `false` | `true`         |
+| debug          | `false`  | Boolean | `false` | `true`         |
+
 ```js
 module.exports = {
     plugins: [
@@ -178,6 +224,9 @@ module.exports = {
             },
         },
         "gatsby-transformer-remark",
+        //
+        // OR "gatsby-plugin-mdx" for advanced usage using MDX
+        //
         // You need some transformations?
         // Checkout https://www.gatsbyjs.com/plugins/?=gatsby-remark
         // And pick-up some plugins
@@ -247,22 +296,6 @@ require("prismjs/themes/prism.css")
 
 </details></p>
 
-| Option         | Required | Type    | Default | Example        |
-| -------------- | -------- | ------- | ------- | -------------- |
-| folder         | `true`   | String  | `null`  | `"1Tn1dCbIc"`  |
-| createPages    | `false`  | Boolean | `false` | `true`         |
-| pageContext    | `false`  | Array   | `[]`    | `["locale"]`   |
-| demoteHeadings | `false`  | Boolean | `true`  | `false`        |
-| imagesOptions  | `false`  | Object  | `null`  | `{width: 512}` |
-| skipCodes      | `false`  | Boolean | `false` | `true`         |
-| skipFootnotes  | `false`  | Boolean | `false` | `true`         |
-| skipHeadings   | `false`  | Boolean | `false` | `true`         |
-| skipImages     | `false`  | Boolean | `false` | `true`         |
-| skipLists      | `false`  | Boolean | `false` | `true`         |
-| skipQuotes     | `false`  | Boolean | `false` | `true`         |
-| skipTables     | `false`  | Boolean | `false` | `true`         |
-| debug          | `false`  | Boolean | `false` | `true`         |
-
 ### Create templates and pages
 
 Using `createPages: true` option, pages will be created automatically.
@@ -285,6 +318,7 @@ If you prefer to create pages manualy, checkout the [createPages API](./src/util
 You are using `gatsby-source-google-docs` for your website? Thank you!
 Please add the link bellow:
 
+-   [documentation](https://cedricdelpoux.github.io/gatsby-source-google-docs/)
 -   [cedricdelpoux](https://cedricdelpoux.fr/en)
 
 ## Contributing
