@@ -35,7 +35,8 @@
 
 -   **Google Docs** formatting options (headings, bullets, tables, images...)
 -   `MDX` support to use `<ReactComponents />` in your documents
--   `gatsby-image` support
+-   **Gatsby** v3 & v2 support
+-   `gatsby-plugin-image` and `gatsby-image` support
 -   Code blocs support
 -   **Gatsby Cloud** support
 -   Slug generation from **Google Drive** tree

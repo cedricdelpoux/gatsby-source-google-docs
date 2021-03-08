@@ -4,7 +4,7 @@ exports.createSchema = ({actions}) => {
     type Cover {
       title: String
       alt: String
-      image: File
+      image: File @link(by: "id", from: "image___NODE")
     }
 
     type BreadcrumbItem {

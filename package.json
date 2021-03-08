@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "dotenv": "^8.2.0",
-    "gatsby": "^2.0.0"
+    "gatsby": "^2.0.0 || ^3.0.0"
   },
   "bin": {
     "gatsby-source-google-docs-token": "./utils/generate-token.js"
