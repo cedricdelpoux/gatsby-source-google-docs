@@ -11,7 +11,7 @@ import {GatsbyLogo} from "../components/gatsby-logo"
 import {Grid} from "../components/grid"
 import {Menu} from "../components/menu"
 
-export default ({children}) => {
+const LayoutIndex = ({children}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [colorMode, setColorMode] = useColorMode()
   const location = useLocation()
@@ -52,7 +52,6 @@ export default ({children}) => {
           onKeyDown={() => setIsMenuOpen(!isMenuOpen)}
           role="button"
           tabIndex="0"
-          ariaLabel="Toggle Menu"
         >
           <RiMenuLine />
         </div>
@@ -94,8 +93,6 @@ export default ({children}) => {
         <Menu open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         <div
           sx={{
-            display: "flex",
-            flexDirection: "column",
             "& > p": {
               mb: 0,
             },
@@ -155,3 +152,5 @@ export default ({children}) => {
     </div>
   )
 }
+
+export default LayoutIndex

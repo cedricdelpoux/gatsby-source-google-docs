@@ -1,29 +1,34 @@
 import {graphql} from "gatsby"
-import Img from "gatsby-image"
+import {GatsbyImage, getImage} from "gatsby-plugin-image"
 import {MDXRenderer} from "gatsby-plugin-mdx"
 import React from "react"
 import {Styled} from "theme-ui"
 /** @jsx jsx */
 import {jsx} from "theme-ui"
 
-export default ({
+const H1 = Styled.h1
+
+const PageTemplate = ({
   data: {
     page: {name, cover, childMdx},
   },
 }) => {
+  console.log(cover)
   return (
     <React.Fragment>
-      <Styled.h1>{name}</Styled.h1>
+      <H1>{name}</H1>
       {/*
         To add a cover:
         Add an image in your Google Doc first page header
         https://support.google.com/docs/answer/86629
       */}
-      {cover && <Img fluid={cover.image.childImageSharp.fluid} />}
+      {cover && <GatsbyImage image={getImage(cover.image)} />}
       <MDXRenderer>{childMdx.body}</MDXRenderer>
     </React.Fragment>
   )
 }
+
+export default PageTemplate
 
 export const pageQuery = graphql`
   query Page($path: String!) {
@@ -32,9 +37,7 @@ export const pageQuery = graphql`
       cover {
         image {
           childImageSharp {
-            fluid(maxWidth: 500, quality: 100) {
-              ...GatsbyImageSharpFluid
-            }
+            gatsbyImageData(placeholder: BLURRED)
           }
         }
       }

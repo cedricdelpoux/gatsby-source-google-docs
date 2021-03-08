@@ -9,13 +9,14 @@ module.exports = {
       // resolve: "gatsby-source-google-docs",
       resolve: require.resolve(`../..`),
       options: {
-        folder: process.env.GOOGLE_DOCS_FOLDER,
+        // https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag
+        folder: "1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag",
         // --------
         // Optional
         // --------
         debug: false,
         createPages: true,
-        skipImages: DEV ? true : false,
+        // skipImages: DEV ? true : false,
         imagesOptions: {
           width: DEV ? 512 : 1024,
         },

@@ -5,9 +5,9 @@ module.exports = {
     {
       resolve: require.resolve(`../..`),
       options: {
-        folder: process.env.GOOGLE_DOCS_FOLDER,
+        // https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag
+        folder: "1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag",
         createPages: true,
-        keepDefaultStyle: true,
       },
     },
     "gatsby-plugin-sharp",

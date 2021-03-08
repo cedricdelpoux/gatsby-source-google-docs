@@ -1,7 +1,7 @@
 import {Link} from "gatsby"
 import React from "react"
 
-export default () => {
+const Page404 = () => {
   return (
     <main>
       <Link to="/">
@@ -11,3 +11,5 @@ export default () => {
     </main>
   )
 }
+
+export default Page404

@@ -1,7 +1,7 @@
 const gradientBackground = (theme) =>
   `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`
 
-export default {
+const theme = {
   space: [0, 8, 16, 32, 64],
   radii: [0, 10, 20],
   breakpoints: ["500px", "800px", "1080px"],
@@ -84,3 +84,5 @@ export default {
     },
   },
 }
+
+export default theme

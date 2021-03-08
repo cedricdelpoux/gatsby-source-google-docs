@@ -23,7 +23,6 @@ export const Menu = ({open, onClose}) => {
         onKeyDown={onClose}
         role="button"
         tabIndex="0"
-        ariaLabel="Close menu"
         sx={{
           position: "fixed",
           top: 0,
@@ -33,6 +32,7 @@ export const Menu = ({open, onClose}) => {
           bg: "black",
           opacity: "0.5",
           display: open ? "block" : "none",
+          zIndex: 1,
         }}
       >
         {" "}
@@ -40,6 +40,7 @@ export const Menu = ({open, onClose}) => {
       {/* Sidebar */}
       <div
         sx={{
+          zIndex: 2,
           position: "fixed",
           top: 0,
           left: 0,
