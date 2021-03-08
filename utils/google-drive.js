@@ -4,9 +4,9 @@ const _chunk = require("lodash/chunk")
 const _flatten = require("lodash/flatten")
 const GoogleOAuth2 = require("google-oauth2-env-vars")
 const yamljs = require("yamljs")
-const wyt = require("@forivall/wyt")
 
 const {ENV_TOKEN_VAR} = require("./constants")
+const {wait} = require("./wait")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
@@ -147,7 +147,7 @@ async function getGoogleDrive() {
  */
 
 // 10 per 1.5 seconds.
-const rateLimit = wyt(10, 1500)
+const rateLimit = wait(10, 1500)
 const BATCH_SIZE = 100
 /**
  * @param {import('..').Options & FetchDocumentsOptions} options
