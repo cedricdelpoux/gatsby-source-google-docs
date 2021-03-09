@@ -953,7 +953,7 @@
     semver "^7.1.2"
     tempy "^1.0.0"
 
-"@semantic-release/release-notes-generator@^9.0.0", "@semantic-release/release-notes-generator@^9.0.1":
+"@semantic-release/release-notes-generator@^9.0.0":
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/@semantic-release/release-notes-generator/-/release-notes-generator-9.0.1.tgz#732d285d103064f2a64f08a32031551ebb4f918b"
   integrity sha512-bOoTiH6SiiR0x2uywSNR7uZcRDl22IpZhj+Q5Bn0v+98MFtOMhCxFhbrKQjhbYoZw7vps1mvMRmFkp/g6R9cvQ==
@@ -966,6 +966,22 @@
     get-stream "^5.0.0"
     import-from "^3.0.0"
     into-stream "^5.0.0"
+    lodash "^4.17.4"
+    read-pkg-up "^7.0.0"
+
+"@semantic-release/release-notes-generator@^9.0.2":
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/@semantic-release/release-notes-generator/-/release-notes-generator-9.0.2.tgz#a00da9f984b6d42d16e037ecd529f58665cde938"
+  integrity sha512-xGFSidhGqB27uwgWCU6y0gbf4r/no5flOAkJyFFc4+bPf8S+LfAVm7xhhlK5VPXLt2Iu1RBH8F+IgMK2ah5YpA==
+  dependencies:
+    conventional-changelog-angular "^5.0.0"
+    conventional-changelog-writer "^4.0.0"
+    conventional-commits-filter "^2.0.0"
+    conventional-commits-parser "^3.0.0"
+    debug "^4.0.0"
+    get-stream "^5.0.0"
+    import-from "^3.0.0"
+    into-stream "^6.0.0"
     lodash "^4.17.4"
     read-pkg-up "^7.0.0"
 
@@ -2985,10 +3001,10 @@ eslint-config-prettier@^8.1.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.1.0.tgz#4ef1eaf97afe5176e6a75ddfb57c335121abc5a6"
   integrity sha512-oKMhGv3ihGbCIimCAjqkdzx2Q+jthoqnXSP+d86M9tptwugycmTFdVR4IpLgq2c4SHifbwO90z2fQ8/Aio73yw==
 
-eslint-plugin-jest@^24.1.7:
-  version "24.1.7"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.1.7.tgz#77cb4e88ec2559721aa083a5905ef9e27fa12059"
-  integrity sha512-p5Dk/Rgiv+ThxguYl96dj7Hqkow09dwSH1G5ALKdREM4pHO1V1xP0N6/myzoquD3z4h+1YPYHzM+g7Fd0xyaXg==
+eslint-plugin-jest@^24.2.0:
+  version "24.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.2.0.tgz#2d7784f58bf424b7ba888305c6c070f80bd2af5d"
+  integrity sha512-PZ6+/cOldZxpGF3rVYX6Y+83AUAI4jofdtyVrjimVHgXHfPBC5UKVTn92f6aFFV9HuD8xa1WNqY5s3kgfSzROQ==
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.0.1"
 
@@ -3423,6 +3439,16 @@ file-type@^16.0.0:
     token-types "^2.0.0"
     typedarray-to-buffer "^3.1.5"
 
+file-type@^16.2.0:
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-16.3.0.tgz#f03af91db30f92cc9a0b335c0644c46101522f6d"
+  integrity sha512-ZA0hV64611vJT42ltw0T9IDwHApQuxRdrmQZWTeDmeAUtZBBVSQW3nSQqhhW1cAgpXgqcJvm410BYHXJQ9AymA==
+  dependencies:
+    readable-web-to-node-stream "^3.0.0"
+    strtok3 "^6.0.3"
+    token-types "^2.0.0"
+    typedarray-to-buffer "^3.1.5"
+
 fill-range@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-4.0.0.tgz#d544811d428f98eb06a63dc402d2403c328c38f7"
@@ -3663,30 +3689,31 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-gatsby-core-utils@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/gatsby-core-utils/-/gatsby-core-utils-1.10.0.tgz#7df5bc7b7e810c71602d5ec18a925e8a7890fb45"
-  integrity sha512-uI5gJXmVHegn8E/vttoX0BaXRJPC73RzxuZDtl2U5WBEgeg+VVkKCmNVQE9Xk+Qstm2Wd6RU+QJ4LMx5ywYZhQ==
+gatsby-core-utils@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/gatsby-core-utils/-/gatsby-core-utils-2.0.0.tgz#00fdc1f2efcaabe7426e63b020a7117ca613780c"
+  integrity sha512-+DrClKZ/ScTbzhIHZXuU3DoIhEJ95uJV+swR7VVqYVhEpV1CnjUGR/dB+tMd0VqlPdrXB38FuR8O5kuSvYm+/A==
   dependencies:
     ci-info "2.0.0"
     configstore "^5.0.1"
+    file-type "^16.2.0"
     fs-extra "^8.1.0"
     node-object-hash "^2.0.0"
     proper-lockfile "^4.1.1"
     tmp "^0.2.1"
     xdg-basedir "^4.0.0"
 
-gatsby-source-filesystem@2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/gatsby-source-filesystem/-/gatsby-source-filesystem-2.11.0.tgz#3fff5398796b17eb960e83d0eaa99e578b6e4ef1"
-  integrity sha512-SLKksyfRvdMHyF0kb3YCr4ME6RW4Pje9zo1RVAJ1sqaBFDch0YUZzTE51QO586JSkrN00UeE8lU++ODXlm425g==
+gatsby-source-filesystem@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/gatsby-source-filesystem/-/gatsby-source-filesystem-3.0.0.tgz#6f82e8eeac8772be2848bee9959f217c87f5b86e"
+  integrity sha512-t51BSxAqRKO/veY99U/TcsWA7C1MRIokOJHGHoJij1ZLBzvB2GMB7dNQHhAyHa7MWwfzAwd7jI/TJCJX9l0KlQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     better-queue "^3.8.10"
     chokidar "^3.4.3"
     file-type "^16.0.0"
     fs-extra "^8.1.0"
-    gatsby-core-utils "^1.10.0"
+    gatsby-core-utils "^2.0.0"
     got "^9.6.0"
     md5-file "^5.0.0"
     mime "^2.4.6"
@@ -4455,6 +4482,14 @@ into-stream@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/into-stream/-/into-stream-5.1.1.tgz#f9a20a348a11f3c13face22763f2d02e127f4db8"
   integrity sha512-krrAJ7McQxGGmvaYbB7Q1mcA+cRwg9Ij2RfWIeVesNBgVDZmzY/Fa4IpZUT3bmdRzMzdf/mzltCG2Dq99IZGBA==
+  dependencies:
+    from2 "^2.3.0"
+    p-is-promise "^3.0.0"
+
+into-stream@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/into-stream/-/into-stream-6.0.0.tgz#4bfc1244c0128224e18b8870e85b2de8e66c6702"
+  integrity sha512-XHbaOAvP+uFKUFsOgoNPRjLkwB+I22JFPFe5OjTkQ0nwgj6+pSjb4NmB6VMxaPshLiOf+zcpOCBQuLwC1KHhZA==
   dependencies:
     from2 "^2.3.0"
     p-is-promise "^3.0.0"
