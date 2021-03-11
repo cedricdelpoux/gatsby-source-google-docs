@@ -23,9 +23,9 @@ async function fetchDocument(id) {
   return res.data
 }
 
-/** @param {import('..').Options} pluginOptions */
-async function fetchDocuments(pluginOptions) {
-  const documentsProperties = await fetchFiles(pluginOptions)
+/** @param {import('..').Options} options */
+async function fetchDocuments(options) {
+  const documentsProperties = await fetchFiles(options)
   const links = documentsProperties.reduce(
     (acc, properties) => ({...acc, [properties.id]: properties.slug}),
     {}
@@ -37,7 +37,7 @@ async function fetchDocuments(pluginOptions) {
       const googleDocument = new GoogleDocument({
         document,
         properties,
-        pluginOptions,
+        options,
         links,
       })
 
