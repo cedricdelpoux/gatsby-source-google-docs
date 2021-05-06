@@ -48,13 +48,18 @@ class GoogleDocument {
       return ""
     }
 
+    let before = ""
+    let after = ""
     let text = el.textRun.content
       .replace(/\n$/, "") // Remove new lines
       .replace(/“|”/g, '"') // Replace smart quotes by double quotes
     const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/) // Match "text", "before" and "after"
-    const before = contentMatch[1]
-    const after = contentMatch[3]
-    text = contentMatch[2]
+
+    if (contentMatch) {
+      before = contentMatch[1]
+      text = contentMatch[2]
+      after = contentMatch[3]
+    }
 
     const defaultStyle = this.getTextStyle(namedStyleType)
     const textStyle = el.textRun.textStyle
