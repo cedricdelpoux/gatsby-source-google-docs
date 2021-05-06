@@ -131,6 +131,12 @@ exports[`Document "Quotes" to Markdown 1`] = `
 "
 `;
 
+exports[`Document "Special characters" to Markdown 1`] = `
+"
+<span style='color:rgb(51, 51, 51);background-color:rgb(255, 255, 255)'>19980006564 - 0081</span>
+"
+`;
+
 exports[`Document "Tables" to Markdown 1`] = `
 "| Col 1 | Col 2 | Col 3 |
 | ----- | ----- | ----- |
