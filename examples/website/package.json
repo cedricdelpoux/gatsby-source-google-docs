@@ -7,7 +7,7 @@
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "dev": "gatsby develop",
     "serve": "gatsby serve",
-    "token": "../utils/generate-token.js"
+    "token": "../../utils/generate-token.js"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.22",
