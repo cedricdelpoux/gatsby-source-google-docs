@@ -1,5 +1,5 @@
 language: node_js
-node_js: 14.9
+node_js: 15.0
 
 before_install:
   - yarn global add codecov
