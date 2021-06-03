@@ -345,6 +345,6 @@ Please add the link bellow:
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [badge-prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gatsby-source-google-docs
-[travis]: https://travis-ci.org/cedricdelpoux/gatsby-source-google-docs
+[travis]: https://travis-ci.com/cedricdelpoux/gatsby-source-google-docs
 [codecov]: https://codecov.io/gh/cedricdelpoux/gatsby-source-google-docs
 [github-issue]: https://github.com/cedricdelpoux/gatsby-source-google-docs/issues/new
