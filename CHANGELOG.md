@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0 (2021-06-14)
+
+-   Added
+    -   Use images titles for files names
+
 ## 2.0.0 (2021-01-01)
 
 -   Added
