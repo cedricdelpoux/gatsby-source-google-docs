@@ -66,7 +66,6 @@
     "test": "jest --coverage",
     "prepublishOnly": "yarn lint && yarn test",
     "semantic-release": "semantic-release",
-    "pre-commit": "lint-staged",
     "prepare": "husky install"
   }
 }
