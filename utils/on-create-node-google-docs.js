@@ -1,9 +1,11 @@
 const _get = require("lodash/get")
+const _kebabCase = require("lodash/kebabCase")
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
 const {getImageUrlParameters} = require("./get-image-url-parameters")
 
-const GOOGLE_IMAGE_REGEX = /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/
+const GOOGLE_IMAGE_REGEX =
+  /(https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*) "([^)]*)"/
 
 exports.onCreateNodeGoogleDocs = async ({
   node,
@@ -47,13 +49,16 @@ exports.onCreateNodeGoogleDocs = async ({
     }
   }
 
-  const googleUrls = node.markdown.match(
-    new RegExp(GOOGLE_IMAGE_REGEX.source, "g")
-  )
+  const googleImagesRegex = new RegExp(GOOGLE_IMAGE_REGEX.source, "g")
+  const googleImagesIterator = node.markdown.matchAll(googleImagesRegex)
+  const googleImages = [...googleImagesIterator]
 
-  if (Array.isArray(googleUrls)) {
+  if (Array.isArray(googleImages)) {
     const filesNodes = await Promise.all(
-      googleUrls.map(async (url) => {
+      googleImages.map(async (image) => {
+        // console.log(image)
+        const [, url, title] = image
+        console.log(title)
         let fileNode
         try {
           fileNode = await createRemoteFileNode({
@@ -63,7 +68,9 @@ exports.onCreateNodeGoogleDocs = async ({
             createNodeId,
             cache,
             store,
-            name: "google-docs-image-" + createNodeId(url),
+            name: title
+              ? _kebabCase(title)
+              : "google-docs-image-" + createNodeId(url),
             reporter,
           })
         } catch (e) {
