@@ -4,8 +4,12 @@ const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
 const {getImageUrlParameters} = require("./get-image-url-parameters")
 
-const GOOGLE_IMAGE_REGEX =
-  /(https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*) "([^)]*)"/
+const IMAGE_URL_REGEX =
+  /https:\/\/[a-z0-9]*.googleusercontent\.com\/[a-zA-Z0-9_-]*/
+const MD_URL_TITLE_REGEX = new RegExp(
+  `(${IMAGE_URL_REGEX.source}) "([^)]*)"`,
+  "g"
+)
 
 exports.onCreateNodeGoogleDocs = async ({
   node,
@@ -21,7 +25,7 @@ exports.onCreateNodeGoogleDocs = async ({
 
   const imageUrlParams = getImageUrlParameters(pluginOptions)
 
-  if (node.cover && GOOGLE_IMAGE_REGEX.test(node.cover.image)) {
+  if (node.cover && IMAGE_URL_REGEX.test(node.cover.image)) {
     let fileNode
     try {
       const url = node.cover.image + imageUrlParams
@@ -49,16 +53,13 @@ exports.onCreateNodeGoogleDocs = async ({
     }
   }
 
-  const googleImagesRegex = new RegExp(GOOGLE_IMAGE_REGEX.source, "g")
-  const googleImagesIterator = node.markdown.matchAll(googleImagesRegex)
+  const googleImagesIterator = node.markdown.matchAll(MD_URL_TITLE_REGEX)
   const googleImages = [...googleImagesIterator]
 
   if (Array.isArray(googleImages)) {
     const filesNodes = await Promise.all(
       googleImages.map(async (image) => {
-        // console.log(image)
         const [, url, title] = image
-        console.log(title)
         let fileNode
         try {
           fileNode = await createRemoteFileNode({
