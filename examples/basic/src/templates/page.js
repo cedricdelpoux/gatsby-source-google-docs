@@ -2,7 +2,7 @@ import {Link, graphql} from "gatsby"
 import Img from "gatsby-image"
 import React from "react"
 
-export default ({
+const TemplatePage = ({
   data: {
     page: {
       name,
@@ -27,6 +27,8 @@ export default ({
     </>
   )
 }
+
+export default TemplatePage
 
 export const pageQuery = graphql`
   query Page($path: String!) {
