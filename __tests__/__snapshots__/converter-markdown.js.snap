@@ -140,8 +140,8 @@ exports[`Document "Special characters" to Markdown 1`] = `
 exports[`Document "Tables" to Markdown 1`] = `
 "| Col 1 | Col 2 | Col 3 |
 | ----- | ----- | ----- |
-| Col 1 line 1 | Col 2 line 1 | Col 3 line 1
-Col 1 line 2 | Col 2 line 2 | Col 3 line 2 |
+| Col 1 line 1 | Col 2 line 1 | Col 3 line 1 |
+| Col 1 line 2 | Col 2 line 2 | Col 3 line 2 |
 "
 `;
 
