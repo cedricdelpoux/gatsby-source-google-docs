@@ -361,7 +361,7 @@ Object {
     },
     Object {
       "type": "p",
-      "value": "verticalindent",
+      "value": "vertical<br/>indent",
     },
     Object {
       "type": "p",

@@ -45,7 +45,7 @@ text with **space bold after** and _space italic before_.
 		indented text
 
 
-verticalindent
+vertical<br/>indent
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
@@ -106,7 +106,7 @@ text with **space bold after** and _space italic before_.
 		indented text
 
 
-verticalindent
+vertical<br/>indent
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
@@ -167,7 +167,7 @@ text with **space bold after** and _space italic before_.
 		indented text
 
 
-verticalindent
+vertical<br/>indent
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
@@ -242,7 +242,7 @@ text with **space bold after** and _space italic before_.
 		indented text
 
 
-verticalindent
+vertical<br/>indent
 
 
 [Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)

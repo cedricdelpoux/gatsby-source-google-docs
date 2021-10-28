@@ -17,6 +17,7 @@ module.exports = {
     },
   },
   rules: {
+    "no-control-regex": 0,
     "react/prop-types": "off",
     "react/display-name": "off",
   },

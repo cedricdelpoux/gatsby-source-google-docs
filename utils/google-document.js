@@ -53,6 +53,7 @@ class GoogleDocument {
     let text = el.textRun.content
       .replace(/\n$/, "") // Remove new lines
       .replace(/“|”/g, '"') // Replace smart quotes by double quotes
+      .replace(/\u000b/g, "<br/>") // Replace soft lines breaks, vertical tabs
     const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/) // Match "text", "before" and "after"
 
     if (contentMatch) {
@@ -211,7 +212,6 @@ class GoogleDocument {
     return content
       .map(({paragraph}) => paragraph.elements.map(this.formatText).join(""))
       .join("")
-      .replace(/\n/g, "<br/>") // Replace newline characters by <br/> to avoid multi-paragraphs
   }
 
   indentText(text, level) {
@@ -408,10 +408,10 @@ class GoogleDocument {
       .map(({paragraph}) =>
         paragraph.elements.map((el) => el.textRun.content).join("")
       )
-      .join("")
-      .replace(/\x0B/g, "\n") //eslint-disable-line no-control-regex
-      .replace(/^\n|\n$/g, "")
-      .split("\n")
+      .join("") // Transform to string
+      .replace(/\x0B/g, "\n") // Replace vertical tabs
+      .replace(/^\n|\n$/g, "") // Remove new lines characters at the beginning and end of line
+      .split("\n") // Transform to array
 
     // "".split() -> [""]
     if (codeContent.length === 1 && codeContent[0] === "") return
