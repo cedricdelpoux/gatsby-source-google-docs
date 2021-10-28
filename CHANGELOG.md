@@ -1,9 +1,10 @@
 # Changelog
 
-## 2.1.0 (2021-06-14)
+## 2.1.0 (2021-10-28)
 
 -   Added
     -   Use images titles for files names
+    -   Handle soft lines breaks
 
 ## 2.0.0 (2021-01-01)
 
