@@ -35,7 +35,7 @@
 
 -   **Google Docs** formatting options (headings, bullets, tables, images...)
 -   `MDX` support to use `<ReactComponents />` in your documents
--   **Gatsby** v3 & v2 support
+-   **Gatsby** v3 & v4 support
 -   `gatsby-plugin-image` and `gatsby-image` support
 -   Code blocs support
 -   **Gatsby Cloud** support

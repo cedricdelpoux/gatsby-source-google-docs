@@ -2,9 +2,17 @@ const _merge = require("lodash/merge")
 
 const {fetchDocuments} = require("./google-docs")
 const {DEFAULT_OPTIONS} = require("./constants")
+const {updateImages} = require("./update-images")
 
 exports.sourceNodes = async (
-  {actions: {createNode}, createContentDigest, reporter},
+  {
+    actions: {createNode},
+    createContentDigest,
+    reporter,
+    store,
+    cache,
+    createNodeId,
+  },
   pluginOptions
 ) => {
   const options = _merge({}, DEFAULT_OPTIONS, pluginOptions)
@@ -38,17 +46,31 @@ exports.sourceNodes = async (
       const {document, properties, cover, related} = googleDocument
       const markdown = googleDocument.toMarkdown()
 
-      createNode({
+      const node = {
         ...properties,
         document,
         cover,
         markdown,
-        related___NODE: related,
+        related,
+      }
+
+      await updateImages({
+        node,
+        createNode,
+        store,
+        cache,
+        createNodeId,
+        reporter,
+        pluginOptions,
+      })
+
+      createNode({
+        ...node,
         internal: {
           type: "GoogleDocs",
           mediaType: "text/markdown",
-          content: markdown,
-          contentDigest: createContentDigest(markdown),
+          content: node.markdown,
+          contentDigest: createContentDigest(node.markdown),
         },
         dir: process.cwd(), // To make gatsby-remark-images works
       })

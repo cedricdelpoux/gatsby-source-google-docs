@@ -4,7 +4,7 @@ exports.createSchema = ({actions}) => {
     type Cover {
       title: String
       alt: String
-      image: File @link(by: "id", from: "image___NODE")
+      image: File @link
     }
 
     type BreadcrumbItem {
@@ -18,6 +18,8 @@ exports.createSchema = ({actions}) => {
       breadcrumb: [BreadcrumbItem!]!
       template: String
       cover: Cover
+      related: [GoogleDocs!] @link
+      images: [File] @link
     }
   `
   createTypes(typeDefs)

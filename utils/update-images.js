@@ -11,13 +11,12 @@ const MD_URL_TITLE_REGEX = new RegExp(
   "g"
 )
 
-exports.onCreateNodeGoogleDocs = async ({
+exports.updateImages = async ({
   node,
-  actions: {createNode},
+  createNode,
   store,
   cache,
   createNodeId,
-  createContentDigest,
   reporter,
   pluginOptions,
 }) => {
@@ -45,11 +44,7 @@ exports.onCreateNodeGoogleDocs = async ({
     }
 
     if (fileNode) {
-      delete node.cover.image
-      node.cover.image___NODE = fileNode.id
-
-      // fileNode.id is useful to link MarkdownRemark cover nodes
-      await cache.set(fileNode.relativePath, fileNode.id)
+      node.cover.image = fileNode.id
     }
   }
 
@@ -92,11 +87,12 @@ exports.onCreateNodeGoogleDocs = async ({
         )
       })
 
-    node.images___NODE = filesNodes
+    const imagesIds = filesNodes
       .filter((fileNode) => fileNode)
       .map((fileNode) => fileNode.id)
+
+    node.images = imagesIds
   }
 
-  node.internal.content = node.markdown
-  node.internal.contentDigest = createContentDigest(node.markdown)
+  return
 }

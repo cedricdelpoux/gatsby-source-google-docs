@@ -1,29 +1,19 @@
-const {onCreateNodeGoogleDocs} = require("./on-create-node-google-docs")
-const {onCreateNodeMarkdownRemark} = require("./on-create-node-markdown-remark")
+const _get = require("lodash/get")
 
-exports.onCreateNode = async (
-  {node, actions, store, cache, createNodeId, createContentDigest, reporter},
-  pluginOptions
-) => {
-  if (node.internal.type === "GoogleDocs") {
-    await onCreateNodeGoogleDocs({
-      node,
-      actions,
-      store,
-      cache,
-      createNodeId,
-      createContentDigest,
-      reporter,
-      pluginOptions,
-    })
+exports.onCreateNode = async ({node, getNode}, pluginOptions) => {
+  if (_get(pluginOptions, "skipImages") === true) return
+  if (_get(node, "frontmatter.cover") === null) return
+
+  const googleDocsNode = getNode(node.parent)
+
+  if (googleDocsNode) {
+    const coverImageId = _get(googleDocsNode, "cover.image")
+
+    if (coverImageId) {
+      delete node.frontmatter.cover.image
+      node.frontmatter.cover.image___NODE = coverImageId
+    }
   }
 
-  if (node.internal.type === "MarkdownRemark") {
-    await onCreateNodeMarkdownRemark({
-      node,
-      actions,
-      cache,
-      pluginOptions,
-    })
-  }
+  return
 }
