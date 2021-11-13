@@ -44,6 +44,7 @@ module.exports = {
     "gatsby-plugin-eslint",
     "gatsby-plugin-layout",
     "gatsby-plugin-theme-ui",
+    "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
     "gatsby-plugin-mdx-embed",

@@ -51,7 +51,7 @@ const theme = {
   styles: {
     root: {
       backgroundImage: gradientBackground,
-      margin: [2, 3],
+      padding: [2, 3],
       fontFamily: "Quicksand",
     },
     a: {

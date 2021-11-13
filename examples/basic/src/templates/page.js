@@ -1,5 +1,5 @@
 import {Link, graphql} from "gatsby"
-import Img from "gatsby-image"
+import {GatsbyImage, getImage} from "gatsby-plugin-image"
 import React from "react"
 
 const TemplatePage = ({
@@ -22,7 +22,7 @@ const TemplatePage = ({
         Add an image in your Google Doc first page header
         https://support.google.com/docs/answer/86629
       */}
-      {cover && <Img fluid={cover.image.childImageSharp.fluid} />}
+      {cover && <GatsbyImage image={getImage(cover.image)} />}
       <div dangerouslySetInnerHTML={{__html: html}} />
     </>
   )
@@ -37,9 +37,7 @@ export const pageQuery = graphql`
       cover {
         image {
           childImageSharp {
-            fluid(maxWidth: 500, quality: 100) {
-              ...GatsbyImageSharpFluid
-            }
+            gatsbyImageData
           }
         }
       }

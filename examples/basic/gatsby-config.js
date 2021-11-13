@@ -8,8 +8,10 @@ module.exports = {
         // https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag
         folder: "1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag",
         createPages: true,
+        skipImages: false,
       },
     },
+    "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
     {
