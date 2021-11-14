@@ -36,11 +36,11 @@ exports.sourceNodes = async (
   timer.start()
 
   try {
-    timer.setStatus("fetching")
+    timer.setStatus("fetching Google Docs documents")
 
     const googleDocuments = await fetchDocuments(options)
 
-    timer.setStatus("creating nodes")
+    timer.setStatus("downloading Google Docs images locally")
 
     for (let googleDocument of googleDocuments) {
       const {document, properties, cover, related} = googleDocument
