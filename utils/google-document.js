@@ -210,10 +210,15 @@ class GoogleDocument {
 
   getTableCellContent(content) {
     return content
-      .map(({paragraph}) => paragraph.elements.map(this.formatText).join(""))
+      .map((contentElement) => {
+        const hasParagraph = contentElement.paragraph
+
+        if (!hasParagraph) return ""
+        return contentElement.paragraph.elements.map(this.formatText).join("")
+      })
       .join("")
   }
-
+  
   indentText(text, level) {
     return `${_repeat(HORIZONTAL_TAB_CHAR, level)}${text}`
   }
