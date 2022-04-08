@@ -8,7 +8,7 @@ import {Button, Styled, jsx, useColorMode} from "theme-ui"
 
 import {Details} from "../components/details"
 import {GatsbyLogo} from "../components/gatsby-logo"
-import {Grid} from "../components/grid"
+import {Masonry} from "../components/masonry"
 import {Menu} from "../components/menu"
 
 const LayoutIndex = ({children}) => {
@@ -120,7 +120,9 @@ const LayoutIndex = ({children}) => {
             },
           }}
         >
-          <MDXProvider components={{Button, Details, GatsbyLogo, Grid, Link}}>
+          <MDXProvider
+            components={{Button, Details, GatsbyLogo, Masonry, Link}}
+          >
             {children}
           </MDXProvider>
         </div>
