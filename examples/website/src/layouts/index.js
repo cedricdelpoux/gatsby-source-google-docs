@@ -4,7 +4,7 @@ import {Link} from "gatsby"
 import {useEffect, useState} from "react"
 import {RiMenuLine, RiMoonLine, RiSunLine} from "react-icons/ri"
 /** @jsx jsx */
-import {Button, Styled, jsx, useColorMode} from "theme-ui"
+import {Button, Themed, jsx, useColorMode} from "theme-ui"
 
 import {Details} from "../components/details"
 import {GatsbyLogo} from "../components/gatsby-logo"
@@ -142,13 +142,13 @@ const LayoutIndex = ({children}) => {
       >
         <div>
           Made by{" "}
-          <Styled.a href="https://cedricdelpoux.fr">Cédric Delpoux</Styled.a>
+          <Themed.a href="https://cedricdelpoux.fr">Cédric Delpoux</Themed.a>
         </div>
         <div>
           Source code available on{" "}
-          <Styled.a href="https://github.com/cedricdelpoux/gatsby-source-google-docs">
+          <Themed.a href="https://github.com/cedricdelpoux/gatsby-source-google-docs">
             Github
-          </Styled.a>
+          </Themed.a>
         </div>
       </footer>
     </div>
