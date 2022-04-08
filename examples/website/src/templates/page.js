@@ -13,7 +13,6 @@ const PageTemplate = ({
     page: {name, cover, childMdx},
   },
 }) => {
-  console.log(cover)
   return (
     <React.Fragment>
       <H1>{name}</H1>
