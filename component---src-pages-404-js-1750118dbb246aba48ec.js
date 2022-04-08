@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkgatsby_source_google_docs_website=self.webpackChunkgatsby_source_google_docs_website||[]).push([[883],{9616:function(e,t,n){n.r(t);var l=n(5444),u=n(2784);t.default=function(){return u.createElement("main",null,u.createElement(l.Link,{to:"/"},u.createElement("button",null,"Home")),u.createElement("h1",null,"404"))}}}]);
-//# sourceMappingURL=component---src-pages-404-js-1750118dbb246aba48ec.js.map
