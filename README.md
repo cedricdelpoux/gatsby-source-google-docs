@@ -85,7 +85,7 @@ GOOGLE_DOCS_TOKEN={"access_token":"ya...J0","refresh_token":"1..mE","scope":"htt
 -   Type the following command
 
 ```shell
-gatsby-source-google-docs-token
+npx gatsby-source-google-docs-token
 ```
 
 ## Usage
