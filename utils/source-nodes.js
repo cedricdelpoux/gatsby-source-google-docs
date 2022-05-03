@@ -31,16 +31,13 @@ exports.sourceNodes = async (
     }
   }
 
-  const timer = reporter.activityTimer(`source-google-docs`)
-
-  timer.start()
-
   try {
+    const timer = reporter.activityTimer(`source-google-docs`)
+    timer.start()
     timer.setStatus("fetching Google Docs documents")
 
-    const googleDocuments = await fetchDocuments(options)
-
-    timer.setStatus("downloading Google Docs images locally")
+    const googleDocuments = await fetchDocuments({options, reporter})
+    let imagesCount = 0
 
     for (let googleDocument of googleDocuments) {
       const {document, properties, cover, related} = googleDocument
@@ -54,15 +51,19 @@ exports.sourceNodes = async (
         related,
       }
 
-      await updateImages({
+      timer.setStatus(`fetching "${node.name}" images`)
+
+      const documentImagesCount = await updateImages({
         node,
         createNode,
         store,
         cache,
         createNodeId,
         reporter,
-        pluginOptions,
+        options,
       })
+
+      imagesCount += documentImagesCount
 
       createNode({
         ...node,
@@ -76,7 +77,9 @@ exports.sourceNodes = async (
       })
     }
 
-    timer.setStatus(googleDocuments.length + " nodes created")
+    timer.setStatus(
+      `${googleDocuments.length} documents and ${imagesCount} images fetched`
+    )
 
     timer.end()
 

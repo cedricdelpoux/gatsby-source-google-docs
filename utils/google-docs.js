@@ -24,7 +24,14 @@ async function fetchDocument(id) {
 }
 
 /** @param {import('..').Options} options */
-async function fetchDocuments(options) {
+async function fetchDocuments({options, reporter}) {
+  const timer = reporter.activityTimer(`source-google-docs: documents`)
+
+  if (options.debug) {
+    timer.start()
+    timer.setStatus("fetching documents")
+  }
+
   const documentsProperties = await fetchFiles(options)
   const links = documentsProperties.reduce(
     (acc, properties) => ({...acc, [properties.id]: properties.slug}),
@@ -51,6 +58,11 @@ async function fetchDocuments(options) {
 
   if (process.env.NODE_ENV === "DOCS_TO_TESTS") {
     process.exit()
+  }
+
+  if (options.debug) {
+    timer.setStatus(googleDocuments.length + " documents fetched")
+    timer.end()
   }
 
   return googleDocuments

@@ -18,15 +18,29 @@ exports.updateImages = async ({
   cache,
   createNodeId,
   reporter,
-  pluginOptions,
+  options,
 }) => {
-  if (_get(pluginOptions, "skipImages") === true) return
+  if (_get(options, "skipImages") === true) return
 
-  const imageUrlParams = getImageUrlParameters(pluginOptions)
+  let imagesCount = 0
+
+  const timer = reporter.activityTimer(
+    `source-google-docs: "${node.name}" document images`
+  )
+
+  if (options.debug) {
+    timer.start()
+  }
+
+  const imageUrlParams = getImageUrlParameters(options)
 
   if (node.cover && IMAGE_URL_REGEX.test(node.cover.image)) {
     let fileNode
     try {
+      if (options.debug) {
+        timer.setStatus("fetching cover")
+      }
+
       const url = node.cover.image + imageUrlParams
 
       fileNode = await createRemoteFileNode({
@@ -39,6 +53,8 @@ exports.updateImages = async ({
         name: "google-docs-image-" + createNodeId(url),
         reporter,
       })
+
+      imagesCount++
     } catch (e) {
       reporter.warn(`source-google-docs: ${e}`)
     }
@@ -53,7 +69,11 @@ exports.updateImages = async ({
 
   if (Array.isArray(googleImages)) {
     const filesNodes = await Promise.all(
-      googleImages.map(async (image) => {
+      googleImages.map(async (image, i) => {
+        if (options.debug) {
+          timer.setStatus(`fetching image ${i}/${googleImages.length}`)
+        }
+
         const [, url, title] = image
         let fileNode
         try {
@@ -69,6 +89,8 @@ exports.updateImages = async ({
               : "google-docs-image-" + createNodeId(url),
             reporter,
           })
+
+          imagesCount++
         } catch (e) {
           reporter.warn(`source-google-docs: ${e}`)
         }
@@ -92,7 +114,12 @@ exports.updateImages = async ({
       .map((fileNode) => fileNode.id)
 
     node.images = imagesIds
+
+    if (options.debug) {
+      timer.setStatus(googleImages.length + " images fetched")
+      timer.end()
+    }
   }
 
-  return
+  return imagesCount
 }
