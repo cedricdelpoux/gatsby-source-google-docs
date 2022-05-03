@@ -14,7 +14,7 @@ module.exports = {
         // --------
         // Optional
         // --------
-        debug: false,
+        debug: true,
         createPages: true,
         // skipImages: DEV ? true : false,
         imagesOptions: {
