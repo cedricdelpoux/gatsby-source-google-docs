@@ -22,25 +22,30 @@ exports.updateImages = async ({
 }) => {
   if (_get(options, "skipImages") === true) return
 
-  let imagesCount = 0
-
   const timer = reporter.activityTimer(
-    `source-google-docs: "${node.name}" document images`
+    `source-google-docs: "${node.name}" document`
   )
 
   if (options.debug) {
     timer.start()
   }
 
+  const hasCover = node.cover && IMAGE_URL_REGEX.test(node.cover.image)
   const imageUrlParams = getImageUrlParameters(options)
+  const googleImagesIterator = node.markdown.matchAll(MD_URL_TITLE_REGEX)
+  const googleImages = [...googleImagesIterator]
+  const googleImagesCount = hasCover
+    ? googleImages.length + 1
+    : googleImages.length
+  let imagesFetchedCount = 0
 
-  if (node.cover && IMAGE_URL_REGEX.test(node.cover.image)) {
+  if (options.debug) {
+    timer.setStatus(`${imagesFetchedCount}/${googleImagesCount} images fetched`)
+  }
+
+  if (hasCover) {
     let fileNode
     try {
-      if (options.debug) {
-        timer.setStatus("fetching cover")
-      }
-
       const url = node.cover.image + imageUrlParams
 
       fileNode = await createRemoteFileNode({
@@ -54,7 +59,13 @@ exports.updateImages = async ({
         reporter,
       })
 
-      imagesCount++
+      imagesFetchedCount++
+
+      if (options.debug) {
+        timer.setStatus(
+          `${imagesFetchedCount}/${googleImagesCount} images fetched`
+        )
+      }
     } catch (e) {
       reporter.warn(`source-google-docs: ${e}`)
     }
@@ -64,16 +75,9 @@ exports.updateImages = async ({
     }
   }
 
-  const googleImagesIterator = node.markdown.matchAll(MD_URL_TITLE_REGEX)
-  const googleImages = [...googleImagesIterator]
-
   if (Array.isArray(googleImages)) {
     const filesNodes = await Promise.all(
-      googleImages.map(async (image, i) => {
-        if (options.debug) {
-          timer.setStatus(`fetching image ${i}/${googleImages.length}`)
-        }
-
+      googleImages.map(async (image) => {
         const [, url, title] = image
         let fileNode
         try {
@@ -90,7 +94,13 @@ exports.updateImages = async ({
             reporter,
           })
 
-          imagesCount++
+          imagesFetchedCount++
+
+          if (options.debug) {
+            timer.setStatus(
+              `${imagesFetchedCount}/${googleImagesCount} images fetched`
+            )
+          }
         } catch (e) {
           reporter.warn(`source-google-docs: ${e}`)
         }
@@ -116,10 +126,9 @@ exports.updateImages = async ({
     node.images = imagesIds
 
     if (options.debug) {
-      timer.setStatus(googleImages.length + " images fetched")
       timer.end()
     }
   }
 
-  return imagesCount
+  return imagesFetchedCount
 }
