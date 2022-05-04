@@ -9,6 +9,7 @@ module.exports = {
         folder: "1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag",
         createPages: true,
         skipImages: false,
+        debug: true,
       },
     },
     "gatsby-plugin-image",
