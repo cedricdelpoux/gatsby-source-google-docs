@@ -9,6 +9,7 @@
 -   Updated
 
     -   `createRemoteFileNode` is now called from `sourceNodes` instead of `onCreatedNode`
+    -   images are named using the convention "[DOCUMENT_NAME]-[IMAGE_INDEX]" if no title found
 
 -   Removed
     -   depracated MarkdownNodes cover support
