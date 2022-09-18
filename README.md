@@ -318,7 +318,7 @@ If you prefer to create pages manualy, checkout the [createPages API](./src/util
 ### Trigger production builds
 
 -   Go to [Google Drive example folder](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
--   Create a copy of **Trigger Gatsby Build** file using `Right Click -> Create a copy`
+-   Make a copy of **Trigger Gatsby Build** file using `Right Click -> Make a copy`
 -   Open your copy and update the **Build Webhook URL** in `A2`
 -   Click the **Deploy** button to trigger a new build
 
