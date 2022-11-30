@@ -44,6 +44,17 @@ class GoogleDocument {
       }
     }
 
+    // Person tag
+    if (el.person) {
+      return el.person.personProperties.name;
+    }
+
+    // Rich link
+    if (el.richLink) {
+      const props = el.richLink.richLinkProperties;
+      return `[${props.title}](${props.uri})`;
+    }
+
     if (!el.textRun || !el.textRun.content || !el.textRun.content.trim()) {
       return ""
     }
