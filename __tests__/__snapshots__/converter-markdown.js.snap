@@ -8,11 +8,11 @@ Type \`gatsby-source-google-docs-token\` to generate a token
 
 \`\`\`js
 
-const foo = \\"bar\\"
+const foo = "bar"
 
 module.exports = {
     plugins: [
-        \\"gatsby-source-google-docs\\",
+        "gatsby-source-google-docs",
     ],
 }
 \`\`\`
@@ -20,7 +20,7 @@ module.exports = {
 \`\`\`
 module.exports = {
     plugins: [
-        \\"gatsby-source-google-docs\\",
+        "gatsby-source-google-docs",
     ],
 }
 \`\`\`
@@ -68,7 +68,7 @@ and some other text
 `;
 
 exports[`Document "Images" to Markdown 1`] = `
-"![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw \\"\\")
+"![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw "")
 "
 `;
 
@@ -101,7 +101,7 @@ exports[`Document "Lists" to Markdown 1`] = `
  - List item 3
      1. Sub list item 1
          1. Sub sub list item 1
-         2. Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA \\"\\")image
+         2. Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA "")image
         
      2. Sub list item 2
      3. Sub list item 3
@@ -127,7 +127,7 @@ patterns.
 `;
 
 exports[`Document "Quotes" to Markdown 1`] = `
-"> \\"The way to get started is to quit talking and begin doing.\\"
+"> "The way to get started is to quit talking and begin doing."
 "
 `;
 
