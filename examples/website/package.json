@@ -13,7 +13,7 @@
     "@emotion/react": "^11.9.0",
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "gatsby": "^4.13.1",
+    "gatsby": "^4.25.7",
     "gatsby-plugin-catch-links": "^4.13.0",
     "gatsby-plugin-eslint": "^4.0.2",
     "gatsby-plugin-image": "^2.13.0",
