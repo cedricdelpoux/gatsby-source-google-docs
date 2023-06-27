@@ -13,7 +13,7 @@
     "gatsby": "^4.13.1",
     "gatsby-image": "^3.11.0",
     "gatsby-plugin-image": "^2.13.0",
-    "gatsby-plugin-sharp": "^4.13.0",
+    "gatsby-plugin-sharp": "^4.25.1",
     "gatsby-remark-gifs": "^1.1.0",
     "gatsby-remark-images": "^6.13.0",
     "gatsby-remark-unwrap-images": "^1.0.2",
