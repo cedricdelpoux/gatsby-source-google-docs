@@ -42,7 +42,6 @@ exports.sourceNodes = async (
     for (let googleDocument of googleDocuments) {
       const {document, properties, cover, related} = googleDocument
       const markdown = googleDocument.toMarkdown()
-
       const node = {
         ...properties,
         document,
