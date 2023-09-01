@@ -10,7 +10,7 @@
     "token": "../../utils/generate-token.js"
   },
   "dependencies": {
-    "gatsby": "^4.13.1",
+    "gatsby": "^4.25.7",
     "gatsby-image": "^3.11.0",
     "gatsby-plugin-image": "^2.13.0",
     "gatsby-plugin-sharp": "^4.13.0",
