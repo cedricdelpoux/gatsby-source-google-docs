@@ -28,7 +28,7 @@
     "gatsby-remark-images": "^6.13.0",
     "gatsby-remark-prismjs": "^6.13.0",
     "gatsby-remark-unwrap-images": "^1.0.2",
-    "gatsby-transformer-remark": "^5.13.0",
+    "gatsby-transformer-remark": "^5.25.1",
     "gatsby-transformer-sharp": "^4.13.0",
     "mdx-embed": "^1.0.0",
     "prismjs": "^1.28.0",
