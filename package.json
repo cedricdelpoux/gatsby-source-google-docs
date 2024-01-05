@@ -25,6 +25,8 @@
   ],
   "dependencies": {
     "gatsby-source-filesystem": "5.8.0",
+    "gatsby-source-google-docs": "^2.4.3",
+    "gatsby-transformer-remark": "^6.13.0",
     "google-oauth2-env-vars": "^1.4.0",
     "googleapis": "114.0.0",
     "json2md": "^2.0.0",
@@ -58,7 +60,7 @@
   },
   "scripts": {
     "cz": "git-cz",
-    "lint": "eslint *.js utils examples/**/src",
+    "lint": "eslint *.js utils examples/basic/src/**/*.{js,jsx} examples/website/src/**/*.{js,jsx}",
     "test": "jest --coverage",
     "prepublishOnly": "yarn lint && yarn test",
     "semantic-release": "semantic-release",

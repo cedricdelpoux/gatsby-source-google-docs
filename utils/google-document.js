@@ -128,20 +128,13 @@ class GoogleDocument {
       text = `~~${text}~~`
     }
 
-    if (fontSize) {
-      const em = (fontSize.magnitude / this.bodyFontSize).toFixed(2)
-      if (em !== "1.00") {
-        styles.push(`font-size:${em}em`)
-      }
-    }
-
     if (_get(foregroundColor, ["color", "rgbColor"]) && !link) {
       const {rgbColor} = foregroundColor.color
       const red = Math.round((rgbColor.red || 0) * 255)
       const green = Math.round((rgbColor.green || 0) * 255)
       const blue = Math.round((rgbColor.blue || 0) * 255)
       if (red !== 0 || green !== 0 || blue !== 0) {
-        styles.push(`color:rgb(${red}, ${green}, ${blue})`)
+        styles.push(`color:'rgb(${red}, ${green}, ${blue})'`)
       }
     }
 
@@ -186,7 +179,7 @@ class GoogleDocument {
     const embeddedObject = inlineObject.inlineObjectProperties.embeddedObject
 
     return {
-      source: embeddedObject.imageProperties.contentUri,
+      source: embeddedObject.imageProperties,
       title: embeddedObject.title || "",
       alt: embeddedObject.description || "",
     }
