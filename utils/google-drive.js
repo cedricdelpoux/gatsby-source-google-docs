@@ -324,6 +324,15 @@ async function fetchFiles({folder, ...options}) {
     options,
   })
 
+    // Fetching comments for each file
+  for (let file of documentsFiles) {
+    const comments = await drive.comments.list({
+      fileId: file.id,
+      fields: 'comments'
+    });
+    file.comments = comments.data.comments;
+  }
+
   return documentsFiles
 }
 
