@@ -10169,6 +10169,7 @@ react-dev-utils@^12.0.1:
 
 "react-dom@link:../../node_modules/react-dom":
   version "0.0.0"
+  uid ""
 
 react-error-overlay@^6.0.11:
   version "6.0.11"
@@ -10201,6 +10202,7 @@ react-server-dom-webpack@0.0.0-experimental-c8b778b7f-20220825:
 
 "react@link:../../node_modules/react":
   version "0.0.0"
+  uid ""
 
 read@^1.0.7:
   version "1.0.7"
@@ -10603,6 +10605,13 @@ sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
+
+scheduler@^0.23.0:
+  version "0.23.2"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.2.tgz#414ba64a3b282892e944cf2108ecc078d115cdc3"
+  integrity sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==
+  dependencies:
+    loose-envify "^1.1.0"
 
 schema-utils@2.7.0:
   version "2.7.0"
