@@ -52,7 +52,10 @@ exports.updateImages = async ({
     let fileNode
     try {
       const {image, title} = node.cover
-      const url = image + imageUrlParams
+      const [googleImageUrl, googleImageParams] = image.split("?")
+
+      // URLs format: https://...googleusercontent.com/docsz/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
+      const url = googleImageUrl + imageUrlParams + "?" + googleImageParams
 
       fileNode = await createRemoteFileNode({
         url,
