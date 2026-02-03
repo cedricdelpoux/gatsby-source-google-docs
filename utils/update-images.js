@@ -2,7 +2,7 @@ const _get = require("lodash/get")
 const _kebabCase = require("lodash/kebabCase")
 const {createRemoteFileNode} = require("gatsby-source-filesystem")
 
-const {getImageUrlParameters} = require("./get-image-url-parameters")
+const {getImageUrl, getImageUrlParameters} = require("./get-image-url")
 
 const IMAGE_URL_REGEX =
   /https:\/\/[a-z0-9-]*.googleusercontent\.com\/(?:docsz?\/)?[a-zA-Z0-9_=-]*[?]key=[a-zA-Z0-9-]*/
@@ -52,13 +52,9 @@ exports.updateImages = async ({
     let fileNode
     try {
       const {image, title} = node.cover
-      const [googleImageUrl, googleImageParams] = image.split("?")
-
-      // URLs format: https://...googleusercontent.com/docsz/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
-      const url = googleImageUrl + imageUrlParams + "?" + googleImageParams
 
       fileNode = await createRemoteFileNode({
-        url,
+        url: getImageUrl(image, options),
         parentNodeId: node.id,
         createNode,
         createNodeId,
@@ -67,6 +63,8 @@ exports.updateImages = async ({
         name: title ? _kebabCase(title) : _kebabCase(node.name) + "-" + 0,
         reporter,
       })
+
+      node.markdown = node.markdown.replace(image, fileNode.relativePath)
 
       imagesFetchedCount++
 
@@ -91,7 +89,7 @@ exports.updateImages = async ({
         let fileNode
         try {
           fileNode = await createRemoteFileNode({
-            url: url + imageUrlParams,
+            url: getImageUrl(url, options),
             parentNodeId: node.id,
             createNode,
             createNodeId,
@@ -121,9 +119,8 @@ exports.updateImages = async ({
     filesNodes
       .filter((fileNode) => fileNode)
       .forEach((fileNode) => {
-        const imageUrl = fileNode.url.replace(imageUrlParams, "")
         node.markdown = node.markdown.replace(
-          new RegExp(imageUrl, "g"),
+          fileNode.url.replace(imageUrlParams, ""),
           fileNode.relativePath
         )
       })

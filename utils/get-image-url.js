@@ -18,6 +18,15 @@ const getImageUrlParameters = (pluginOptions) => {
   return `=${optionsArray.join("-")}`
 }
 
+const getImageUrl = (urlWithParams, pluginOptions) => {
+  const [googleImageUrl, googleImageParams] = urlWithParams.split("?")
+  const imageUrlParams = getImageUrlParameters(pluginOptions)
+
+  // URLs format: https://...googleusercontent.com/docsz/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
+  return googleImageUrl + imageUrlParams + "?" + googleImageParams
+}
+
 module.exports = {
+  getImageUrl,
   getImageUrlParameters,
 }
