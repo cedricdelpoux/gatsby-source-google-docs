@@ -5,7 +5,7 @@ const {createRemoteFileNode} = require("gatsby-source-filesystem")
 const {getImageUrl, getImageUrlParameters} = require("./get-image-url")
 
 const IMAGE_URL_REGEX =
-  /https:\/\/[a-z0-9-]*.googleusercontent\.com\/(?:docsz?\/)?[a-zA-Z0-9_=-]*[?]key=[a-zA-Z0-9-]*/
+  /https:\/\/[a-z0-9-]*.googleusercontent\.com\/(?:docsz?\/)?[a-zA-Z0-9-_=]*[?]key=[a-zA-Z0-9-_]*/
 const MD_URL_TITLE_REGEX = new RegExp(
   `(${IMAGE_URL_REGEX.source}) "([^)]*)"`,
   "g"
