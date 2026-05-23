@@ -1,8 +1,11 @@
 {
   "name": "gatsby-source-google-docs",
-  "version": "2.4.8",
+  "version": "2.4.9",
   "description": "Gatsby plugin to use Google Docs as a data source",
-  "repository": "https://github.com/cedricdelpoux/gatsby-source-google-docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cedricdelpoux/gatsby-source-google-docs.git"
+  },
   "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
   "license": "MIT",
   "keywords": [
@@ -54,7 +57,7 @@
     "semantic-release": "^21.0.0"
   },
   "bin": {
-    "gatsby-source-google-docs-token": "./utils/generate-token.js"
+    "gatsby-source-google-docs-token": "utils/generate-token.js"
   },
   "scripts": {
     "cz": "git-cz",
