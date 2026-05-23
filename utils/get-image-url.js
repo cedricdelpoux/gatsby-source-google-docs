@@ -8,22 +8,37 @@ const getImageUrlParameters = (pluginOptions) => {
   if (!imagesOptions) return ""
 
   const {width, height, crop} = imagesOptions
-  const widthParam = isSizeValid(width) && `w${width}`
-  const heightParam = isSizeValid(height) && `h${height}`
-  const cropParam = crop && crop === true && "c"
-  const optionsArray = [widthParam, heightParam, cropParam].filter(Boolean)
+  const params = []
 
-  if (optionsArray.length === 0) return ""
+  if (isSizeValid(width)) params.push(`w${width}`)
+  if (isSizeValid(height)) params.push(`h${height}`)
+  if (crop === true) params.push("c")
 
-  return `=${optionsArray.join("-")}`
+  return params.length ? `=${params.join("-")}` : ""
+}
+
+const stripGoogleImageSizeParams = (googleImageUrl) => {
+  const sizeDelimiterIndex = googleImageUrl.lastIndexOf("=s")
+  const lastSlashIndex = googleImageUrl.lastIndexOf("/")
+
+  if (sizeDelimiterIndex > lastSlashIndex) {
+    return googleImageUrl.slice(0, sizeDelimiterIndex)
+  }
+
+  return googleImageUrl
 }
 
 const getImageUrl = (urlWithParams, pluginOptions) => {
   const [googleImageUrl, googleImageParams] = urlWithParams.split("?")
   const imageUrlParams = getImageUrlParameters(pluginOptions)
+  const cleanedGoogleImageUrl = imageUrlParams
+    ? stripGoogleImageSizeParams(googleImageUrl)
+    : googleImageUrl
 
   // URLs format: https://...googleusercontent.com/docsz/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
-  return googleImageUrl + imageUrlParams + "?" + googleImageParams
+  return `${cleanedGoogleImageUrl}${imageUrlParams}${
+    googleImageParams ? `?${googleImageParams}` : ""
+  }`
 }
 
 module.exports = {
