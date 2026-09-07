@@ -31,8 +31,8 @@ const TemplatePage = ({
 export default TemplatePage
 
 export const pageQuery = graphql`
-  query Page($path: String!) {
-    page: googleDocs(slug: {eq: $path}) {
+  query Page($slug: String!) {
+    page: googleDocs(slug: {eq: $slug}) {
       name
       cover {
         image {

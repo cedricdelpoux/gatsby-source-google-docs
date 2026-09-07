@@ -65,7 +65,14 @@ exports.createPages = async (
         createPage({
           path: slug,
           component,
-          context,
+          context: {
+            // `slug` is provided explicitly because Gatsby's auto-injected
+            // `path` variable is normalized by the `trailingSlash` option
+            // (defaults to "always" since Gatsby 5) and no longer matches
+            // the raw `slug` stored on the node.
+            slug,
+            ...context,
+          },
         })
       })
     }

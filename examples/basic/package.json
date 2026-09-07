@@ -10,16 +10,19 @@
     "token": "../../utils/generate-token.js"
   },
   "dependencies": {
-    "gatsby": "^4.25.7",
-    "gatsby-image": "^3.11.0",
-    "gatsby-plugin-image": "^2.13.0",
-    "gatsby-plugin-sharp": "^4.13.0",
-    "gatsby-remark-gifs": "^1.1.0",
-    "gatsby-remark-images": "^6.13.0",
+    "dotenv": "^16.4.5",
+    "gatsby": "^5.16.1",
+    "gatsby-plugin-image": "^3.16.0",
+    "gatsby-plugin-sharp": "^5.16.0",
+    "gatsby-remark-gifs": "^1.2.0",
+    "gatsby-remark-images": "^7.16.0",
     "gatsby-remark-unwrap-images": "^1.0.2",
-    "gatsby-transformer-remark": "^5.13.0",
-    "gatsby-transformer-sharp": "^4.13.0",
-    "react": "link:../../node_modules/react",
-    "react-dom": "link:../../node_modules/react-dom"
+    "gatsby-transformer-remark": "^6.16.0",
+    "gatsby-transformer-sharp": "^5.16.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "resolutions": {
+    "sanitize-html": "2.13.1"
   }
 }
