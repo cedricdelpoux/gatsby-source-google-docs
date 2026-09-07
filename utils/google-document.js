@@ -59,19 +59,25 @@ class GoogleDocument {
       return ""
     }
 
-    let before = ""
-    let after = ""
-    let text = el.textRun.content
+    const content = el.textRun.content
       .replace(/\n$/, "") // Remove new lines
       .replace(/“|”/g, '"') // Replace smart quotes by double quotes
       .replace(/\u000b/g, "<br/>") // Replace soft lines breaks, vertical tabs
-    const contentMatch = text.match(/^(\s*)(\S+(?:[ \t\v]*\S+)*)(\s*)$/) // Match "text", "before" and "after"
+      // Line and paragraph separators are invisible in Google Docs but are
+      // line terminators for javascript, so they break the markdown generation
+      .replace(/[\u2028\u2029]/g, " ")
 
-    if (contentMatch) {
-      before = contentMatch[1]
-      text = contentMatch[2]
-      after = contentMatch[3]
-    }
+    // Split the surrounding whitespaces ("before" and "after") from the "text".
+    // Done without a regex on purpose: a pattern with nested quantifiers used to
+    // backtrack exponentially and freeze the build on texts containing
+    // whitespaces pasted from other editors (U+2028, U+00A0, ...)
+    const contentWithoutSpacesBefore = content.trimStart()
+    const before = content.slice(
+      0,
+      content.length - contentWithoutSpacesBefore.length
+    )
+    let text = contentWithoutSpacesBefore.trimEnd()
+    const after = contentWithoutSpacesBefore.slice(text.length)
 
     const defaultStyle = this.getTextStyle(namedStyleType)
     const textStyle = el.textRun.textStyle

@@ -121,4 +121,45 @@ describe("GoogleDocument formatText special cases", () => {
     const googleDocument = new GoogleDocument({document})
     expect(googleDocument.toMarkdown()).toContain("Hello")
   })
+
+  test("does not hang on texts containing exotic whitespaces", () => {
+    const words = new Array(40).fill("word").join(" ")
+    const document = {
+      title: "Exotic Whitespaces",
+      body: {
+        content: [
+          {
+            paragraph: {
+              paragraphStyle: {namedStyleType: "NORMAL_TEXT"},
+              elements: [
+                {
+                  textRun: {
+                    // U+2028 (line separator) and U+00A0 (non breaking space)
+                    // are commonly pasted from other editors
+                    content: ` ${words}\u2028${words}\u00a0${words} `,
+                    textStyle: {},
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+      namedStyles: {
+        styles: [
+          {
+            namedStyleType: "NORMAL_TEXT",
+            textStyle: {},
+          },
+        ],
+      },
+    }
+
+    const start = Date.now()
+    const googleDocument = new GoogleDocument({document})
+    const markdown = googleDocument.toMarkdown()
+
+    expect(Date.now() - start).toBeLessThan(1000)
+    expect(markdown.trim()).toBe(`${words} ${words}\u00a0${words}`)
+  })
 })
