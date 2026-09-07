@@ -1,4 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+# GUI git clients (VS Code, GitKraken, ...) launch this hook without going
+# through a login shell, so PATH additions from .zprofile/.zshrc (notably
+# Homebrew's `brew shellenv`) are missing and `npx`/`yarn` are not found.
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
 npx --no-install commitlint --edit $1
