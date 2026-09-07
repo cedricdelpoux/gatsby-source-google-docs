@@ -1,16 +1,12 @@
 const {google} = require("googleapis")
-const GoogleOAuth2 = require("google-oauth2-env-vars")
 
-const {ENV_TOKEN_VAR} = require("./constants")
+const {getAuth} = require("./get-auth")
 const {GoogleDocument} = require("./google-document")
 const {writeDocumentToTests} = require("./write-document-to-tests")
 const {fetchFiles} = require("./google-drive")
 
 async function fetchDocument(id) {
-  const googleOAuth2 = new GoogleOAuth2({
-    token: ENV_TOKEN_VAR,
-  })
-  const auth = await googleOAuth2.getAuth()
+  const auth = await getAuth()
 
   const res = await google.docs({version: "v1", auth}).documents.get({
     documentId: id,

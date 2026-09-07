@@ -2,10 +2,9 @@ const {google} = require("googleapis")
 const _kebabCase = require("lodash/kebabCase")
 const _chunk = require("lodash/chunk")
 const _flatten = require("lodash/flatten")
-const GoogleOAuth2 = require("google-oauth2-env-vars")
 const yamljs = require("yamljs")
 
-const {ENV_TOKEN_VAR} = require("./constants")
+const {getAuth} = require("./get-auth")
 const {wait} = require("./wait")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
@@ -125,10 +124,7 @@ const updateFile = ({file, folder}) => {
 }
 
 async function getGoogleDrive() {
-  const googleOAuth2 = new GoogleOAuth2({
-    token: ENV_TOKEN_VAR,
-  })
-  const auth = await googleOAuth2.getAuth()
+  const auth = await getAuth()
 
   return google.drive({version: "v3", auth})
 }
