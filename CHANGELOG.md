@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.10
+
+-   Fixed: Build freezing indefinitely on texts containing exotic whitespaces (U+00A0, U+2028, ...)
+-   Fixed: Images inside table cells being pushed outside the table
+-   Fixed: Unclear error when `GOOGLE_DOCS_TOKEN` is not valid JSON
+
 ## 2.2.0
 
 -   Added
