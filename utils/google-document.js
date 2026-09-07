@@ -231,7 +231,12 @@ class GoogleDocument {
         const hasParagraph = contentElement.paragraph
 
         if (!hasParagraph) return ""
-        return contentElement.paragraph.elements.map(this.formatText).join("")
+
+        // Images have to stay in the cell, they can't be pushed as standalone
+        // elements outside of the table
+        return contentElement.paragraph.elements
+          .map((el) => this.formatText(el, {inlineImages: true}))
+          .join("")
       })
       .join("")
   }

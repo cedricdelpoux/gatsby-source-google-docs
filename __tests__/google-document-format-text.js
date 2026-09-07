@@ -162,4 +162,91 @@ describe("GoogleDocument formatText special cases", () => {
     expect(Date.now() - start).toBeLessThan(1000)
     expect(markdown.trim()).toBe(`${words} ${words}\u00a0${words}`)
   })
+
+  test("keeps images inside table cells", () => {
+    const imageElement = (id) => ({
+      inlineObjectElement: {inlineObjectId: id},
+    })
+    const document = {
+      title: "Table Images",
+      body: {
+        content: [
+          {
+            table: {
+              tableRows: [
+                {
+                  tableCells: [
+                    {content: [{paragraph: {elements: [imageElement("i1")]}}]},
+                    {content: [{paragraph: {elements: [imageElement("i2")]}}]},
+                  ],
+                },
+                {
+                  tableCells: [
+                    {content: [{paragraph: {elements: [imageElement("i3")]}}]},
+                    {
+                      content: [
+                        {
+                          paragraph: {
+                            elements: [
+                              {textRun: {content: "Text", textStyle: {}}},
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+      inlineObjects: {
+        i1: {
+          inlineObjectProperties: {
+            embeddedObject: {
+              imageProperties: {contentUri: "https://image.com/1"},
+            },
+          },
+        },
+        i2: {
+          inlineObjectProperties: {
+            embeddedObject: {
+              imageProperties: {contentUri: "https://image.com/2"},
+            },
+          },
+        },
+        i3: {
+          inlineObjectProperties: {
+            embeddedObject: {
+              imageProperties: {contentUri: "https://image.com/3"},
+            },
+          },
+        },
+      },
+      namedStyles: {
+        styles: [
+          {
+            namedStyleType: "NORMAL_TEXT",
+            textStyle: {},
+          },
+        ],
+      },
+    }
+
+    const googleDocument = new GoogleDocument({document})
+
+    expect(googleDocument.elements).toEqual([
+      {
+        type: "table",
+        value: {
+          headers: [
+            '![](https://image.com/1 "")',
+            '![](https://image.com/2 "")',
+          ],
+          rows: [['![](https://image.com/3 "")', "Text"]],
+        },
+      },
+    ])
+  })
 })
