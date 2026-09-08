@@ -1,5 +1,4 @@
 import {graphql, useStaticQuery} from "gatsby"
-import {MDXRenderer} from "gatsby-plugin-mdx"
 import React from "react"
 /** @jsx jsx */
 import {jsx} from "theme-ui"
@@ -7,10 +6,8 @@ import {jsx} from "theme-ui"
 export const Menu = ({open, onClose}) => {
   const data = useStaticQuery(graphql`
     query MenuQuery {
-      menu: googleDocs(name: {eq: "Menu"}) {
-        childMdx {
-          body
-        }
+      menu: mdx(frontmatter: {name: {eq: "Menu"}}) {
+        staticHtml
       }
     }
   `)
@@ -77,7 +74,12 @@ export const Menu = ({open, onClose}) => {
           },
         }}
       >
-        <MDXRenderer>{data.menu.childMdx.body}</MDXRenderer>
+        <div
+          // The "Menu" document is plain CommonMark (no JSX in it), compiled
+          // to static HTML by this site's own `gatsby-node.mjs` -- see the
+          // comment on its `staticHtml` resolver for why.
+          dangerouslySetInnerHTML={{__html: data.menu.staticHtml}}
+        />
       </div>
     </React.Fragment>
   )

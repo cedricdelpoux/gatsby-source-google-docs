@@ -1,4 +1,5 @@
-require("dotenv").config()
+// `quiet` silences the banner dotenv prints on every load
+require("dotenv").config({quiet: true})
 
 module.exports = {
   plugins: [

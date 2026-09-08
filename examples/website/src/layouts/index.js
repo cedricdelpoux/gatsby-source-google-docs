@@ -4,7 +4,7 @@ import {Link} from "gatsby"
 import {useEffect, useState} from "react"
 import {RiMenuLine, RiMoonLine, RiSunLine} from "react-icons/ri"
 /** @jsx jsx */
-import {Button, Themed, jsx, useColorMode} from "theme-ui"
+import {Button, jsx, useColorMode} from "theme-ui"
 
 import {Details} from "../components/details"
 import {GatsbyLogo} from "../components/gatsby-logo"
@@ -66,7 +66,7 @@ const LayoutIndex = ({children}) => {
         >
           {"gatsby-source-google-docs"}
         </Link>
-        <div //eslint-disable-line
+        <div
           sx={{
             display: "flex",
             p: 2,
@@ -141,14 +141,13 @@ const LayoutIndex = ({children}) => {
         }}
       >
         <div>
-          Made by{" "}
-          <Themed.a href="https://cedricdelpoux.fr">Cédric Delpoux</Themed.a>
+          Made by <a href="https://cedricdelpoux.fr">Cédric Delpoux</a>
         </div>
         <div>
           Source code available on{" "}
-          <Themed.a href="https://github.com/cedricdelpoux/gatsby-source-google-docs">
+          <a href="https://github.com/cedricdelpoux/gatsby-source-google-docs">
             Github
-          </Themed.a>
+          </a>
         </div>
       </footer>
     </div>

@@ -1,28 +1,25 @@
 {
-  "name": "gatsby-source-google-docs-basic",
+  "name": "gatsby-source-google-docs-mdx",
   "private": true,
   "scripts": {
     "build": "gatsby build",
     "dev": "gatsby develop",
-    "docs2test": "NODE_ENV=DOCS_TO_TESTS yarn dev",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "token": "../../utils/generate-token.js"
   },
   "dependencies": {
+    "@mdx-js/react": "^2.3.0",
     "dotenv": "^17.2.3",
     "gatsby": "^5.16.1",
     "gatsby-plugin-image": "^3.16.0",
+    "gatsby-plugin-mdx": "^5.16.0",
     "gatsby-plugin-sharp": "^5.16.0",
-    "gatsby-remark-gifs": "^1.2.0",
     "gatsby-remark-images": "^7.16.0",
-    "gatsby-remark-unwrap-images": "^1.0.2",
-    "gatsby-transformer-remark": "^6.16.0",
+    "gatsby-source-filesystem": "^5.16.0",
     "gatsby-transformer-sharp": "^5.16.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "resolutions": {
-    "sanitize-html": "2.13.1"
+    "react-dom": "^18.2.0",
+    "remark-gfm": "^3"
   }
 }
