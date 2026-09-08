@@ -22,6 +22,13 @@ export interface Options {
    */
   outputDir?: string
   /**
+   * Directory the documents fetched from Google and the images they reference
+   * are kept in, so that a build only fetches what changed since the previous
+   * one. Delete it to fetch everything again.
+   * @default ".google-docs"
+   */
+  cacheDir?: string
+  /**
    * Extension of the written files. Use "mdx" to author documents as MDX.
    * @default "md"
    */

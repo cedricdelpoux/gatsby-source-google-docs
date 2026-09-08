@@ -74,7 +74,10 @@
   "jest": {
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "<rootDir>/.claude/"
+      "/.claude/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/.claude/"
     ]
   },
   "scripts": {

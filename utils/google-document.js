@@ -639,6 +639,8 @@ class GoogleDocument {
     const frontmatter = {
       ...this.properties,
       ...(this.cover ? {cover: this.cover} : {}),
+      // `related` used to live on the node next to the markdown. Everything
+      // the document carries now has to travel inside the file itself.
       // Deduplicated: `processInternalLinks` pushes an id once per link, so a
       // document linked to several times used to appear several times.
       ...(this.related.length > 0 ? {related: [...new Set(this.related)]} : {}),

@@ -4,8 +4,10 @@ const {join, resolve} = require("path")
 const _merge = require("lodash/merge")
 const {createFileNode} = require("gatsby-source-filesystem/create-file-node")
 
-const {fetchDocuments} = require("./google-docs")
+const {fetchDocument, fetchDocuments} = require("./google-docs")
 const {DEFAULT_OPTIONS} = require("./constants")
+const {getImageUrlParameters} = require("./get-image-url")
+const {createStore} = require("./store")
 const {writeDocuments} = require("./write-documents")
 
 const SOURCE_INSTANCE_NAME = "google-docs"
@@ -73,7 +75,7 @@ async function listFiles(directory) {
 }
 
 exports.sourceNodes = async (
-  {actions: {createNode}, reporter, cache, createNodeId},
+  {actions: {createNode}, reporter, cache, createNodeId, store: gatsbyStore},
   pluginOptions
 ) => {
   const options = _merge({}, DEFAULT_OPTIONS, pluginOptions)
@@ -97,16 +99,41 @@ exports.sourceNodes = async (
     timer.start()
     timer.setStatus("fetching Google Docs documents")
 
-    const googleDocuments = await fetchDocuments({options, reporter})
+    // Kept out of the Gatsby cache, which Gatsby empties on its own
+    const siteDirectory = gatsbyStore
+      ? gatsbyStore.getState().program.directory
+      : process.cwd()
+    const store = createStore({
+      dir: resolve(siteDirectory, options.cacheDir),
+    })
+
+    await store.init({imagesParams: getImageUrlParameters(options)})
+
+    const {documents: googleDocuments, fetchedCount} = await fetchDocuments({
+      options,
+      reporter,
+      store,
+    })
 
     timer.setStatus(`writing documents to "${options.outputDir}"`)
 
-    const {writtenFiles, documents, imagesCount} = await writeDocuments({
-      googleDocuments,
-      options,
-      reporter,
-    })
+    const {writtenFiles, documents, imagesCount, downloadedImagesCount} =
+      await writeDocuments({
+        documents: googleDocuments,
+        options,
+        reporter,
+        store,
+        refetchDocument: fetchDocument,
+      })
 
+    // An empty listing is far more often a folder the plugin could not read
+    // than a folder that was emptied, and pruning on one would throw away
+    // everything the store holds
+    if (googleDocuments.length > 0) {
+      await store.prune(
+        googleDocuments.map(({googleDocument}) => googleDocument.properties.id)
+      )
+    }
     await removeStaleFiles({outputDir: options.outputDir, writtenFiles})
 
     // The documents and their images are plain files now, so they are sourced
@@ -141,7 +168,8 @@ exports.sourceNodes = async (
     }
 
     timer.setStatus(
-      `${googleDocuments.length} documents and ${imagesCount} images fetched`
+      `${googleDocuments.length} documents (${fetchedCount} fetched) ` +
+        `and ${imagesCount} images (${downloadedImagesCount} downloaded)`
     )
 
     timer.end()

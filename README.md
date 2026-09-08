@@ -35,6 +35,7 @@
 
 - **Google Docs** formatting options (headings, bullets, tables, images...)
 - `MDX` support to use `<ReactComponents />` in your documents
+- Incremental builds: only the documents and images that changed are fetched
 - **Gatsby** v5 support
 - `gatsby-plugin-image` and `gatsby-image` support
 - Code blocs support
@@ -204,25 +205,26 @@ You also can add metadata (`locale`, `date`, `template`, ...) to your documents.
 
 ### Add the plugin to your `gatsby-config.js` file
 
-| Option           | Required | Type    | Default                 | Example        |
-| ---------------- | -------- | ------- | ----------------------- | -------------- |
-| folder           | `true`   | String  | `null`                  | `"1Tn1dCbIc"`  |
-| createPages      | `false`  | Boolean | `false`                 | `true`         |
-| outputDir        | `false`  | String  | `"content/google-docs"` | `"content"`    |
-| extension        | `false`  | String  | `"md"`                  | `"mdx"`        |
-| escapeMdxSyntax  | `false`  | Boolean | `true`                  | `false`        |
-| pageContext      | `false`  | Array   | `[]`                    | `["locale"]`   |
-| demoteHeadings   | `false`  | Boolean | `true`                  | `false`        |
-| imagesOptions    | `false`  | Object  | `null`                  | `{width: 512}` |
-| keepDefaultStyle | `false`  | Boolean | `false`                 | `true`         |
-| skipCodes        | `false`  | Boolean | `false`                 | `true`         |
-| skipFootnotes    | `false`  | Boolean | `false`                 | `true`         |
-| skipHeadings     | `false`  | Boolean | `false`                 | `true`         |
-| skipImages       | `false`  | Boolean | `false`                 | `true`         |
-| skipLists        | `false`  | Boolean | `false`                 | `true`         |
-| skipQuotes       | `false`  | Boolean | `false`                 | `true`         |
-| skipTables       | `false`  | Boolean | `false`                 | `true`         |
-| debug            | `false`  | Boolean | `false`                 | `true`         |
+| Option           | Required | Type    | Default                 | Example         |
+| ---------------- | -------- | ------- | ----------------------- | --------------- |
+| folder           | `true`   | String  | `null`                  | `"1Tn1dCbIc"`   |
+| createPages      | `false`  | Boolean | `false`                 | `true`          |
+| outputDir        | `false`  | String  | `"content/google-docs"` | `"content"`     |
+| cacheDir         | `false`  | String  | `".google-docs"`        | `".cache-docs"` |
+| extension        | `false`  | String  | `"md"`                  | `"mdx"`         |
+| escapeMdxSyntax  | `false`  | Boolean | `true`                  | `false`         |
+| pageContext      | `false`  | Array   | `[]`                    | `["locale"]`    |
+| demoteHeadings   | `false`  | Boolean | `true`                  | `false`         |
+| imagesOptions    | `false`  | Object  | `null`                  | `{width: 512}`  |
+| keepDefaultStyle | `false`  | Boolean | `false`                 | `true`          |
+| skipCodes        | `false`  | Boolean | `false`                 | `true`          |
+| skipFootnotes    | `false`  | Boolean | `false`                 | `true`          |
+| skipHeadings     | `false`  | Boolean | `false`                 | `true`          |
+| skipImages       | `false`  | Boolean | `false`                 | `true`          |
+| skipLists        | `false`  | Boolean | `false`                 | `true`          |
+| skipQuotes       | `false`  | Boolean | `false`                 | `true`          |
+| skipTables       | `false`  | Boolean | `false`                 | `true`          |
+| debug            | `false`  | Boolean | `false`                 | `true`          |
 
 ```js
 module.exports = {
@@ -345,6 +347,16 @@ author your documents as MDX.
 > the config has to be a `gatsby-config.mjs` file — see
 > [`examples/mdx`](/examples/mdx/gatsby-config.mjs).
 
+> ⚠️ By default, a document's text is escaped before being written: a stray,
+> unmatched `<` or `{` (a `<placeholder>` convention, a generic `<T>`, ...)
+> makes MDX v2 fail the **whole build**, not just that document. A
+> well-formed tag compiles fine either way — `<GatsbyLogo />` works whether
+> escaped or not — so this only matters for text that isn't a deliberate
+> component. If every document on your site deliberately embeds live
+> JSX/components as literal text, and you've made sure none of them contain
+> a stray `<`/`{` otherwise, set `escapeMdxSyntax: false` to compile them as
+> intended.
+
 ```js
 // gatsby-config.mjs
 import remarkGfm from "remark-gfm"
@@ -368,15 +380,44 @@ const config = {
 export default config
 ```
 
-> ⚠️ By default, a document's text is escaped before being written: a stray,
-> unmatched `<` or `{` (a `<placeholder>` convention, a generic `<T>`, ...)
-> makes MDX v2 fail the **whole build**, not just that document. A
-> well-formed tag compiles fine either way — `<GatsbyLogo />` works whether
-> escaped or not — so this only matters for text that isn't a deliberate
-> component. If every document on your site deliberately embeds live
-> JSX/components as literal text, and you've made sure none of them contain
-> a stray `<`/`{` otherwise, set `escapeMdxSyntax: false` to compile them as
-> intended.
+### Only what changed is fetched
+
+Fetching a document is one request, and every image it holds is a download of
+its own: a folder of long documents full of images takes minutes to fetch. The
+plugin keeps them in a `.google-docs` directory next to your
+`gatsby-config.js`, and a build only fetches what changed since the previous
+one.
+
+```
+.google-docs
+├── documents
+│   └── 1Tn1dCbIc.json       # one file per document, as Google gave it
+├── images
+│   └── 1Tn1dCbIc            # the images it references, downloaded once
+│       └── kix.4dmdp8b4.png
+└── state.json
+```
+
+Google Drive gives the time a document was last modified while listing the
+folder, which the plugin already does: a document that has not been touched
+since it was stored is never fetched again, and neither are its images. Editing
+a document on Google Docs, renaming it, changing its description or moving it
+to another folder is picked up on the next build — its metadata always comes
+from the listing, fetched or not.
+
+The documents are stored as Google gave them, not as markdown: changing
+`demoteHeadings`, `extension` or any other option takes effect on the next
+build without fetching anything again. Changing `imagesOptions` downloads the
+images again, since their size is part of the URL they are downloaded from.
+
+> Add `.google-docs` to your `.gitignore`, or commit it to give your continuous
+> integration a folder it does not have to fetch. Delete it to fetch everything
+> again.
+
+This directory is **not** the Gatsby cache, on purpose: Gatsby empties its own
+whenever a plugin version, `package.json`, `gatsby-config.js` or
+`gatsby-node.js` changes, and a continuous integration job never has one, so
+adding a dependency to your site would cost a complete refetch.
 
 ### Create templates and pages
 
@@ -474,7 +515,8 @@ Other things to know:
   shared with any other markdown your site sources, so filter on
   `frontmatter: {slug: {ne: null}}` if you need only Google Docs documents.
 - `related` is now a list of document ids instead of linked nodes.
-- Add `outputDir` (`content/google-docs` by default) to your `.gitignore`.
+- Add `outputDir` (`content/google-docs` by default) and `cacheDir`
+  (`.google-docs` by default) to your `.gitignore`.
 - **Node 22 or 24 is required**, and `gatsby@^5` is now a peer dependency.
 
 ## Showcase
