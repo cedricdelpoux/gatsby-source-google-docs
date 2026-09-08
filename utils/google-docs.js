@@ -1,4 +1,4 @@
-const {google} = require("googleapis")
+const {docs: googleDocs} = require("@googleapis/docs")
 
 const {getAuth} = require("./get-auth")
 const {GoogleDocument} = require("./google-document")
@@ -8,7 +8,7 @@ const {fetchFiles} = require("./google-drive")
 async function fetchDocument(id) {
   const auth = await getAuth()
 
-  const res = await google.docs({version: "v1", auth}).documents.get({
+  const res = await googleDocs({version: "v1", auth}).documents.get({
     documentId: id,
   })
 

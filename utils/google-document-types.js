@@ -15,7 +15,7 @@ exports.isCodeBlocks = (table) => {
     paragraph.elements.every(({textRun}) => {
       const content = textRun.content
         .replace(/\n/g, "")
-        .replace(/\x0B/g, "") //eslint-disable-line no-control-regex
+        .replace(/\x0B/g, "")
         .trim()
       const isEmpty = content === ""
       const fontFamily = _get(textRun, [
@@ -43,10 +43,8 @@ exports.isQuote = (table) => {
 
   const firstRow = table.tableRows[0]
   const firstCell = firstRow.tableCells[0]
-  const {
-    0: firstContent,
-    [firstCell.content.length - 1]: lastContent,
-  } = firstCell.content
+  const {0: firstContent, [firstCell.content.length - 1]: lastContent} =
+    firstCell.content
   const startText = firstContent.paragraph.elements[0].textRun.content
   const lastText = lastContent.paragraph.elements[0].textRun.content
   const startsWithQuote = startText.replace(/\n/g, "").startsWith("“")

@@ -1,4 +1,4 @@
-const {google} = require("googleapis")
+const {drive: googleDrive} = require("@googleapis/drive")
 const _kebabCase = require("lodash/kebabCase")
 const _chunk = require("lodash/chunk")
 const _flatten = require("lodash/flatten")
@@ -34,7 +34,7 @@ const getMetadataFromDescription = (description) => {
       if (typeof descriptionObject !== "string") {
         Object.assign(metadata, descriptionObject)
       }
-    } catch (e) {
+    } catch {
       // Description field is not valid YAML
       // Do not throw an error
     }
@@ -126,7 +126,7 @@ const updateFile = ({file, folder}) => {
 async function getGoogleDrive() {
   const auth = await getAuth()
 
-  return google.drive({version: "v3", auth})
+  return googleDrive({version: "v3", auth})
 }
 
 /**
@@ -138,7 +138,7 @@ async function getGoogleDrive() {
 
 /**
  * @typedef FetchDocumentsOptions
- * @property {import('googleapis').drive_v3.Drive} drive
+ * @property {import('@googleapis/drive').drive_v3.Drive} drive
  * @property {DocumentFetchParent[]} parents
  */
 

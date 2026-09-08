@@ -26,45 +26,58 @@
     "gatsby-ssr.js",
     "utils"
   ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "gatsby": "^5.0.0"
+  },
   "dependencies": {
-    "gatsby-source-filesystem": "5.8.0",
+    "@googleapis/docs": "^10.0.0",
+    "@googleapis/drive": "^22.0.0",
+    "dotenv": "^17",
+    "gatsby-source-filesystem": "^5.16.0",
+    "google-auth-library": "^10",
     "google-oauth2-env-vars": "^1.4.0",
-    "googleapis": "114.0.0",
     "json2md": "^2.0.0",
     "lodash": "^4.17.21",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.5.0",
-    "@commitlint/config-conventional": "^17.4.4",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^9.0.2",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^8.0.7",
-    "@semantic-release/npm": "^10.0.2",
-    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@commitlint/cli": "^21",
+    "@commitlint/config-conventional": "^21",
+    "@eslint/js": "^9",
+    "@semantic-release/changelog": "^6",
+    "@semantic-release/commit-analyzer": "^13",
+    "@semantic-release/git": "^10",
+    "@semantic-release/github": "^12",
+    "@semantic-release/npm": "^13",
+    "@semantic-release/release-notes-generator": "^14",
+    "commitizen": "^4",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-jest": "^27.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "husky": "^8.0.3",
-    "jest": "^29.5.0",
-    "lint-staged": "^13.2.0",
-    "prettier": "2.8.7",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10",
+    "eslint-plugin-jest": "^29",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.12.0",
+    "husky": "^9",
+    "jest": "^30",
+    "lint-staged": "^17",
+    "prettier": "^3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "semantic-release": "^21.0.0"
+    "semantic-release": "^25"
   },
   "bin": {
     "gatsby-source-google-docs-token": "utils/generate-token.js"
   },
   "scripts": {
     "cz": "git-cz",
-    "lint": "eslint *.js utils examples/**/src",
+    "lint": "eslint .",
     "test": "jest --coverage",
     "prepublishOnly": "yarn lint && yarn test",
     "semantic-release": "semantic-release",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "format": "prettier --write ."
   }
 }

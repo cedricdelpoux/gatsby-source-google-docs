@@ -1,0 +1,5 @@
+CHANGELOG.md
+coverage
+examples/*/.cache
+examples/*/public
+yarn.lock

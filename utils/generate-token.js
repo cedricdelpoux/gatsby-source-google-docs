@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-/* eslint-disable no-console */
 
 const GoogleOAuth2 = require("google-oauth2-env-vars")
 
