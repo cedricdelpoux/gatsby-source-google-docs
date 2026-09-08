@@ -8,6 +8,9 @@ module.exports = [
   {
     ignores: [
       "coverage/**",
+      // Nested git worktrees (e.g. from Claude Code) live inside the repo
+      // tree with their own node_modules; never lint their contents.
+      ".claude/**",
       "examples/*/.cache/**",
       "examples/*/public/**",
       "**/node_modules/**",

@@ -71,6 +71,12 @@
   "bin": {
     "gatsby-source-google-docs-token": "utils/generate-token.js"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/.claude/"
+    ]
+  },
   "scripts": {
     "cz": "git-cz",
     "lint": "eslint .",
