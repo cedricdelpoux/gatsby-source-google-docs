@@ -105,3 +105,85 @@ test(`Skip tables`, () => {
   const documentObject = googleDocument.toMarkdown()
   expect(documentObject).toMatchSnapshot()
 })
+
+test(`"extension: mdx" option escapes MDX syntax and emits JSX styles`, () => {
+  const options = {extension: "mdx", keepDefaultStyle: true}
+  const googleDocument = new GoogleDocument({document: documentTexts, options})
+  const markdown = googleDocument.toMarkdown()
+
+  // `style` as a string makes React throw once the page renders
+  expect(markdown).not.toMatch(/<span style='/)
+  expect(markdown).toMatch(/<span style=\{\{/)
+  // camelCased properties, as JSX requires
+  expect(markdown).not.toMatch(/"font-size"/)
+
+  expect(markdown).toMatchSnapshot()
+})
+
+test(`"extension: mdx" escapes braces and angle brackets in text`, () => {
+  const document = {
+    body: {
+      content: [
+        {
+          paragraph: {
+            elements: [
+              {
+                textRun: {
+                  content: "Use {props} and a <Component /> here",
+                  textStyle: {},
+                },
+              },
+            ],
+            paragraphStyle: {namedStyleType: "NORMAL_TEXT"},
+          },
+        },
+      ],
+    },
+  }
+
+  const asMarkdown = new GoogleDocument({document, options: {}}).toMarkdown()
+  const asMdx = new GoogleDocument({
+    document,
+    options: {extension: "mdx"},
+  }).toMarkdown()
+
+  // MDX would read these as an expression and a JSX tag
+  expect(asMarkdown).toContain("{props}")
+  expect(asMdx).toContain("\\{props}")
+  expect(asMdx).toContain("\\<Component />")
+})
+
+test(`"escapeMdxSyntax: false" lets a well-formed literal component compile as JSX`, () => {
+  const document = {
+    body: {
+      content: [
+        {
+          paragraph: {
+            elements: [
+              {
+                textRun: {
+                  content: "Will render: <GatsbyLogo />",
+                  textStyle: {},
+                },
+              },
+            ],
+            paragraphStyle: {namedStyleType: "NORMAL_TEXT"},
+          },
+        },
+      ],
+    },
+  }
+
+  const escaped = new GoogleDocument({
+    document,
+    options: {extension: "mdx"},
+  }).toMarkdown()
+  const raw = new GoogleDocument({
+    document,
+    options: {extension: "mdx", escapeMdxSyntax: false},
+  }).toMarkdown()
+
+  expect(escaped).toContain("\\<GatsbyLogo />")
+  expect(raw).toContain("<GatsbyLogo />")
+  expect(raw).not.toContain("\\<")
+})

@@ -10,6 +10,20 @@ const {DEFAULT_OPTIONS} = require("./constants")
 const HORIZONTAL_TAB_CHAR = "\x09"
 const GOOGLE_DOCS_INDENT = 18
 
+/**
+ * Turn ["font-size:1.2em", "color:rgb(0, 0, 0)"] into the object form JSX needs:
+ * {fontSize: "1.2em", color: "rgb(0, 0, 0)"}.
+ */
+const getStyleObject = (styles) =>
+  styles.reduce((acc, style) => {
+    const separatorIndex = style.indexOf(":")
+    const property = style
+      .slice(0, separatorIndex)
+      .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+
+    return {...acc, [property]: style.slice(separatorIndex + 1)}
+  }, {})
+
 class GoogleDocument {
   constructor({document, properties = {}, options = {}, links = {}}) {
     this.document = document
@@ -110,6 +124,23 @@ class GoogleDocument {
     text = text.replace(/\*/g, "\\*") // Prevent * to be bold
     text = text.replace(/_/g, "\\_") // Prevent _ to be italic
 
+    if (this.options.extension === "mdx" && this.options.escapeMdxSyntax) {
+      // MDX v2 treats "{" as the start of an expression and "<" as the start
+      // of a JSX tag anywhere in the text. A well-formed, self-closing or
+      // matched tag compiles fine either way (<GatsbyLogo /> works even
+      // unescaped) but a document containing a stray, unmatched one --
+      // a "<placeholder>" convention, a generic "<T>", anything CommonMark
+      // would treat as a literal character -- fails the whole build. Both
+      // characters are ASCII punctuation, so the backslash escape is plain
+      // CommonMark and stays correct markdown either way.
+      //
+      // Set `escapeMdxSyntax: false` if your documents deliberately embed
+      // live JSX/components as literal text (see the "escapeMdxSyntax"
+      // option in the README): every document on the site must then be
+      // free of stray "<"/"{", since any one of them would break the build.
+      text = text.replace(/([{<])/g, "\\$1")
+    }
+
     if (baselineOffset === "SUPERSCRIPT") {
       text = `<sup>${text}</sup>`
     }
@@ -160,7 +191,13 @@ class GoogleDocument {
     }
 
     if (styles.length > 0) {
-      text = `<span style='${styles.join(";")}'>${text}</span>`
+      // In MDX the span is JSX, where `style` has to be an object: React
+      // throws "The `style` prop expects a mapping from style properties to
+      // values, not a string" on the HTML form.
+      text =
+        this.options.extension === "mdx"
+          ? `<span style={${JSON.stringify(getStyleObject(styles))}}>${text}</span>`
+          : `<span style='${styles.join(";")}'>${text}</span>`
     }
 
     if (link) {
@@ -602,6 +639,9 @@ class GoogleDocument {
     const frontmatter = {
       ...this.properties,
       ...(this.cover ? {cover: this.cover} : {}),
+      // Deduplicated: `processInternalLinks` pushes an id once per link, so a
+      // document linked to several times used to appear several times.
+      ...(this.related.length > 0 ? {related: [...new Set(this.related)]} : {}),
     }
     const json = this.elements.map(this.normalizeElement)
     const markdownContent = json2md(json)

@@ -1,4 +1,4 @@
-import {drive_v3} from "googleapis"
+import {drive_v3} from "@googleapis/drive"
 
 export interface Options {
   /**
@@ -15,6 +15,26 @@ export interface Options {
    * To add default fields values
    */
   createPages?: boolean
+  /**
+   * Directory the documents and their images are written to.
+   * It is managed by the plugin: any other file it contains is deleted.
+   * @default "content/google-docs"
+   */
+  outputDir?: string
+  /**
+   * Extension of the written files. Use "mdx" to author documents as MDX.
+   * @default "md"
+   */
+  extension?: "md" | "mdx"
+  /**
+   * MDX v2 fails the whole build on a stray, unmatched "<" or "{" in any
+   * document's text (a "<placeholder>" convention, a generic "<T>", ...).
+   * Set to `false` only if every document on the site deliberately embeds
+   * live JSX/components as literal text and is free of such characters
+   * otherwise. Ignored when `extension` is not "mdx".
+   * @default true
+   */
+  escapeMdxSyntax?: boolean
   /** h1 -> h2, h2 -> h3, ... */
   demoteHeadings?: boolean
   /**
@@ -48,6 +68,5 @@ export interface Metadata extends DocumentFile {
     title: any
     alt: any
   }
-  markdown: string
   breadcrumb: object[]
 }
