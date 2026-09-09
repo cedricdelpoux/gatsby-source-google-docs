@@ -164,7 +164,11 @@ exports.sourceNodes = async (
         fileNode.internal.content = content
       }
 
-      createNode(fileNode)
+      // `File` is owned by `gatsby-source-filesystem`, and a site that runs
+      // its own instance of it has already claimed the type. Naming it as the
+      // creating plugin is what `createRemoteFileNode` does, and what keeps
+      // Gatsby from rejecting the node as belonging to another plugin.
+      createNode(fileNode, {name: "gatsby-source-filesystem"})
     }
 
     timer.setStatus(
