@@ -42,8 +42,36 @@ export interface Options {
    * @default true
    */
   escapeMdxSyntax?: boolean
+  /**
+   * Metadata fields to forward to the context of the created pages,
+   * on top of the ones the plugin always provides.
+   * Ignored when `createPages` is not `true`.
+   * @default []
+   */
+  pageContext?: string[]
   /** h1 -> h2, h2 -> h3, ... */
   demoteHeadings?: boolean
+  /**
+   * Size the images are downloaded at. Changing it downloads them again,
+   * since the size is part of the URL they are fetched from.
+   */
+  imagesOptions?: {
+    /** Between 1 and 16383 */
+    width?: number
+    /** Between 1 and 16383 */
+    height?: number
+    /** Crop the image to the given `width` and `height` instead of fitting it */
+    crop?: boolean
+  }
+  /** Keep the bold, italic, underline, ... of the Google Docs default style */
+  keepDefaultStyle?: boolean
+  skipCodes?: boolean
+  skipFootnotes?: boolean
+  skipHeadings?: boolean
+  skipImages?: boolean
+  skipLists?: boolean
+  skipQuotes?: boolean
+  skipTables?: boolean
   /**
    * To exclude some folder in the tree
    * It can be folder names or IDs
