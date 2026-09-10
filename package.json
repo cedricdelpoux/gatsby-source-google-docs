@@ -47,12 +47,6 @@
     "@commitlint/cli": "^21",
     "@commitlint/config-conventional": "^21",
     "@eslint/js": "^9",
-    "@semantic-release/changelog": "^6",
-    "@semantic-release/commit-analyzer": "^13",
-    "@semantic-release/git": "^10",
-    "@semantic-release/github": "^12",
-    "@semantic-release/npm": "^13",
-    "@semantic-release/release-notes-generator": "^14",
     "commitizen": "^4",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^9",
@@ -65,8 +59,7 @@
     "lint-staged": "^17",
     "prettier": "^3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "semantic-release": "^25"
+    "react-dom": "^18.2.0"
   },
   "bin": {
     "gatsby-source-google-docs-token": "utils/generate-token.js"
@@ -85,7 +78,6 @@
     "lint": "eslint .",
     "test": "jest --coverage",
     "prepublishOnly": "yarn lint && yarn test",
-    "semantic-release": "semantic-release",
     "prepare": "husky",
     "format": "prettier --write ."
   }
