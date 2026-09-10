@@ -65,6 +65,10 @@
     "gatsby-source-google-docs-token": "utils/generate-token.js"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "utils/**/*.js",
+      "!utils/wrap-page-element.js"
+    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/.claude/"
