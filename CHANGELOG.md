@@ -1,5 +1,35 @@
 # Changelog
 
+## 3.0.0
+
+Documents are no longer kept in memory as `GoogleDocs` nodes: they are written
+to the filesystem and picked up by `gatsby-transformer-remark` or
+`gatsby-plugin-mdx`. See [Migrating from v2](./README.md#migrating-from-v2) to
+update your queries.
+
+-   Added
+
+    -   Gatsby 5 support
+    -   MDX works again, with `gatsby-plugin-mdx` v5 (`remark-gfm` is required)
+    -   Documents are written under `outputDir`, with their images next to them, and the `File` nodes are created by the plugin itself
+    -   Only what changed on Google Drive is fetched: documents and images are kept in `cacheDir` between builds
+    -   Options:
+
+        -   `outputDir`
+        -   `cacheDir`
+        -   `extension`
+        -   `escapeMdxSyntax`
+
+-   Updated
+
+    -   Node 22 or 24 is required (Node 25 is not supported), and `gatsby@^5` is a peer dependency
+    -   Document data now travels as `frontmatter` on the `MarkdownRemark`/`Mdx` node
+    -   `allGoogleDocs` becomes `allMarkdownRemark` (or `allMdx`), shared with any other markdown the site sources
+    -   `related` is a list of document ids instead of linked nodes, and a document linked several times is no longer repeated in it
+
+-   Removed
+    -   The `GoogleDocs` node type
+
 ## 2.4.10
 
 -   Fixed: Build freezing indefinitely on texts containing exotic whitespaces (U+00A0, U+2028, ...)
