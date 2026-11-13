@@ -1,6 +1,6 @@
 {
   "name": "google-oauth2-env-vars",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Generate and cache Google OAuth 2.0 tokens in .env files",
   "repository": "https://github.com/cedricdelpoux/google-oauth2-env-vars",
   "author": {
@@ -17,29 +17,32 @@
     "api"
   ],
   "main": "index.js",
+  "types": "types/index.d.ts",
   "files": [
     "index.js",
-    "utils"
+    "utils",
+    "types"
   ],
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
-    "clipboardy": "^2.3.0",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "glob": "^9.3.2",
-    "googleapis": "^114.0.0",
-    "inquirer": "^8.0.0",
-    "open": "^8.0.0"
+    "google-auth-library": "^11.3.4"
   },
   "devDependencies": {
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.8.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.0",
-    "prettier": "2.8.7"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "^7.0.2"
   },
   "scripts": {
-    "lint": "eslint index.js utils/*.js",
-    "prepare": "husky install",
-    "prepublishOnly": "yarn lint"
+    "build": "tsc",
+    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "format": "prettier --write .",
+    "test": "node --test",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm test"
   }
 }

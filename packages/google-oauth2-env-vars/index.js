@@ -1,5 +1,3 @@
-require("dotenv").config()
-
 const {askClientIds} = require("./utils/ask-client-ids")
 const {getNewToken} = require("./utils/get-new-token")
 const {initAuth} = require("./utils/init-auth")
@@ -11,7 +9,26 @@ const {
   TOKEN_FIELDS,
 } = require("./utils/constants")
 
+try {
+  process.loadEnvFile()
+} catch (e) {
+  if (e.code !== "ENOENT") {
+    throw e
+  }
+}
+
+/**
+ * @typedef {object} Options
+ * @property {string} [token] Name of the .env variable holding the token
+ * @property {string[]} [scope] Scopes the token is authorized for
+ * @property {string[]} [apis] APIs to enable in the Google Cloud console
+ * @property {number} [port] Port of the local server receiving the authorization code
+ */
+
+/** @typedef {import("google-auth-library").Credentials} Token */
+
 class GoogleOAuth2 {
+  /** @param {Options} [options] */
   constructor(options = {}) {
     this.tokenName = options.token || null
     this.scope = options.scope || null
@@ -19,8 +36,27 @@ class GoogleOAuth2 {
     this.port = options.port || DEFAULT_PORT
   }
 
+  /** @param {Token} token */
   isTokenValid(token) {
     return token && TOKEN_FIELDS.every((field) => !!token[field])
+  }
+
+  /**
+   * @param {string} rawToken
+   * @returns {Token}
+   */
+  parseToken(rawToken) {
+    try {
+      return JSON.parse(rawToken)
+    } catch (e) {
+      throw new Error(
+        `${this.tokenName} is not valid JSON (${e.message}). ` +
+          "It must be on a single line, with double quotes around every key and string value: " +
+          `${this.tokenName}={"access_token":"...","refresh_token":"...","scope":"...","token_type":"Bearer","expiry_date":0}. ` +
+          "Run the token generation again to get a new one.",
+        {cause: e}
+      )
+    }
   }
 
   async getNewEnvVars() {
@@ -28,7 +64,7 @@ class GoogleOAuth2 {
       throw new Error("You need to define `scope` in GoogleOAuth2 constructor")
     }
 
-    const {clientId, clientSecret} = await askClientIds()
+    const {clientId, clientSecret} = await askClientIds({port: this.port})
 
     const token = await getNewToken({
       clientId,
@@ -39,47 +75,56 @@ class GoogleOAuth2 {
       port: this.port,
     })
 
-    return token
+    return {
+      [CLIENT_ID]: clientId,
+      [CLIENT_SECRET]: clientSecret,
+      [this.tokenName]: token,
+    }
   }
 
+  /**
+   * Read the variables from the environment, and throw when one of them is
+   * missing or invalid.
+   *
+   * @returns {Record<string, string | Token>}
+   */
   getEnvVars() {
-    let envClientId
-    let envClientSecret
-    let envToken
+    const clientId = process.env[CLIENT_ID]
+    const clientSecret = process.env[CLIENT_SECRET]
+    const rawToken = this.tokenName && process.env[this.tokenName]
 
-    if (process.env[CLIENT_ID]) {
-      envClientId = process.env[CLIENT_ID]
-    } else {
+    if (!clientId) {
       throw new Error(`${CLIENT_ID} not found in .env`)
     }
 
-    if (process.env[CLIENT_SECRET]) {
-      envClientSecret = process.env[CLIENT_SECRET]
-    } else {
+    if (!clientSecret) {
       throw new Error(`${CLIENT_SECRET} not found in .env`)
     }
 
-    if (this.tokenName && process.env[this.tokenName]) {
-      envToken = JSON.parse(process.env[this.tokenName])
-    }
-
-    if (!envToken) {
+    if (!rawToken) {
       throw new Error(`${this.tokenName} not found in .env`)
     }
 
-    if (!this.isTokenValid(envToken)) {
+    const token = this.parseToken(rawToken)
+
+    if (!this.isTokenValid(token)) {
       throw new Error(
         `${this.tokenName} not valid. Please generate a new token`
       )
     }
 
     return {
-      [CLIENT_ID]: envClientId,
-      [CLIENT_SECRET]: envClientSecret,
-      [this.tokenName]: envToken,
+      [CLIENT_ID]: clientId,
+      [CLIENT_SECRET]: clientSecret,
+      [this.tokenName]: token,
     }
   }
 
+  /**
+   * Read the variables, or walk through their generation when they are missing.
+   *
+   * @returns {Promise<Record<string, string | Token>>}
+   */
   async generateEnvVars() {
     let envVars
 
@@ -104,17 +149,12 @@ class GoogleOAuth2 {
 
   async getAuth() {
     const envVars = this.getEnvVars()
-    const clientId = envVars[CLIENT_ID]
-    const clientSecret = envVars[CLIENT_SECRET]
-    const token = envVars[this.tokenName]
 
-    const auth = await initAuth({
-      clientId,
-      clientSecret,
-      token,
+    return initAuth({
+      clientId: envVars[CLIENT_ID],
+      clientSecret: envVars[CLIENT_SECRET],
+      token: envVars[this.tokenName],
     })
-
-    return auth
   }
 }
 

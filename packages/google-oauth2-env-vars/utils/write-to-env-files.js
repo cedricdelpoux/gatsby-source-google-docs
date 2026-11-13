@@ -1,22 +1,37 @@
-const glob = require("glob")
-const fs = require("fs")
+const fs = require("node:fs")
 
-const envFiles = glob.sync(".env*")
+const getEnvFiles = () => {
+  const files = fs
+    .readdirSync(".", {withFileTypes: true})
+    .filter((entry) => entry.isFile() && entry.name.startsWith(".env"))
+    .map((entry) => entry.name)
 
-if (envFiles.length === 0) {
-  envFiles.push(".env")
+  return files.length > 0 ? files : [".env"]
+}
+
+const setEnvLine = (content, name, line) => {
+  const lines = content.split("\n")
+  const isVarLine = (text) => text.startsWith(`${name}=`)
+  const index = lines.findIndex(isVarLine)
+
+  if (index === -1) {
+    const separator = content && !content.endsWith("\n") ? "\n" : ""
+    return `${content}${separator}${line}\n`
+  }
+
+  return lines
+    .map((text, i) => (i === index ? line : text))
+    .filter((text, i) => i === index || !isVarLine(text))
+    .join("\n")
 }
 
 const writeToEnvFiles = (name, value) => {
-  try {
-    envFiles.forEach((file) => {
-      fs.appendFileSync(file, `${name}=${value}\n`)
-      console.log(`✅  ${name} added to ${file}`)
-    })
-    console.log("")
-  } catch (e) {
-    throw new Error(e)
+  for (const file of getEnvFiles()) {
+    const content = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : ""
+    fs.writeFileSync(file, setEnvLine(content, name, `${name}=${value}`))
+    console.log(`✅  ${name} written to ${file}`)
   }
+  console.log("")
 }
 
 module.exports = {

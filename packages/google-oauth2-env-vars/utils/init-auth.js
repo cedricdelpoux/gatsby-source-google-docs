@@ -1,23 +1,14 @@
-const {google} = require("googleapis")
+const {OAuth2Client} = require("google-auth-library")
 
-const initAuth = async ({clientId, clientSecret, token}) => {
-  const auth = new google.auth.OAuth2(clientId, clientSecret)
+const initAuth = ({clientId, clientSecret, token}) => {
+  const auth = new OAuth2Client({clientId, clientSecret})
 
   auth.setCredentials(token)
 
-  let expired = true
-
-  if (token.expiry_date) {
-    const nowDate = new Date()
-    const expirationDate = new Date(token.expiry_date)
-    expired = expirationDate.getTime() < nowDate.getTime()
-  }
-
-  if (expired) {
-    auth.on("tokens", (refreshedToken) => {
-      auth.setCredentials(refreshedToken)
-    })
-  }
+  // A refreshed token comes without its refresh_token, which must be kept
+  auth.on("tokens", (refreshedToken) => {
+    auth.setCredentials({...token, ...refreshedToken})
+  })
 
   return auth
 }

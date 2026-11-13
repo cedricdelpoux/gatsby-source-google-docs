@@ -1,11 +1,10 @@
-const inquirer = require("inquirer")
-
+const {askRequired} = require("./ask")
 const {openUrl} = require("./open-url")
 const {writeToEnvFiles} = require("./write-to-env-files")
 
 const {CLIENT_ID, CLIENT_SECRET, OAUTH_URL} = require("./constants")
 
-const askClientIds = async () => {
+const askClientIds = async ({port}) => {
   if (process.env[CLIENT_ID] && process.env[CLIENT_SECRET]) {
     console.log(`✅  ${CLIENT_ID} found in .env`)
     console.log(`✅  ${CLIENT_SECRET} found in .env`)
@@ -19,26 +18,14 @@ const askClientIds = async () => {
   console.log("")
   console.info('Create an "Google OAuth 2.0 Client ID" with the config:')
   console.info('Type: "Web application"')
-  console.info('Redirect uri: "http://localhost:5000/callback"')
+  console.info(`Redirect uri: "http://localhost:${port}/callback"`)
 
-  await openUrl({message: "Google OAuth 2.0 URL:", url: OAUTH_URL})
+  openUrl({message: "Google OAuth 2.0 URL:", url: OAUTH_URL})
 
   console.log("Copy your `Client ID` and `Client secret`")
 
-  const {clientId, clientSecret} = await inquirer.prompt([
-    {
-      type: "input",
-      name: "clientId",
-      message: "Client ID:",
-      validate: (input) => !!input,
-    },
-    {
-      type: "input",
-      name: "clientSecret",
-      message: "Client Secret:",
-      validate: (input) => !!input,
-    },
-  ])
+  const clientId = await askRequired("Client ID: ")
+  const clientSecret = await askRequired("Client Secret: ")
 
   writeToEnvFiles(CLIENT_ID, clientId)
   writeToEnvFiles(CLIENT_SECRET, clientSecret)

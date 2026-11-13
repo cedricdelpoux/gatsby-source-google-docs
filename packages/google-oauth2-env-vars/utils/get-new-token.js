@@ -1,10 +1,20 @@
-const {google} = require("googleapis")
+const {OAuth2Client} = require("google-auth-library")
 
+const {ask} = require("./ask")
 const {getAuthorizationCode} = require("./get-authorization-code")
+const {openUrl} = require("./open-url")
 const {writeToEnvFiles} = require("./write-to-env-files")
 const {ENABLE_API_URL} = require("./constants")
-const {openUrl} = require("./open-url")
-const {waitInput} = require("./wait-input")
+
+const enableApi = async (api) => {
+  console.log(`🤚  You need to enable "${api}" API`)
+  openUrl({message: "API URL:", url: `${ENABLE_API_URL}${api}`})
+  console.log(`🛑  Follow the URL and enable "${api}" API`)
+  console.log("")
+  await ask("🚦  API enabled? Press Enter to continue setup")
+  console.log("")
+  console.log("------------------------")
+}
 
 const getNewToken = async ({
   clientId,
@@ -14,46 +24,43 @@ const getNewToken = async ({
   apisToEnable,
   port,
 }) => {
-  try {
-    console.log("------------------------")
-    console.log("| Generating new token |")
-    console.log("------------------------")
-    console.log("")
-    if (apisToEnable) {
-      for (const api of apisToEnable) {
-        console.log(`🤚  You need to enable "${api}" API`)
+  console.log("------------------------")
+  console.log("| Generating new token |")
+  console.log("------------------------")
+  console.log("")
 
-        await openUrl({message: "API URL:", url: `${ENABLE_API_URL}${api}`})
-
-        console.log(`🛑  Follow the URL and enable "${api}" API`)
-
-        await waitInput("API enabled?")
-      }
-    }
-
-    const client = new google.auth.OAuth2(
-      clientId,
-      clientSecret,
-      `http://localhost:${port}/callback`
-    )
-
-    const authUrl = client.generateAuthUrl({
-      access_type: "offline",
-      scope,
-      prompt: "consent",
-    })
-    const code = await getAuthorizationCode({url: authUrl, port})
-
-    const {tokens} = await client.getToken(code)
-
-    if (tokenName) {
-      writeToEnvFiles(tokenName, JSON.stringify(tokens))
-    }
-
-    return tokens
-  } catch (e) {
-    throw new Error(e)
+  for (const api of apisToEnable) {
+    await enableApi(api)
   }
+
+  const client = new OAuth2Client({
+    clientId,
+    clientSecret,
+    redirectUri: `http://localhost:${port}/callback`,
+  })
+
+  const url = client.generateAuthUrl({
+    access_type: "offline",
+    scope,
+    prompt: "consent",
+  })
+
+  const code = await getAuthorizationCode({
+    port,
+    onListening: () => {
+      console.log("🤚  You need to authorize your application")
+      openUrl({message: "Authorization URL:", url})
+      console.log("🛑  Follow the URL to authorize your application")
+    },
+  })
+
+  const {tokens} = await client.getToken(code)
+
+  if (tokenName) {
+    writeToEnvFiles(tokenName, JSON.stringify(tokens))
+  }
+
+  return tokens
 }
 
 module.exports = {
