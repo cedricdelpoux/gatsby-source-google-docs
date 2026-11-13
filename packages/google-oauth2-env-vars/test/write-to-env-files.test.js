@@ -71,6 +71,37 @@ test("writes to every .env* file", () => {
   assert.equal(read("other"), "")
 })
 
+const LEFT_OUT_FILES = [
+  ".envrc",
+  ".env.example",
+  ".env.sample",
+  ".env.template",
+]
+
+test("leaves out .envrc and the templates", () => {
+  for (const file of LEFT_OUT_FILES) {
+    fs.writeFileSync(file, "")
+  }
+  fs.writeFileSync(".env.local", "")
+
+  writeToEnvFiles("TOKEN", "a")
+
+  assert.equal(read(".env.local"), "TOKEN=a\n")
+  for (const file of LEFT_OUT_FILES) {
+    assert.equal(read(file), "")
+  }
+  assert.equal(fs.existsSync(".env"), false)
+})
+
+test("creates .env when there are only files left out", () => {
+  fs.writeFileSync(".envrc", "")
+
+  writeToEnvFiles("TOKEN", "a")
+
+  assert.equal(read(".env"), "TOKEN=a\n")
+  assert.equal(read(".envrc"), "")
+})
+
 test("looks for the .env* files when writing, not when loaded", () => {
   fs.writeFileSync(".env.production", "")
 

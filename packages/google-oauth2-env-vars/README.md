@@ -41,8 +41,9 @@ const googleOAuth2 = new GoogleOAuth2({
   //
   // Optional
   //
-  // Port of the local server receiving the authorization code
-  port: 5000, // DEFAULT
+  // Fixed port of the local server receiving the authorization code,
+  // for a "Web application" client. Any free port by default.
+  port: 5000,
 })
 
 const envVars = await googleOAuth2.generateEnvVars()
@@ -51,9 +52,9 @@ const envVars = await googleOAuth2.generateEnvVars()
 When the variables are missing from the environment, `generateEnvVars()` walks you through the setup in the terminal:
 
 1. It asks you to enable each API in `apis` in the Google Cloud console.
-2. It asks for the `Client ID` and `Client secret` of an OAuth 2.0 client of type "Web application", whose authorized redirect URI is `http://localhost:<port>/callback` (`http://localhost:5000/callback` by default).
-3. It asks you to authorize the application, and receives the authorization code on that redirect URI.
-4. It writes `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` and the token to every `.env*` file of the current directory, or to a new `.env` file when there is none. A variable that is already there is replaced.
+2. It asks for the `Client ID` and `Client secret` of an OAuth 2.0 client of type "Desktop app". With a fixed `port`, it can also be a "Web application" client whose authorized redirect URI is `http://localhost:<port>/callback`.
+3. It asks you to authorize the application, and receives the authorization code on a local server, which listens on any free port unless `port` is set. The authorization uses PKCE.
+4. It writes `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` and the token to the `.env` and `.env.*` files of the current directory, or to a new `.env` file when there is none. It leaves out `.envrc` and the templates `.env.example`, `.env.sample` and `.env.template`, which are often committed. A variable that is already there is replaced.
 
 Each URL is printed in the terminal and opened in your browser when possible.
 

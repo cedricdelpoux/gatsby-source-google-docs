@@ -1,4 +1,4 @@
-const {OAuth2Client} = require("google-auth-library")
+const {CodeChallengeMethod, OAuth2Client} = require("google-auth-library")
 
 const {ask} = require("./ask")
 const {getAuthorizationCode} = require("./get-authorization-code")
@@ -33,28 +33,33 @@ const getNewToken = async ({
     await enableApi(api)
   }
 
-  const client = new OAuth2Client({
-    clientId,
-    clientSecret,
-    redirectUri: `http://localhost:${port}/callback`,
-  })
-
-  const url = client.generateAuthUrl({
-    access_type: "offline",
-    scope,
-    prompt: "consent",
-  })
+  const client = new OAuth2Client({clientId, clientSecret})
+  const {codeVerifier, codeChallenge} = await client.generateCodeVerifierAsync()
+  let redirectUri
 
   const code = await getAuthorizationCode({
     port,
-    onListening: () => {
+    onListening: (listeningPort) => {
+      redirectUri = `http://localhost:${listeningPort}/callback`
+      const url = client.generateAuthUrl({
+        access_type: "offline",
+        scope,
+        prompt: "consent",
+        redirect_uri: redirectUri,
+        code_challenge: codeChallenge,
+        code_challenge_method: CodeChallengeMethod.S256,
+      })
       console.log("🤚  You need to authorize your application")
       openUrl({message: "Authorization URL:", url})
       console.log("🛑  Follow the URL to authorize your application")
     },
   })
 
-  const {tokens} = await client.getToken(code)
+  const {tokens} = await client.getToken({
+    code,
+    codeVerifier,
+    redirect_uri: redirectUri,
+  })
 
   if (tokenName) {
     writeToEnvFiles(tokenName, JSON.stringify(tokens))

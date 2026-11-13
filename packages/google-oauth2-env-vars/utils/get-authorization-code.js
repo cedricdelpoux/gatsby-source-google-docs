@@ -31,8 +31,25 @@ const getAuthorizationCode = ({port, onListening}) =>
       }
     })
 
-    server.on("error", reject)
-    server.listen(port, onListening)
+    server.on("error", (/** @type {NodeJS.ErrnoException} */ e) => {
+      if (e.code !== "EADDRINUSE") {
+        reject(e)
+        return
+      }
+      reject(
+        new Error(
+          `Port ${port} is already in use. Free it, or leave out \`port\` ` +
+            'to listen on any free port, which needs a "Desktop app" OAuth client.',
+          {cause: e}
+        )
+      )
+    })
+    server.listen(port, () => {
+      const address = /** @type {import("node:net").AddressInfo} */ (
+        server.address()
+      )
+      onListening(address.port)
+    })
   })
 
 module.exports = {

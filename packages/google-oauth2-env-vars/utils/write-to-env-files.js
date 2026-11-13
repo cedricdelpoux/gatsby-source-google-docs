@@ -1,9 +1,14 @@
 const fs = require("node:fs")
 
+const TEMPLATE_FILES = new Set([".env.example", ".env.sample", ".env.template"])
+
+const isEnvFile = (name) =>
+  name === ".env" || (name.startsWith(".env.") && !TEMPLATE_FILES.has(name))
+
 const getEnvFiles = () => {
   const files = fs
     .readdirSync(".", {withFileTypes: true})
-    .filter((entry) => entry.isFile() && entry.name.startsWith(".env"))
+    .filter((entry) => entry.isFile() && isEnvFile(entry.name))
     .map((entry) => entry.name)
 
   return files.length > 0 ? files : [".env"]

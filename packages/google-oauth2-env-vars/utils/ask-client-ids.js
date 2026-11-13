@@ -16,9 +16,12 @@ const askClientIds = async ({port}) => {
   }
 
   console.log("")
-  console.info('Create an "Google OAuth 2.0 Client ID" with the config:')
-  console.info('Type: "Web application"')
-  console.info(`Redirect uri: "http://localhost:${port}/callback"`)
+  console.info('Create a "Google OAuth 2.0 Client ID" of type "Desktop app"')
+  if (port) {
+    console.info(
+      `or of type "Web application" with the redirect URI "http://localhost:${port}/callback"`
+    )
+  }
 
   openUrl({message: "Google OAuth 2.0 URL:", url: OAUTH_URL})
 

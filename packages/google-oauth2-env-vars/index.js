@@ -2,12 +2,7 @@ const {askClientIds} = require("./utils/ask-client-ids")
 const {getNewToken} = require("./utils/get-new-token")
 const {initAuth} = require("./utils/init-auth")
 
-const {
-  CLIENT_ID,
-  CLIENT_SECRET,
-  DEFAULT_PORT,
-  TOKEN_FIELDS,
-} = require("./utils/constants")
+const {CLIENT_ID, CLIENT_SECRET, TOKEN_FIELDS} = require("./utils/constants")
 
 try {
   process.loadEnvFile()
@@ -22,10 +17,19 @@ try {
  * @property {string} [token] Name of the .env variable holding the token
  * @property {string[]} [scope] Scopes the token is authorized for
  * @property {string[]} [apis] APIs to enable in the Google Cloud console
- * @property {number} [port] Port of the local server receiving the authorization code
+ * @property {number} [port] Fixed port for a "Web application" client registered
+ *   with http://localhost:<port>/callback. A free port is picked by default,
+ *   which needs a "Desktop app" client.
  */
 
 /** @typedef {import("google-auth-library").Credentials} Token */
+
+/** @param {Error} e */
+const printError = (e) => {
+  console.error("")
+  console.error(`❌  ${e.message}`)
+  process.exitCode = 1
+}
 
 class GoogleOAuth2 {
   /** @param {Options} [options] */
@@ -33,7 +37,7 @@ class GoogleOAuth2 {
     this.tokenName = options.token || null
     this.scope = options.scope || null
     this.apisToEnable = options.apis || []
-    this.port = options.port || DEFAULT_PORT
+    this.port = options.port || 0
   }
 
   /** @param {Token} token */
@@ -122,20 +126,26 @@ class GoogleOAuth2 {
 
   /**
    * Read the variables, or walk through their generation when they are missing.
+   * A failure is printed in the console and sets the exit code, instead of
+   * throwing, and the result is then undefined.
    *
-   * @returns {Promise<Record<string, string | Token>>}
+   * @returns {Promise<Record<string, string | Token> | undefined>}
    */
   async generateEnvVars() {
     let envVars
 
     try {
       envVars = this.getEnvVars()
-      console.log(`✅${CLIENT_ID} found in .env`)
-      console.log(`✅${CLIENT_SECRET} found in .env`)
-      console.log(`✅${this.tokenName} found in .env`)
+      console.log(`✅  ${CLIENT_ID} found in .env`)
+      console.log(`✅  ${CLIENT_SECRET} found in .env`)
+      console.log(`✅  ${this.tokenName} found in .env`)
     } catch (e) {
-      console.log(`❌${e.message}`)
-      envVars = await this.getNewEnvVars()
+      console.log(`❌  ${e.message}`)
+      envVars = await this.getNewEnvVars().catch(printError)
+    }
+
+    if (!envVars) {
+      return undefined
     }
 
     console.log("")
