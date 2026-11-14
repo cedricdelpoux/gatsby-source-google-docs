@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+-   Updated
+
+    -   The conversion to Markdown and the Google authentication live in [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), so they can be used without Gatsby. The output and the `.env` variables are the same.
+
 ## 3.0.0
 
 Documents are no longer kept in memory as `GoogleDocs` nodes: they are written

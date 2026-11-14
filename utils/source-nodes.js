@@ -3,8 +3,9 @@ const {join, resolve} = require("path")
 
 const _merge = require("lodash/merge")
 const {createFileNode} = require("gatsby-source-filesystem/create-file-node")
+const {fetchDocument} = require("google-docs-to-markdown/google")
 
-const {fetchDocument, fetchDocuments} = require("./google-docs")
+const {fetchDocuments} = require("./google-docs")
 const {DEFAULT_OPTIONS} = require("./constants")
 const {getImageUrlParameters} = require("./get-image-url")
 const {createStore} = require("./store")
@@ -131,7 +132,7 @@ exports.sourceNodes = async (
     // everything the store holds
     if (googleDocuments.length > 0) {
       await store.prune(
-        googleDocuments.map(({googleDocument}) => googleDocument.properties.id)
+        googleDocuments.map(({googleDocument}) => googleDocument.frontmatter.id)
       )
     }
     await removeStaleFiles({outputDir: options.outputDir, writtenFiles})

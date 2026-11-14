@@ -7,10 +7,8 @@ const {sourceNodes} = require("../utils/source-nodes")
 const {createStore} = require("../utils/store")
 const {writeDocuments} = require("../utils/write-documents")
 
-jest.mock("../utils/google-docs", () => ({
-  fetchDocument: jest.fn(),
-  fetchDocuments: jest.fn(),
-}))
+jest.mock("google-docs-to-markdown/google", () => ({fetchDocument: jest.fn()}))
+jest.mock("../utils/google-docs", () => ({fetchDocuments: jest.fn()}))
 jest.mock("../utils/write-documents", () => ({writeDocuments: jest.fn()}))
 jest.mock("../utils/store", () => ({createStore: jest.fn()}))
 
@@ -64,7 +62,7 @@ beforeEach(async () => {
 
   createStore.mockReturnValue(store)
   fetchDocuments.mockResolvedValue({
-    documents: [{googleDocument: {properties: {id: DOCUMENT_ID}}}],
+    documents: [{googleDocument: {frontmatter: {id: DOCUMENT_ID}}}],
     fetchedCount: 1,
   })
   writeDocuments.mockResolvedValue({

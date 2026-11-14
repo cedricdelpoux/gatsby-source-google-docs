@@ -4,7 +4,7 @@ const _chunk = require("lodash/chunk")
 const _flatten = require("lodash/flatten")
 const yamljs = require("yamljs")
 
-const {getAuth} = require("./get-auth")
+const {getAuth} = require("google-docs-to-markdown/google")
 const {wait} = require("./wait")
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"

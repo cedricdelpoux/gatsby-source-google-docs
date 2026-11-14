@@ -1,23 +1,7 @@
-const {docs: googleDocs} = require("@googleapis/docs")
+const {GoogleDocument} = require("google-docs-to-markdown")
+const {fetchDocument} = require("google-docs-to-markdown/google")
 
-const {getAuth} = require("./get-auth")
-const {GoogleDocument} = require("./google-document")
-const {writeDocumentToTests} = require("./write-document-to-tests")
 const {fetchFiles} = require("./google-drive")
-
-async function fetchDocument(id) {
-  const auth = await getAuth()
-
-  const res = await googleDocs({version: "v1", auth}).documents.get({
-    documentId: id,
-  })
-
-  if (!res.data) {
-    throw new Error("Empty Data")
-  }
-
-  return res.data
-}
 
 /**
  * Fetch every document of the folder, reusing the ones the store already holds.
@@ -73,24 +57,16 @@ async function fetchDocuments({options, reporter, store}) {
         })
       }
 
-      const googleDocument = new GoogleDocument({
-        document,
-        properties,
-        options,
+      const googleDocument = new GoogleDocument(document, {
+        ...options,
+        mdx: options.extension === "mdx",
+        frontmatter: properties,
         links,
       })
-
-      if (process.env.NODE_ENV === "DOCS_TO_TESTS") {
-        writeDocumentToTests(googleDocument)
-      }
 
       return {googleDocument, fromStore}
     })
   )
-
-  if (process.env.NODE_ENV === "DOCS_TO_TESTS") {
-    process.exit()
-  }
 
   if (options.debug) {
     timer.setStatus(
@@ -103,6 +79,5 @@ async function fetchDocuments({options, reporter, store}) {
 }
 
 module.exports = {
-  fetchDocument,
   fetchDocuments,
 }

@@ -1,14 +1,10 @@
+const {fetchDocument} = require("google-docs-to-markdown/google")
+
 const {fetchFiles} = require("../utils/google-drive")
 const {fetchDocuments} = require("../utils/google-docs")
 
+jest.mock("google-docs-to-markdown/google", () => ({fetchDocument: jest.fn()}))
 jest.mock("../utils/google-drive", () => ({fetchFiles: jest.fn()}))
-jest.mock("../utils/get-auth", () => ({getAuth: jest.fn()}))
-
-const mockGet = jest.fn()
-
-jest.mock("@googleapis/docs", () => ({
-  docs: () => ({documents: {get: mockGet}}),
-}))
 
 const document = {
   title: "Home",
@@ -46,7 +42,7 @@ const properties = {
 
 beforeEach(() => {
   jest.clearAllMocks()
-  mockGet.mockResolvedValue({data: document})
+  fetchDocument.mockResolvedValue(document)
   fetchFiles.mockResolvedValue([properties])
 })
 
@@ -59,7 +55,7 @@ test("fetches a document the store does not hold", async () => {
     store,
   })
 
-  expect(mockGet).toHaveBeenCalledTimes(1)
+  expect(fetchDocument).toHaveBeenCalledTimes(1)
   expect(fetchedCount).toBe(1)
   expect(documents[0].fromStore).toBe(false)
   expect(store.documents["1Tn1dCbIc"].modifiedTime).toBe(
@@ -78,7 +74,7 @@ test("does not fetch a document that has not been modified since", async () => {
     store,
   })
 
-  expect(mockGet).not.toHaveBeenCalled()
+  expect(fetchDocument).not.toHaveBeenCalled()
   expect(fetchedCount).toBe(0)
   expect(documents[0].fromStore).toBe(true)
   expect(documents[0].googleDocument.document).toBe(document)
@@ -91,7 +87,7 @@ test("fetches a document again once it has been modified", async () => {
 
   const {fetchedCount} = await fetchDocuments({options: {}, reporter, store})
 
-  expect(mockGet).toHaveBeenCalledTimes(1)
+  expect(fetchDocument).toHaveBeenCalledTimes(1)
   expect(fetchedCount).toBe(1)
   expect(store.documents["1Tn1dCbIc"].modifiedTime).toBe(
     properties.modifiedTime
@@ -109,5 +105,5 @@ test("reads the metadata of a stored document from Google Drive", async () => {
 
   const {documents} = await fetchDocuments({options: {}, reporter, store})
 
-  expect(documents[0].googleDocument.properties.slug).toBe("/new")
+  expect(documents[0].googleDocument.frontmatter.slug).toBe("/new")
 })

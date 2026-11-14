@@ -69,7 +69,7 @@ Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby
 yarn add gatsby-source-google-docs gatsby-transformer-remark
 ```
 
-- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**
+- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), which you can also use without Gatsby
 - `gatsby-transformer-remark` transform **Markdown** to **HTML**
 - `gatsby-plugin-mdx` transform **Markdown** to **MDX**
 

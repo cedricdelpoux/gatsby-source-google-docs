@@ -33,13 +33,9 @@
     "gatsby": "^5.0.0"
   },
   "dependencies": {
-    "@googleapis/docs": "^10.0.0",
     "@googleapis/drive": "^22.0.0",
-    "dotenv": "^17",
     "gatsby-source-filesystem": "^5.16.0",
-    "google-auth-library": "^10",
-    "google-oauth2-env-vars": "^1.4.0",
-    "json2md": "^2.0.0",
+    "google-docs-to-markdown": "^1.0.0",
     "lodash": "^4.17.21",
     "yamljs": "^0.3.0"
   },

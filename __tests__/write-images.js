@@ -9,8 +9,9 @@ const {
 const {tmpdir} = require("os")
 const {join} = require("path")
 
+const {GoogleDocument} = require("google-docs-to-markdown")
+
 const {downloadImage} = require("../utils/download-image")
-const {GoogleDocument} = require("../utils/google-document")
 const {createStore} = require("../utils/store")
 const {writeDocuments} = require("../utils/write-documents")
 
@@ -47,9 +48,8 @@ const createDocument = (url = IMAGE_URL) => ({
 })
 
 const createGoogleDocument = (document = createDocument()) =>
-  new GoogleDocument({
-    document,
-    properties: {id: "1Tn1dCbIc", name: "Home", slug: "/home"},
+  new GoogleDocument(document, {
+    frontmatter: {id: "1Tn1dCbIc", name: "Home", slug: "/home"},
   })
 
 const reporter = {warn: jest.fn()}

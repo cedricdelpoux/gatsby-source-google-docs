@@ -1,6 +1,6 @@
 const {fetchFiles} = require("../utils/google-drive")
 
-jest.mock("../utils/get-auth", () => ({getAuth: jest.fn()}))
+jest.mock("google-docs-to-markdown/google", () => ({getAuth: jest.fn()}))
 
 const mockList = jest.fn()
 const mockGet = jest.fn()

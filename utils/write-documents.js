@@ -144,8 +144,8 @@ async function writeImages({
     return {markdown, imageFiles: [], downloadedCount: 0}
   }
 
-  const documentId = googleDocument.properties.id
-  const slug = googleDocument.properties.slug
+  const documentId = googleDocument.frontmatter.id
+  const slug = googleDocument.frontmatter.slug
   const imagesDirectory = getImagesDirectory(slug)
   const documentDirectory = dirname(join(outputDir, documentPath))
   const storeDirectory = store.imagesDirectory(documentId)
@@ -184,7 +184,7 @@ async function writeImages({
 
     const name = title
       ? _kebabCase(title)
-      : `${_kebabCase(googleDocument.properties.name) || "image"}-${index}`
+      : `${_kebabCase(googleDocument.frontmatter.name) || "image"}-${index}`
     // An image Google does not list among the inline objects of the document
     // has no id to be stored under: the name it takes in `outputDir` does
     const imageId = imageIdsByUrl.get(url) || name
@@ -261,7 +261,7 @@ async function writeDocuments({
 
   for (const {googleDocument, fromStore} of googleDocuments) {
     const documentPath = getDocumentPath(
-      googleDocument.properties.slug,
+      googleDocument.frontmatter.slug,
       extension
     )
 
