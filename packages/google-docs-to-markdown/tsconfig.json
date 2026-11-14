@@ -1,0 +1,14 @@
+{
+  "include": ["index.js", "google.js"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "module": "nodenext",
+    "target": "es2023",
+    "skipLibCheck": true,
+    "strict": false
+  }
+}

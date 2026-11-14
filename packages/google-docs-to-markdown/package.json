@@ -1,0 +1,72 @@
+{
+  "name": "google-docs-to-markdown",
+  "version": "1.0.0",
+  "description": "Convert Google Docs to Markdown or MDX",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git"
+  },
+  "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "google",
+    "google-docs",
+    "docs",
+    "markdown",
+    "mdx",
+    "converter"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.js"
+    },
+    "./google": {
+      "types": "./types/google.d.ts",
+      "default": "./google.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "google.js",
+    "bin",
+    "lib",
+    "types"
+  ],
+  "bin": {
+    "google-docs-to-markdown-token": "bin/generate-token.js"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {
+    "@googleapis/docs": "^14.1.1",
+    "google-auth-library": "^11.3.4",
+    "google-oauth2-env-vars": "^2.0.0",
+    "json2md": "^2.0.3",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "fixture": "node scripts/write-fixture.js",
+    "format": "prettier --write .",
+    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "test": "vitest run --coverage",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "allowScripts": {
+    "fsevents": false
+  }
+}
