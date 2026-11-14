@@ -95,13 +95,34 @@ test("retries a failed download", async () => {
 
 test("gives up after three attempts, naming the image and the reason", async () => {
   useFakeRetryDelays()
-  global.fetch.mockResolvedValue(new Response("", {status: 404}))
+  global.fetch.mockResolvedValue(new Response("", {status: 503}))
 
   await expect(
     runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
-  ).rejects.toThrow(`Unable to download "${URL}": 404`)
+  ).rejects.toThrow(`Unable to download "${URL}": 503`)
 
   expect(global.fetch).toHaveBeenCalledTimes(3)
+})
+
+test("does not ask again for an image Google refuses", async () => {
+  global.fetch.mockResolvedValue(new Response("", {status: 404}))
+
+  await expect(
+    downloadImage({url: URL, directory, name: "cover"})
+  ).rejects.toMatchObject({status: 404})
+
+  expect(global.fetch).toHaveBeenCalledTimes(1)
+})
+
+test("asks again for an image Google rate limits", async () => {
+  useFakeRetryDelays()
+  global.fetch
+    .mockResolvedValueOnce(new Response("", {status: 429}))
+    .mockResolvedValueOnce(image("image/png"))
+
+  await runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
+
+  expect(global.fetch).toHaveBeenCalledTimes(2)
 })
 
 test("refuses a response that is not an image", async () => {

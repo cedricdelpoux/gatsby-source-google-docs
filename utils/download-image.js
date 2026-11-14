@@ -38,7 +38,10 @@ async function downloadImage({url, directory, name}) {
       const response = await fetch(url)
 
       if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`)
+        throw Object.assign(
+          new Error(`${response.status} ${response.statusText}`),
+          {status: response.status}
+        )
       }
 
       const mimeType = (response.headers.get("content-type") || "")
@@ -72,13 +75,22 @@ async function downloadImage({url, directory, name}) {
     } catch (e) {
       lastError = e
 
+      // Asking again gives the same answer, except when it is rate limited
+      const isClientError =
+        e.status >= 400 && e.status < 500 && e.status !== 429
+
+      if (isClientError) break
+
       if (attempt < RETRIES) {
         await delay(RETRY_DELAY * attempt)
       }
     }
   }
 
-  throw new Error(`Unable to download "${url}": ${lastError.message}`)
+  throw Object.assign(
+    new Error(`Unable to download "${url}": ${lastError.message}`),
+    {status: lastError.status}
+  )
 }
 
 module.exports = {

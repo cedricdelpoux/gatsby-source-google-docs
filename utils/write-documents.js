@@ -2,15 +2,11 @@ const {constants} = require("fs")
 const {copyFile, mkdir, readFile, rm, stat, writeFile} = require("fs/promises")
 const {dirname, extname, join, relative, sep} = require("path")
 
+const {GoogleDocument} = require("google-docs-to-markdown")
 const _kebabCase = require("lodash/kebabCase")
 
 const {downloadImage} = require("./download-image")
-const {getImageIdsByUrl} = require("./document-images")
 const {getImageUrl} = require("./get-image-url")
-
-const IMAGE_URL_REGEX =
-  /https:\/\/[a-z0-9-]*\.googleusercontent\.com\/(?:docsz?\/)?[a-zA-Z0-9-_=]*[?]key=[a-zA-Z0-9-_]*/g
-const MD_IMAGE_REGEX = new RegExp(`(${IMAGE_URL_REGEX.source}) "([^)]*)"`, "g")
 
 const IMAGES_DIR = "images"
 
@@ -45,23 +41,29 @@ const getImagesDirectory = (slug) => {
 const toPosix = (path) => path.split(sep).join("/")
 
 /**
- * Collect every Google image URL referenced by a document: the cover, which
- * lives in the frontmatter, and the inline images of the body.
+ * Download an image at the size of `imagesOptions`, or at its original size
+ * when Google does not understand the size parameters added to its URL: their
+ * syntax is tied to the shape of the URL, which Google changes from time to
+ * time.
  */
-const getImageUrls = (googleDocument, markdown) => {
-  const urls = new Map()
+const downloadResizedImage = async ({url, options, reporter, ...params}) => {
+  const resizedUrl = getImageUrl(url, options)
 
-  if (googleDocument.cover && googleDocument.cover.image) {
-    urls.set(googleDocument.cover.image, googleDocument.cover.title || "")
+  if (resizedUrl === url) {
+    return downloadImage({url, ...params})
   }
 
-  for (const [, url, title] of markdown.matchAll(MD_IMAGE_REGEX)) {
-    if (!urls.has(url)) {
-      urls.set(url, title || "")
-    }
-  }
+  try {
+    return await downloadImage({url: resizedUrl, ...params})
+  } catch (e) {
+    if (e.status !== 400) throw e
 
-  return urls
+    reporter.warn(
+      `source-google-docs: ${e.message}, downloading it at its original size`
+    )
+
+    return downloadImage({url, ...params})
+  }
 }
 
 /**
@@ -138,18 +140,16 @@ async function writeImages({
   store,
   refetchDocument,
 }) {
-  const urls = getImageUrls(googleDocument, markdown)
+  const {images} = googleDocument
 
-  if (urls.size === 0) {
+  if (images.length === 0) {
     return {markdown, imageFiles: [], downloadedCount: 0}
   }
 
   const documentId = googleDocument.frontmatter.id
-  const slug = googleDocument.frontmatter.slug
-  const imagesDirectory = getImagesDirectory(slug)
+  const imagesDirectory = getImagesDirectory(googleDocument.frontmatter.slug)
   const documentDirectory = dirname(join(outputDir, documentPath))
   const storeDirectory = store.imagesDirectory(documentId)
-  const imageIdsByUrl = getImageIdsByUrl(googleDocument.document)
   const storedImages = await store.readImages(documentId)
   const imageFiles = []
   const usedImageIds = new Set()
@@ -161,33 +161,32 @@ async function writeImages({
    * A document served from the store carries the URLs of the fetch that
    * produced it, and Google expires them within hours: an image missing from
    * the store cannot be downloaded from them, the document has to be fetched
-   * again to get URLs that still work. Only the URLs change, the markdown is
-   * the same, so it does not have to be converted again.
+   * again to get URLs that still work. The ids of the images do not change, so
+   * they map the stored images to their fresh URLs.
    */
-  const getDownloadUrl = async (url, imageId) => {
+  const getDownloadUrl = async ({id, url}) => {
     if (!fromStore) return url
 
     if (!freshUrlsById) {
-      freshUrlsById = refetchDocument(documentId).then((document) => {
-        const idsByUrl = getImageIdsByUrl(document)
-
-        return new Map(Array.from(idsByUrl, ([freshUrl, id]) => [id, freshUrl]))
-      })
+      freshUrlsById = refetchDocument(documentId).then(
+        (document) =>
+          new Map(
+            new GoogleDocument(document).images.map((image) => [
+              image.id,
+              image.url,
+            ])
+          )
+      )
     }
 
-    return (await freshUrlsById).get(imageId) || url
+    return (await freshUrlsById).get(id) || url
   }
 
-  let index = 0
-  for (const [url, title] of urls) {
-    index++
-
+  for (const [index, image] of images.entries()) {
+    const {id: imageId, url, title} = image
     const name = title
       ? _kebabCase(title)
-      : `${_kebabCase(googleDocument.frontmatter.name) || "image"}-${index}`
-    // An image Google does not list among the inline objects of the document
-    // has no id to be stored under: the name it takes in `outputDir` does
-    const imageId = imageIdsByUrl.get(url) || name
+      : `${_kebabCase(googleDocument.frontmatter.name) || "image"}-${index + 1}`
 
     usedImageIds.add(imageId)
 
@@ -195,8 +194,10 @@ async function writeImages({
       let fileName = storedImages.get(imageId)
 
       if (!fileName) {
-        fileName = await downloadImage({
-          url: getImageUrl(await getDownloadUrl(url, imageId), options),
+        fileName = await downloadResizedImage({
+          url: await getDownloadUrl(image),
+          options,
+          reporter,
           directory: storeDirectory,
           name: imageId,
         })
@@ -226,7 +227,7 @@ async function writeImages({
   // An image replaced in a document leaves the one it replaced behind, and the
   // store would grow forever. Only once every image of the document made it,
   // so that a download that failed never costs one that was already there.
-  if (imageFiles.length === urls.size) {
+  if (imageFiles.length === images.length) {
     for (const [imageId, fileName] of storedImages) {
       if (!usedImageIds.has(imageId)) {
         await rm(join(storeDirectory, fileName), {force: true})

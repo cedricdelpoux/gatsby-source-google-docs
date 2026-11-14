@@ -35,7 +35,7 @@ const getImageUrl = (urlWithParams, pluginOptions) => {
     ? stripGoogleImageSizeParams(googleImageUrl)
     : googleImageUrl
 
-  // URLs format: https://...googleusercontent.com/docsz/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
+  // URLs format: https://[HOST]/[PATH]/[IMAGE_ID][IMAGE_PARAMS]?key=[AUTHORIZATION_KEY]
   return `${cleanedGoogleImageUrl}${imageUrlParams}${
     googleImageParams ? `?${googleImageParams}` : ""
   }`

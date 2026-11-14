@@ -19,7 +19,7 @@ jest.mock("../utils/download-image", () => ({downloadImage: jest.fn()}))
 
 const IMAGE_ID = "kix.abc123"
 const IMAGE_URL =
-  "https://lh7-rt.googleusercontent.com/docsz/AD_4nXabc123?key=Ab12Cd"
+  "https://docs.google.com/docs-images-rt/AIpPl2Dabc123=s2048?key=Ab12Cd"
 
 const createDocument = (url = IMAGE_URL) => ({
   title: "Home",
@@ -58,10 +58,14 @@ let dir
 let outputDir
 let store
 
-const write = async ({googleDocument = createGoogleDocument(), fromStore}) =>
+const write = async ({
+  googleDocument = createGoogleDocument(),
+  fromStore,
+  options,
+}) =>
   writeDocuments({
     documents: [{googleDocument, fromStore}],
-    options: {outputDir, extension: "md"},
+    options: {outputDir, extension: "md", ...options},
     reporter,
     store,
     refetchDocument: jest.fn(),
@@ -109,6 +113,96 @@ test("downloads an image to the store and copies it next to the document", async
   expect(documents[0].markdown).not.toContain(IMAGE_URL)
 })
 
+test("downloads an image whatever the format of its URL", async () => {
+  const url =
+    "https://lh7-rt.googleusercontent.com/docsz/AD_4nXabc123?key=Ab12Cd"
+
+  const {documents} = await write({
+    googleDocument: createGoogleDocument(createDocument(url)),
+    fromStore: false,
+  })
+
+  expect(downloadImage.mock.calls[0][0].url).toBe(url)
+  expect(documents[0].markdown).toContain("images/home/alt-text.png")
+})
+
+test("numbers the untitled images in the order of the document", async () => {
+  const document = createDocument()
+  const image = (id) => ({
+    inlineObjectProperties: {
+      embeddedObject: {
+        imageProperties: {
+          contentUri: `https://docs.google.com/docs-images-rt/${id}?key=Ab12Cd`,
+        },
+      },
+    },
+  })
+
+  document.inlineObjects = {
+    "kix.second": image("second"),
+    "kix.first": image("first"),
+  }
+  document.body.content[0].paragraph.elements = [
+    {inlineObjectElement: {inlineObjectId: "kix.first"}},
+    {inlineObjectElement: {inlineObjectId: "kix.second"}},
+  ]
+
+  const {documents} = await write({
+    googleDocument: createGoogleDocument(document),
+    fromStore: false,
+  })
+
+  expect(documents[0].markdown.indexOf("images/home/home-1.png")).toBeLessThan(
+    documents[0].markdown.indexOf("images/home/home-2.png")
+  )
+  expect(downloadImage.mock.calls.map(([{name}]) => name)).toEqual([
+    "kix.first",
+    "kix.second",
+  ])
+})
+
+test("downloads an image at the size of the options", async () => {
+  await write({fromStore: false, options: {imagesOptions: {width: 800}}})
+
+  expect(downloadImage).toHaveBeenCalledTimes(1)
+  expect(downloadImage.mock.calls[0][0].url).toBe(
+    "https://docs.google.com/docs-images-rt/AIpPl2Dabc123=w800?key=Ab12Cd"
+  )
+})
+
+test("downloads an image at its original size when it cannot be resized", async () => {
+  downloadImage.mockRejectedValueOnce(
+    Object.assign(new Error("400 Bad Request"), {status: 400})
+  )
+
+  const {documents} = await write({
+    fromStore: false,
+    options: {imagesOptions: {width: 800}},
+  })
+
+  expect(downloadImage.mock.calls.map(([{url}]) => url)).toEqual([
+    "https://docs.google.com/docs-images-rt/AIpPl2Dabc123=w800?key=Ab12Cd",
+    IMAGE_URL,
+  ])
+  expect(reporter.warn).toHaveBeenCalledWith(
+    expect.stringContaining("original size")
+  )
+  expect(documents[0].markdown).toContain("images/home/alt-text.png")
+})
+
+test("does not fall back to the original size on another error", async () => {
+  downloadImage.mockRejectedValueOnce(
+    Object.assign(new Error("403 Forbidden"), {status: 403})
+  )
+
+  await write({fromStore: false, options: {imagesOptions: {width: 800}}})
+
+  expect(downloadImage).toHaveBeenCalledTimes(1)
+  expect(reporter.warn).toHaveBeenCalledWith(
+    expect.not.stringContaining("original size")
+  )
+})
+
 test("does not download an image the store already holds", async () => {
   await write({fromStore: false})
   downloadImage.mockClear()
@@ -140,7 +234,7 @@ test("fetches a stored document again for an image the store lost", async () => 
   // The URLs of a stored document expire: an image that has to be downloaded
   // can only be downloaded from a URL the document is fetched again for
   const freshUrl =
-    "https://lh7-rt.googleusercontent.com/docsz/AD_4nXfresh456?key=Ef34Gh"
+    "https://docs.google.com/docs-images-rt/AIpPl2Dfresh456=s2048?key=Ef34Gh"
   const refetchDocument = jest.fn().mockResolvedValue(createDocument(freshUrl))
 
   await writeDocuments({
@@ -180,7 +274,7 @@ test("keeps an image the document could not download this time", async () => {
   downloadImage.mockRejectedValue(new Error("Unable to download"))
 
   const other = createDocument(
-    "https://lh7-rt.googleusercontent.com/docsz/AD_4nXother?key=Ij56Kl"
+    "https://docs.google.com/docs-images-rt/AIpPl2Dother=s2048?key=Ij56Kl"
   )
   other.inlineObjects["kix.def456"] = other.inlineObjects[IMAGE_ID]
   delete other.inlineObjects[IMAGE_ID]

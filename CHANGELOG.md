@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+-   Fixed
+
+    -   Images are downloaded again: Google now serves them from `docs.google.com/docs-images-rt` URLs, which the plugin did not recognize
+    -   An image Google cannot resize to `imagesOptions` is downloaded at its original size instead of not at all
+
 -   Updated
 
     -   The conversion to Markdown and the Google authentication live in [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), so they can be used without Gatsby. The output and the `.env` variables are the same.
