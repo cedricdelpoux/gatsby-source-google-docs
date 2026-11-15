@@ -219,6 +219,18 @@ test("drops a document excluded from its description", async () => {
   expect(Object.keys(bySlug(files))).toEqual(["/home"])
 })
 
+test("does not walk into an excluded folder", async () => {
+  drive({
+    [ROOT]: [folder({id: "f1", name: "Drafts", description: "exclude: true"})],
+    f1: [document({name: "Draft", parents: ["f1"]})],
+  })
+
+  const files = await fetchFiles({folder: ROOT}, {reporter})
+
+  expect(files).toEqual([])
+  expect(mockList).toHaveBeenCalledTimes(1)
+})
+
 test("defaults every document to a page dated from its creation", async () => {
   drive({[ROOT]: [document({name: "Home"})]})
 

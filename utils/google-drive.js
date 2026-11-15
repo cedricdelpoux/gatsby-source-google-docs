@@ -206,7 +206,7 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
           },
         }
       })
-      .filter((folder) => !folder.exclude)
+      .filter((folder) => !folder.metadata.exclude)
   }
   let nextParents = collectParents(res.data.files)
 
