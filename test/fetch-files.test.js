@@ -231,6 +231,15 @@ test("does not walk into an excluded folder", async () => {
   expect(mockList).toHaveBeenCalledTimes(1)
 })
 
+test("ignores a description that is a YAML list", async () => {
+  drive({[ROOT]: [document({name: "Home", description: "- running\n- bike"})]})
+
+  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+
+  expect(file).not.toHaveProperty("0")
+  expect(reporter.warn).not.toHaveBeenCalled()
+})
+
 test("defaults every document to a page dated from its creation", async () => {
   drive({[ROOT]: [document({name: "Home"})]})
 

@@ -1,6 +1,7 @@
 import {drive as googleDrive} from "@googleapis/drive"
 import _kebabCase from "lodash/kebabCase.js"
 import _chunk from "lodash/chunk.js"
+import _isPlainObject from "lodash/isPlainObject.js"
 import YAML from "yaml"
 
 import {wait} from "./wait.js"
@@ -37,8 +38,8 @@ const getMetadataFromDescription = (description, name, warn) => {
   try {
     const metadata = YAML.parse(description)
 
-    // A plain sentence is a valid YAML string, not metadata
-    return typeof metadata === "object" ? {...metadata} : {}
+    // A plain sentence or a list is valid YAML, but not metadata
+    return _isPlainObject(metadata) ? {...metadata} : {}
   } catch (e) {
     warn(
       `the description of "${name}" is not valid YAML, so its metadata are ignored: ${e.message.split("\n")[0]}`

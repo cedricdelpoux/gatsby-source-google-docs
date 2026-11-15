@@ -9,6 +9,7 @@
     -   The descriptions are read with [yaml](https://eemeli.org/yaml/) instead of yamljs, which could not read some valid YAML and dropped their metadata. A description that is not valid YAML is now reported instead of ignored silently.
     -   An image whose URL expired before it was downloaded is downloaded again from a fresh URL. Google expires them a few minutes after a document is fetched, so most of the images of a large site failed with "403 Forbidden".
     -   A folder with `exclude: true` is no longer walked through, which saves a listing of every folder it holds
+    -   A description written as a YAML list is ignored instead of becoming metadata named "0", "1", ...
 
 -   Updated
 
