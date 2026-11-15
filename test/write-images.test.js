@@ -10,6 +10,7 @@ import {
 } from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
+import {setTimeout as delay} from "node:timers/promises"
 
 import {GoogleDocument} from "google-docs-to-markdown"
 
@@ -274,6 +275,43 @@ test("fetches a document again when its image URLs expired", async () => {
     freshUrl,
   ])
   expect(documents[0].markdown).toContain("images/home/alt-text.png")
+})
+
+test("downloads the images of several documents at once", async () => {
+  let runningCount = 0
+  let maxRunningCount = 0
+
+  downloadImage.mockImplementation(async ({directory, name}) => {
+    runningCount++
+    maxRunningCount = Math.max(maxRunningCount, runningCount)
+    await delay(5)
+    runningCount--
+    await mkdir(directory, {recursive: true})
+    await writeFile(join(directory, `${name}.png`), "image")
+
+    return `${name}.png`
+  })
+
+  const googleDocuments = ["a", "b", "c"].map((id) => ({
+    googleDocument: new GoogleDocument(createDocument(), {
+      frontmatter: {id, name: id, slug: `/${id}`},
+    }),
+    fromStore: false,
+  }))
+
+  const {documents, imagesCount} = await writeDocuments({
+    documents: googleDocuments,
+    options: {outputDir, extension: "md"},
+    reporter,
+    store,
+    refetchDocument: vi.fn(),
+  })
+
+  expect(maxRunningCount).toBe(3)
+  expect(imagesCount).toBe(3)
+  expect(documents.map(({filePath}) => filePath)).toEqual(
+    ["a.md", "b.md", "c.md"].map((file) => join(outputDir, file))
+  )
 })
 
 test("forgets an image the document does not reference anymore", async () => {

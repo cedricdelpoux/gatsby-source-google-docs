@@ -4,11 +4,14 @@ import {dirname, extname, join, relative, sep} from "node:path"
 
 import {GoogleDocument} from "google-docs-to-markdown"
 import _kebabCase from "lodash/kebabCase.js"
+import _sumBy from "lodash/sumBy.js"
 
+import {createLimit} from "./create-limit.js"
 import {downloadImage} from "./download-image.js"
 import {getImageUrl} from "./get-image-url.js"
 
 const IMAGES_DIR = "images"
+const MAX_PARALLEL_DOWNLOADS = 8
 
 /**
  * Turn a document slug into the path of the file that holds it.
@@ -145,6 +148,7 @@ async function writeImages({
   reporter,
   store,
   refetchDocument,
+  limit,
 }) {
   const {images} = googleDocument
 
@@ -158,7 +162,7 @@ async function writeImages({
   const storeDirectory = store.imagesDirectory(documentId)
   const storedImages = await store.readImages(documentId)
   const imageFiles = []
-  const usedImageIds = new Set()
+  const usedImageIds = new Set(images.map(({id}) => id))
   let updatedMarkdown = markdown
   let downloadedCount = 0
   let freshUrlsById
@@ -204,23 +208,37 @@ async function writeImages({
     }
   }
 
+  const fileNames = await Promise.all(
+    images.map(async (image) => {
+      const storedFileName = storedImages.get(image.id)
+
+      if (storedFileName) return storedFileName
+
+      try {
+        const fileName = await limit(() => downloadToStore(image))
+
+        downloadedCount++
+
+        return fileName
+      } catch (e) {
+        reporter.warn(`source-google-docs: ${e.message}`)
+
+        return null
+      }
+    })
+  )
+
   for (const [index, image] of images.entries()) {
-    const {id: imageId, url, title} = image
+    const fileName = fileNames[index]
+
+    if (!fileName) continue
+
+    const {url, title} = image
     const name = title
       ? _kebabCase(title)
       : `${_kebabCase(googleDocument.frontmatter.name) || "image"}-${index + 1}`
 
-    usedImageIds.add(imageId)
-
     try {
-      let fileName = storedImages.get(imageId)
-
-      if (!fileName) {
-        fileName = await downloadToStore(image)
-        storedImages.set(imageId, fileName)
-        downloadedCount++
-      }
-
       const imagePath = join(
         outputDir,
         imagesDirectory,
@@ -271,49 +289,51 @@ async function writeDocuments({
 }) {
   const outputDir = options.outputDir
   const extension = options.extension
-  const writtenFiles = []
-  const documents = []
-  let imagesCount = 0
-  let downloadedImagesCount = 0
+  const limit = createLimit(MAX_PARALLEL_DOWNLOADS)
 
-  for (const {googleDocument, fromStore} of googleDocuments) {
-    const documentPath = getDocumentPath(
-      googleDocument.frontmatter.slug,
-      extension
-    )
+  const results = await Promise.all(
+    googleDocuments.map(async ({googleDocument, fromStore}) => {
+      const documentPath = getDocumentPath(
+        googleDocument.frontmatter.slug,
+        extension
+      )
+      const filePath = join(outputDir, documentPath)
+      let markdown = googleDocument.toMarkdown()
+      let writtenImages = {imageFiles: [], downloadedCount: 0}
 
-    let markdown = googleDocument.toMarkdown()
+      if (!options.skipImages) {
+        writtenImages = await writeImages({
+          googleDocument,
+          fromStore,
+          markdown,
+          outputDir,
+          documentPath,
+          options,
+          reporter,
+          store,
+          refetchDocument,
+          limit,
+        })
+        markdown = writtenImages.markdown
+      }
 
-    if (!options.skipImages) {
-      const result = await writeImages({
-        googleDocument,
-        fromStore,
-        markdown,
-        outputDir,
-        documentPath,
-        options,
-        reporter,
-        store,
-        refetchDocument,
-      })
+      await writeIfChanged(filePath, markdown)
 
-      markdown = result.markdown
-      imagesCount += result.imageFiles.length
-      downloadedImagesCount += result.downloadedCount
-      // Images count as written files too, otherwise the stale-file sweep in
-      // `sourceNodes` would delete every one of them right after writing.
-      writtenFiles.push(...result.imageFiles)
-    }
+      return {filePath, markdown, ...writtenImages}
+    })
+  )
 
-    const filePath = join(outputDir, documentPath)
-
-    await writeIfChanged(filePath, markdown)
-
-    writtenFiles.push(filePath)
-    documents.push({filePath, markdown})
+  return {
+    // Images count as written files too, otherwise the stale-file sweep in
+    // `sourceNodes` would delete every one of them right after writing.
+    writtenFiles: results.flatMap(({filePath, imageFiles}) => [
+      ...imageFiles,
+      filePath,
+    ]),
+    documents: results.map(({filePath, markdown}) => ({filePath, markdown})),
+    imagesCount: _sumBy(results, ({imageFiles}) => imageFiles.length),
+    downloadedImagesCount: _sumBy(results, "downloadedCount"),
   }
-
-  return {writtenFiles, documents, imagesCount, downloadedImagesCount}
 }
 
 export {writeDocuments, getDocumentPath, getImagesDirectory}
