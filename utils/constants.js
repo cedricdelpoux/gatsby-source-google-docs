@@ -9,7 +9,6 @@
  * @property {boolean} [demoteHeadings] h1 -> h2, h2 -> h3, ..., `true` by default
  * @property {string[]} [pageContext] Metadata fields to forward to the context of the created pages, on top of the ones the plugin always provides
  * @property {{width?: number, height?: number, crop?: boolean}} [imagesOptions] Size the images are downloaded at, between 1 and 16383. Changing it downloads them again.
- * @property {string[]} [exclude] Names or ids of the folders to leave out
  * @property {boolean} [debug] Report the progress of every step
  */
 
