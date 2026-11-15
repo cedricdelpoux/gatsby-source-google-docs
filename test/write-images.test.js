@@ -194,7 +194,7 @@ test("downloads an image at its original size when it cannot be resized", async 
 
 test("does not fall back to the original size on another error", async () => {
   downloadImage.mockRejectedValueOnce(
-    Object.assign(new Error("403 Forbidden"), {status: 403})
+    Object.assign(new Error("404 Not Found"), {status: 404})
   )
 
   await write({fromStore: false, options: {imagesOptions: {width: 800}}})
@@ -249,6 +249,31 @@ test("fetches a stored document again for an image the store lost", async () => 
 
   expect(refetchDocument).toHaveBeenCalledWith("1Tn1dCbIc")
   expect(downloadImage.mock.calls[0][0].url).toBe(freshUrl)
+})
+
+test("fetches a document again when its image URLs expired", async () => {
+  const freshUrl =
+    "https://docs.google.com/docs-images-rt/AIpPl2Dfresh456=s2048?key=Ef34Gh"
+  const refetchDocument = vi.fn().mockResolvedValue(createDocument(freshUrl))
+
+  downloadImage.mockRejectedValueOnce(
+    Object.assign(new Error("403 Forbidden"), {status: 403})
+  )
+
+  const {documents} = await writeDocuments({
+    documents: [{googleDocument: createGoogleDocument(), fromStore: false}],
+    options: {outputDir, extension: "md"},
+    reporter,
+    store,
+    refetchDocument,
+  })
+
+  expect(refetchDocument).toHaveBeenCalledWith("1Tn1dCbIc")
+  expect(downloadImage.mock.calls.map(([{url}]) => url)).toEqual([
+    IMAGE_URL,
+    freshUrl,
+  ])
+  expect(documents[0].markdown).toContain("images/home/alt-text.png")
 })
 
 test("forgets an image the document does not reference anymore", async () => {

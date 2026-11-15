@@ -164,28 +164,44 @@ async function writeImages({
   let freshUrlsById
 
   /**
-   * A document served from the store carries the URLs of the fetch that
-   * produced it, and Google expires them within hours: an image missing from
-   * the store cannot be downloaded from them, the document has to be fetched
-   * again to get URLs that still work. The ids of the images do not change, so
-   * they map the stored images to their fresh URLs.
+   * Google expires the image URLs a few minutes after a document is fetched,
+   * and fetching it again gives fresh URLs under the same image ids.
    */
-  const getDownloadUrl = async ({id, url}) => {
-    if (!fromStore) return url
-
-    if (!freshUrlsById) {
-      freshUrlsById = refetchDocument(documentId).then(
-        (document) =>
-          new Map(
-            new GoogleDocument(document).images.map((image) => [
-              image.id,
-              image.url,
-            ])
-          )
-      )
-    }
+  const getFreshUrl = async ({id, url}) => {
+    freshUrlsById ??= refetchDocument(documentId).then(
+      (document) =>
+        new Map(
+          new GoogleDocument(document).images.map((image) => [
+            image.id,
+            image.url,
+          ])
+        )
+    )
 
     return (await freshUrlsById).get(id) || url
+  }
+
+  const download = (image, url) =>
+    downloadResizedImage({
+      url,
+      options,
+      reporter,
+      directory: storeDirectory,
+      name: image.id,
+    })
+
+  const downloadToStore = async (image) => {
+    if (fromStore) return download(image, await getFreshUrl(image))
+
+    try {
+      return await download(image, image.url)
+    } catch (e) {
+      const isExpired = e.status === 403
+
+      if (!isExpired) throw e
+
+      return download(image, await getFreshUrl(image))
+    }
   }
 
   for (const [index, image] of images.entries()) {
@@ -200,13 +216,7 @@ async function writeImages({
       let fileName = storedImages.get(imageId)
 
       if (!fileName) {
-        fileName = await downloadResizedImage({
-          url: await getDownloadUrl(image),
-          options,
-          reporter,
-          directory: storeDirectory,
-          name: imageId,
-        })
+        fileName = await downloadToStore(image)
         storedImages.set(imageId, fileName)
         downloadedCount++
       }
