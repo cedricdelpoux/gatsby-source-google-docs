@@ -12,7 +12,6 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@mdx-js/react": "^2.3.0",
-    "@reach/router": "^1.3.4",
     "@theme-ui/css": "^0.17.4",
     "@theme-ui/mdx": "^0.17.4",
     "dotenv": "^17.2.3",
@@ -21,7 +20,6 @@
     "gatsby-plugin-image": "^3.16.0",
     "gatsby-plugin-layout": "^4.16.0",
     "gatsby-plugin-mdx": "^5.16.0",
-    "gatsby-plugin-mdx-embed": "^1.1.3",
     "gatsby-plugin-react-svg": "^3.3.0",
     "gatsby-plugin-sharp": "^5.16.0",
     "gatsby-plugin-theme-ui": "^0.17.4",
@@ -32,10 +30,9 @@
     "gatsby-remark-unwrap-images": "^1.0.2",
     "gatsby-source-filesystem": "^5.16.0",
     "gatsby-transformer-sharp": "^5.16.0",
-    "mdx-embed": "^1.1.2",
     "prismjs": "^1.30.0",
-    "react": "link:../node_modules/react",
-    "react-dom": "link:../node_modules/react-dom",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-icons": "^5.7.0",
     "rehype-stringify": "^9.0.4",
     "remark-gfm": "^3.0.1",
@@ -46,5 +43,17 @@
   },
   "devDependencies": {
     "gh-pages": "^6.3.0"
+  },
+  "allowScripts": {
+    "sharp": true,
+    "lmdb": false,
+    "@parcel/watcher": false,
+    "core-js": false,
+    "core-js-pure": false,
+    "es5-ext": false,
+    "gatsby": false,
+    "gatsby-cli": false,
+    "msgpackr-extract": false,
+    "fsevents": false
   }
 }

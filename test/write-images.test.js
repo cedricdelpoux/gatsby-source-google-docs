@@ -1,21 +1,23 @@
-const {
+import {afterEach, beforeEach, expect, test, vi} from "vitest"
+
+import {
   mkdir,
   mkdtemp,
   readFile,
   readdir,
   rm,
   writeFile,
-} = require("fs/promises")
-const {tmpdir} = require("os")
-const {join} = require("path")
+} from "node:fs/promises"
+import {tmpdir} from "node:os"
+import {join} from "node:path"
 
-const {GoogleDocument} = require("google-docs-to-markdown")
+import {GoogleDocument} from "google-docs-to-markdown"
 
-const {downloadImage} = require("../utils/download-image")
-const {createStore} = require("../utils/store")
-const {writeDocuments} = require("../utils/write-documents")
+import {downloadImage} from "../utils/download-image.js"
+import {createStore} from "../utils/store.js"
+import {writeDocuments} from "../utils/write-documents.js"
 
-jest.mock("../utils/download-image", () => ({downloadImage: jest.fn()}))
+vi.mock("../utils/download-image.js", () => ({downloadImage: vi.fn()}))
 
 const IMAGE_ID = "kix.abc123"
 const IMAGE_URL =
@@ -52,7 +54,7 @@ const createGoogleDocument = (document = createDocument()) =>
     frontmatter: {id: "1Tn1dCbIc", name: "Home", slug: "/home"},
   })
 
-const reporter = {warn: jest.fn()}
+const reporter = {warn: vi.fn()}
 
 let dir
 let outputDir
@@ -68,11 +70,11 @@ const write = async ({
     options: {outputDir, extension: "md", ...options},
     reporter,
     store,
-    refetchDocument: jest.fn(),
+    refetchDocument: vi.fn(),
   })
 
 beforeEach(async () => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 
   dir = await mkdtemp(join(tmpdir(), "google-docs-"))
   outputDir = join(dir, "content")
@@ -235,7 +237,7 @@ test("fetches a stored document again for an image the store lost", async () => 
   // can only be downloaded from a URL the document is fetched again for
   const freshUrl =
     "https://docs.google.com/docs-images-rt/AIpPl2Dfresh456=s2048?key=Ef34Gh"
-  const refetchDocument = jest.fn().mockResolvedValue(createDocument(freshUrl))
+  const refetchDocument = vi.fn().mockResolvedValue(createDocument(freshUrl))
 
   await writeDocuments({
     documents: [{googleDocument: createGoogleDocument(), fromStore: true}],

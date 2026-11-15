@@ -1,4 +1,6 @@
-const {getImageUrl, getImageUrlParameters} = require("../utils/get-image-url")
+import {describe, expect, test} from "vitest"
+
+import {getImageUrl, getImageUrlParameters} from "../utils/get-image-url.js"
 
 describe("getImageUrl", () => {
   test("preserves existing params when no image options are set", () => {

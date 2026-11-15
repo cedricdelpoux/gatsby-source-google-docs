@@ -8,6 +8,7 @@ const require = createRequire(import.meta.url)
 dotenv.config({quiet: true})
 
 const config = {
+  jsxRuntime: "automatic",
   plugins: [
     {
       resolve: require.resolve(`../..`),

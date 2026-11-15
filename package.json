@@ -18,67 +18,56 @@
     "docs",
     "drive"
   ],
+  "type": "module",
   "main": "index.js",
+  "types": "types/index.d.ts",
   "files": [
-    "index.d.ts",
+    "index.js",
     "gatsby-browser.js",
-    "gatsby-node.js",
+    "gatsby-node.mjs",
     "gatsby-ssr.js",
-    "utils"
+    "utils",
+    "types"
   ],
-  "engines": {
-    "node": ">=22"
-  },
-  "peerDependencies": {
-    "gatsby": "^5.0.0"
-  },
-  "dependencies": {
-    "@googleapis/drive": "^22.0.0",
-    "gatsby-source-filesystem": "^5.16.0",
-    "google-docs-to-markdown": "^1.0.0",
-    "lodash": "^4.17.21",
-    "yamljs": "^0.3.0"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^21",
-    "@commitlint/config-conventional": "^21",
-    "@eslint/js": "^9",
-    "commitizen": "^4",
-    "cz-conventional-changelog": "3.3.0",
-    "eslint": "^9",
-    "eslint-config-prettier": "^10",
-    "eslint-plugin-jest": "^29",
-    "eslint-plugin-react": "^7.37.5",
-    "globals": "^17.12.0",
-    "husky": "^9",
-    "jest": "^30",
-    "lint-staged": "^17",
-    "prettier": "^3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "bin": {
     "gatsby-source-google-docs-token": "utils/generate-token.js"
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "utils/**/*.js",
-      "!utils/wrap-page-element.js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/.claude/"
-    ],
-    "modulePathIgnorePatterns": [
-      "/.claude/"
-    ]
+  "engines": {
+    "node": ">=22.12"
+  },
+  "peerDependencies": {
+    "gatsby": "^5.3.0"
+  },
+  "dependencies": {
+    "@googleapis/drive": "^27.1.0",
+    "gatsby-source-filesystem": "^5.16.0",
+    "google-docs-to-markdown": "^1.0.0",
+    "lodash": "^4.18.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "react": "^18.3.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   },
   "scripts": {
-    "cz": "git-cz",
-    "lint": "eslint .",
-    "test": "jest --coverage",
-    "prepublishOnly": "yarn lint && yarn test",
-    "prepare": "husky",
-    "format": "prettier --write ."
+    "build": "tsc",
+    "format": "prettier --write .",
+    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "test": "vitest run --coverage",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "allowScripts": {
+    "fsevents": false,
+    "lmdb": false,
+    "msgpackr-extract": false
   }
 }

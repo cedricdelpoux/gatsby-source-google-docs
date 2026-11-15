@@ -1,17 +1,17 @@
-const {existsSync: exists} = require("fs")
-const {resolve} = require("path")
+import {existsSync as exists} from "node:fs"
+import {resolve} from "node:path"
 
-const _merge = require("lodash/merge")
+import _merge from "lodash/merge.js"
 
-const {DEFAULT_OPTIONS, DEFAULT_TEMPLATE} = require("./constants.js")
-const {getTransformer, TRANSFORMERS} = require("./get-transformer")
+import {DEFAULT_OPTIONS, DEFAULT_TEMPLATE} from "./constants.js"
+import {getTransformer, TRANSFORMERS} from "./get-transformer.js"
 
 const getComponentPath = (template) =>
   template.includes(".")
     ? resolve(`src/templates/${template}`)
     : resolve(`src/templates/${template}.js`)
 
-exports.createPages = async (
+export const createPages = async (
   {graphql, actions: {createPage}, store, reporter},
   pluginOptions
 ) => {

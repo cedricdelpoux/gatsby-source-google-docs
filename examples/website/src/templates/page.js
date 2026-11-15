@@ -1,8 +1,5 @@
 import {graphql} from "gatsby"
 import {GatsbyImage, getImage} from "gatsby-plugin-image"
-import React from "react"
-/** @jsx jsx */
-import {jsx} from "theme-ui"
 
 // Since gatsby-plugin-mdx v4, the compiled document is handed over as
 // `children` — this is why `createPages` (in the core plugin) appends
@@ -17,7 +14,7 @@ const PageTemplate = ({
   children,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <h1>{name}</h1>
       {/*
         To add a cover:
@@ -26,7 +23,7 @@ const PageTemplate = ({
       */}
       {cover && <GatsbyImage image={getImage(cover.image)} />}
       {children}
-    </React.Fragment>
+    </>
   )
 }
 

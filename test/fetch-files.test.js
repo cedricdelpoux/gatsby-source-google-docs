@@ -1,11 +1,13 @@
-const {fetchFiles} = require("../utils/google-drive")
+import {beforeEach, expect, test, vi} from "vitest"
 
-jest.mock("google-docs-to-markdown/google", () => ({getAuth: jest.fn()}))
+import {fetchFiles} from "../utils/google-drive.js"
 
-const mockList = jest.fn()
-const mockGet = jest.fn()
+const {mockList, mockGet} = vi.hoisted(() => ({
+  mockList: vi.fn(),
+  mockGet: vi.fn(),
+}))
 
-jest.mock("@googleapis/drive", () => ({
+vi.mock("@googleapis/drive", () => ({
   drive: () => ({files: {list: mockList, get: mockGet}}),
 }))
 
@@ -45,7 +47,7 @@ const bySlug = (files) =>
   Object.fromEntries(files.map((file) => [file.slug, file]))
 
 beforeEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 test("names, slugs and paths a document of the root folder", async () => {

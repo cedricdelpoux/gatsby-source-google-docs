@@ -1,7 +1,7 @@
-const {GoogleDocument} = require("google-docs-to-markdown")
-const {fetchDocument} = require("google-docs-to-markdown/google")
+import {GoogleDocument} from "google-docs-to-markdown"
+import {fetchDocument} from "google-docs-to-markdown/google"
 
-const {fetchFiles} = require("./google-drive")
+import {fetchFiles} from "./google-drive.js"
 
 /**
  * Fetch every document of the folder, reusing the ones the store already holds.
@@ -12,12 +12,8 @@ const {fetchFiles} = require("./google-drive")
  * document that was stored, so it never has to be fetched again. Its metadata
  * still comes from the listing, so renaming a document or editing its
  * description is picked up whether it was fetched or not.
- *
- * @param {object} params
- * @param {import('..').Options} params.options
- * @param {ReturnType<import('./store').createStore>} params.store
  */
-async function fetchDocuments({options, reporter, store}) {
+async function fetchDocuments({options, reporter, store, auth}) {
   const timer = reporter.activityTimer(`source-google-docs: documents`)
 
   if (options.debug) {
@@ -25,7 +21,7 @@ async function fetchDocuments({options, reporter, store}) {
     timer.setStatus("fetching documents")
   }
 
-  const documentsProperties = await fetchFiles(options)
+  const documentsProperties = await fetchFiles(options, auth)
   const links = documentsProperties.reduce(
     (acc, properties) => ({...acc, [properties.id]: properties.slug}),
     {}
@@ -47,7 +43,7 @@ async function fetchDocuments({options, reporter, store}) {
       if (fromStore) {
         document = stored.document
       } else {
-        document = await fetchDocument(properties.id)
+        document = await fetchDocument(properties.id, {auth})
         fetchedCount++
 
         await store.writeDocument({
@@ -78,6 +74,4 @@ async function fetchDocuments({options, reporter, store}) {
   return {documents, fetchedCount}
 }
 
-module.exports = {
-  fetchDocuments,
-}
+export {fetchDocuments}

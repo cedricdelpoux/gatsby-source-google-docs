@@ -41,7 +41,4 @@ const getImageUrl = (urlWithParams, pluginOptions) => {
   }`
 }
 
-module.exports = {
-  getImageUrl,
-  getImageUrlParameters,
-}
+export {getImageUrl, getImageUrlParameters}

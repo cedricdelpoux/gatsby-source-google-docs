@@ -2,6 +2,7 @@
 require("dotenv").config({quiet: true})
 
 module.exports = {
+  jsxRuntime: "automatic",
   plugins: [
     {
       resolve: require.resolve(`../..`),

@@ -1,20 +1,17 @@
 import {MDXProvider} from "@mdx-js/react"
-import {useLocation} from "@reach/router"
 import {Link} from "gatsby"
 import {useEffect, useState} from "react"
 import {RiMenuLine, RiMoonLine, RiSunLine} from "react-icons/ri"
-/** @jsx jsx */
-import {Button, jsx, useColorMode} from "theme-ui"
+import {Button, useColorMode} from "theme-ui"
 
 import {Details} from "../components/details"
 import {GatsbyLogo} from "../components/gatsby-logo"
 import {Masonry} from "../components/masonry"
 import {Menu} from "../components/menu"
 
-const LayoutIndex = ({children}) => {
+const LayoutIndex = ({children, location}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [colorMode, setColorMode] = useColorMode()
-  const location = useLocation()
 
   useEffect(() => {
     setIsMenuOpen(false)

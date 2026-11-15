@@ -1,8 +1,4 @@
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), ms)
-  })
-}
+import {setTimeout as sleep} from "node:timers/promises"
 
 function reload(requestsPerInterval, interval, state) {
   const throughput = requestsPerInterval / interval
@@ -46,4 +42,4 @@ function wait(requestsPerInterval, interval) {
   return waitRequest
 }
 
-exports.wait = wait
+export {wait}

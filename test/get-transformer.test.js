@@ -1,4 +1,6 @@
-const {getTransformer} = require("../utils/get-transformer")
+import {expect, test} from "vitest"
+
+import {getTransformer} from "../utils/get-transformer.js"
 
 const createStore = (...names) => ({
   getState: () => ({flattenedPlugins: names.map((name) => ({name}))}),

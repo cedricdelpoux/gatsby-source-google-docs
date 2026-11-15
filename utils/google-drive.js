@@ -1,21 +1,28 @@
-const {drive: googleDrive} = require("@googleapis/drive")
-const _kebabCase = require("lodash/kebabCase")
-const _chunk = require("lodash/chunk")
-const _flatten = require("lodash/flatten")
-const yamljs = require("yamljs")
+import {drive as googleDrive} from "@googleapis/drive"
+import _kebabCase from "lodash/kebabCase.js"
+import _chunk from "lodash/chunk.js"
+import yamljs from "yamljs"
 
-const {getAuth} = require("google-docs-to-markdown/google")
-const {wait} = require("./wait")
+import {wait} from "./wait.js"
+
+/**
+ * @typedef {import("@googleapis/drive").drive_v3.Schema$File & {mimeType: "application/vnd.google-apps.document"}} DocumentFile
+ * @typedef {import("@googleapis/drive").drive_v3.Schema$File & {mimeType: "application/vnd.google-apps.folder"}} RawFolder
+ */
+
+/**
+ * @typedef {object} Metadata The frontmatter of a document
+ * @property {string} name
+ * @property {string} slug
+ * @property {string} path
+ * @property {string | object} [description]
+ * @property {{image: string, title: string, alt: string}} [cover]
+ * @property {object[]} breadcrumb
+ */
 
 const MIME_TYPE_DOCUMENT = "application/vnd.google-apps.document"
 const MIME_TYPE_FOLDER = "application/vnd.google-apps.folder"
 
-/**
- * @template T
- * @param {T[]} arr
- * @param {number} count
- * @returns {T[][]}
- */
 function evenlyChunk(arr, count) {
   const chunks = Math.ceil(arr.length / count)
   if (chunks <= 1) {
@@ -99,11 +106,6 @@ const getTreeMetadata = (tree, file) => {
   }
 }
 
-/**
- * @param {object} options
- * @param {Partial<import('..').Metadata>} options.metadata
- * @param {Record<string, unknown>=} options.defaults
- */
 const updateFile = ({file, folder}) => {
   Object.assign(file, {
     exclude: false,
@@ -113,9 +115,7 @@ const updateFile = ({file, folder}) => {
     ...folder.metadata,
   })
 
-  // Transform description into metadata if description is YAML
-  const metadata = getMetadataFromDescription(file.description)
-  Object.assign(file, metadata)
+  Object.assign(file, getMetadataFromDescription(file.description))
 
   // Breadcrumb, slug, path
   Object.assign(file, getTreeMetadata(folder.tree, file))
@@ -123,45 +123,18 @@ const updateFile = ({file, folder}) => {
   return file
 }
 
-async function getGoogleDrive() {
-  const auth = await getAuth()
-
-  return googleDrive({version: "v3", auth})
-}
-
-/**
- * @typedef DocumentFetchParent
- * @property {string | null} id
- * @property {string[]} breadcrumb
- * @property {string} path
- */
-
-/**
- * @typedef FetchDocumentsOptions
- * @property {import('@googleapis/drive').drive_v3.Drive} drive
- * @property {DocumentFetchParent[]} parents
- */
-
 // 10 per 1.5 seconds.
 const rateLimit = wait(10, 1500)
 const BATCH_SIZE = 100
-/**
- * @param {import('..').Options & FetchDocumentsOptions} options
- * @returns {Promise<(import('..').DocumentFile & { path: string })[]>}
- */
 async function fetchDocumentsFiles({drive, parents, options}) {
   if (parents.length > BATCH_SIZE) {
-    return _flatten(
-      await Promise.all(
-        evenlyChunk(parents, BATCH_SIZE).map((parents) =>
-          fetchDocumentsFiles({
-            drive,
-            parents,
-            options,
-          })
-        )
+    const batches = await Promise.all(
+      evenlyChunk(parents, BATCH_SIZE).map((parents) =>
+        fetchDocumentsFiles({drive, parents, options})
       )
     )
+
+    return batches.flat()
   }
 
   const waited = await rateLimit()
@@ -188,25 +161,17 @@ async function fetchDocumentsFiles({drive, parents, options}) {
 
   const res = await drive.files.list(query)
 
-  /** @param {typeof res.data.files} files */
   const collectDocuments = (files) =>
     files
-      .filter(
-        /** @returns {file is import("..").DocumentFile} */
-        (file) => file.mimeType === MIME_TYPE_DOCUMENT
-      )
+      .filter((file) => file.mimeType === MIME_TYPE_DOCUMENT)
       .map((file) => {
         const parentIds = file.parents && new Set(file.parents)
         const folder = parentIds && parents.find((p) => parentIds.has(p.id))
-        return updateFile({
-          folder,
-          file,
-        })
+        return updateFile({folder, file})
       })
       .filter((file) => !file.exclude)
   let documents = collectDocuments(res.data.files)
 
-  /** @param {typeof res.data.files} files */
   const collectParents = (files) => {
     return files
       .filter((file) => file.mimeType === MIME_TYPE_FOLDER)
@@ -252,7 +217,6 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     return [...documents, ...documentsInFolders]
   }
 
-  /** @type {typeof documents} */
   let documentsInFolders = []
 
   const fetchOneParentsBatch = async () => {
@@ -267,7 +231,6 @@ async function fetchDocumentsFiles({drive, parents, options}) {
     documentsInFolders = [...documentsInFolders, ...results]
   }
 
-  /** @param {string} nextPageToken */
   const fetchNextPage = async (nextPageToken) => {
     await rateLimit()
     const nextRes = await drive.files.list({
@@ -298,9 +261,9 @@ async function fetchDocumentsFiles({drive, parents, options}) {
   return fetchNextPage(res.data.nextPageToken)
 }
 
-/** @param {import('..').Options} pluginOptions */
-async function fetchFiles({folder, ...options}) {
-  const drive = await getGoogleDrive()
+/** @param {import('./constants.js').Options} pluginOptions */
+async function fetchFiles({folder, ...options}, auth) {
+  const drive = googleDrive({version: "v3", auth})
 
   const res = await drive.files.get({
     fileId: folder,
@@ -323,6 +286,4 @@ async function fetchFiles({folder, ...options}) {
   return documentsFiles
 }
 
-module.exports = {
-  fetchFiles,
-}
+export {fetchFiles}

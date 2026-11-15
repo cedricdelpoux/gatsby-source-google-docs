@@ -1,11 +1,13 @@
-const {createSchema} = require("../utils/create-schema")
+import {expect, test, vi} from "vitest"
+
+import {createSchema} from "../utils/create-schema.js"
 
 const createApi = (...pluginNames) => ({
-  actions: {createTypes: jest.fn()},
+  actions: {createTypes: vi.fn()},
   store: {
     getState: () => ({flattenedPlugins: pluginNames.map((name) => ({name}))}),
   },
-  reporter: {warn: jest.fn()},
+  reporter: {warn: vi.fn()},
 })
 
 test("declares the frontmatter fields on MarkdownRemarkFrontmatter", () => {

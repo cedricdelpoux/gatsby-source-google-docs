@@ -1,7 +1,4 @@
 import {graphql, useStaticQuery} from "gatsby"
-import React from "react"
-/** @jsx jsx */
-import {jsx} from "theme-ui"
 
 export const Menu = ({open, onClose}) => {
   const data = useStaticQuery(graphql`
@@ -13,7 +10,7 @@ export const Menu = ({open, onClose}) => {
   `)
 
   return (
-    <React.Fragment>
+    <>
       {/* Sidebar Overlay */}
       <div
         onClick={onClose}
@@ -81,6 +78,6 @@ export const Menu = ({open, onClose}) => {
           dangerouslySetInnerHTML={{__html: data.menu.staticHtml}}
         />
       </div>
-    </React.Fragment>
+    </>
   )
 }

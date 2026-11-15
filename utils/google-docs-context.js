@@ -1,3 +1,3 @@
 import {createContext} from "react"
 
-export const GoogleDocsContext = createContext()
+export const GoogleDocsContext = createContext(undefined)

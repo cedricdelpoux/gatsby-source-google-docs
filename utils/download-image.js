@@ -1,8 +1,9 @@
-const {createWriteStream} = require("fs")
-const {mkdir, rm} = require("fs/promises")
-const {dirname, join} = require("path")
-const {Readable} = require("stream")
-const {pipeline} = require("stream/promises")
+import {createWriteStream} from "node:fs"
+import {mkdir, rm} from "node:fs/promises"
+import {dirname, join} from "node:path"
+import {Readable} from "node:stream"
+import {pipeline} from "node:stream/promises"
+import {setTimeout as delay} from "node:timers/promises"
 
 // Google serves document images without a file extension, so the extension has
 // to come from the response. Sharp needs it to be right: `gatsby-plugin-sharp`
@@ -21,8 +22,6 @@ const EXTENSIONS_BY_MIME_TYPE = {
 
 const RETRIES = 3
 const RETRY_DELAY = 1000
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Download `url` into `directory` and return the written file name.
@@ -93,6 +92,4 @@ async function downloadImage({url, directory, name}) {
   )
 }
 
-module.exports = {
-  downloadImage,
-}
+export {downloadImage}

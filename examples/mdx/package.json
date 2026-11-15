@@ -21,5 +21,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remark-gfm": "^3"
+  },
+  "allowScripts": {
+    "sharp": true,
+    "lmdb": false,
+    "@parcel/watcher": false,
+    "core-js": false,
+    "core-js-pure": false,
+    "es5-ext": false,
+    "gatsby": false,
+    "gatsby-cli": false,
+    "msgpackr-extract": false,
+    "fsevents": false
   }
 }

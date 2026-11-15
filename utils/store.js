@@ -1,5 +1,5 @@
-const {mkdir, readdir, readFile, rename, rm, writeFile} = require("fs/promises")
-const {basename, dirname, extname, join} = require("path")
+import {mkdir, readdir, readFile, rename, rm, writeFile} from "node:fs/promises"
+import {basename, dirname, extname, join} from "node:path"
 
 // Documents and images are kept next to `gatsby-config.js` rather than in the
 // Gatsby cache. Gatsby empties its own cache whenever a plugin version,
@@ -78,7 +78,7 @@ const createStore = ({dir}) => {
      * other `imagesOptions` — the size is part of the URL, so the files on
      * disk are not the ones the site asks for anymore.
      */
-    async init({imagesParams} = {}) {
+    async init({imagesParams}) {
       const state = (await readJson(stateFile)) || {}
 
       if (state.version !== VERSION) {
@@ -140,4 +140,4 @@ const createStore = ({dir}) => {
   }
 }
 
-module.exports = {createStore}
+export {createStore}

@@ -35,9 +35,4 @@ const TRANSFORMERS = {
   },
 }
 
-module.exports = {
-  getTransformer,
-  TRANSFORMERS,
-  MDX_PLUGIN,
-  REMARK_PLUGIN,
-}
+export {getTransformer, TRANSFORMERS, MDX_PLUGIN, REMARK_PLUGIN}

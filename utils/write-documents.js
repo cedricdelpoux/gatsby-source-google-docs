@@ -1,12 +1,12 @@
-const {constants} = require("fs")
-const {copyFile, mkdir, readFile, rm, stat, writeFile} = require("fs/promises")
-const {dirname, extname, join, relative, sep} = require("path")
+import {constants} from "node:fs"
+import {copyFile, mkdir, readFile, rm, stat, writeFile} from "node:fs/promises"
+import {dirname, extname, join, relative, sep} from "node:path"
 
-const {GoogleDocument} = require("google-docs-to-markdown")
-const _kebabCase = require("lodash/kebabCase")
+import {GoogleDocument} from "google-docs-to-markdown"
+import _kebabCase from "lodash/kebabCase.js"
 
-const {downloadImage} = require("./download-image")
-const {getImageUrl} = require("./get-image-url")
+import {downloadImage} from "./download-image.js"
+import {getImageUrl} from "./get-image-url.js"
 
 const IMAGES_DIR = "images"
 
@@ -46,15 +46,21 @@ const toPosix = (path) => path.split(sep).join("/")
  * syntax is tied to the shape of the URL, which Google changes from time to
  * time.
  */
-const downloadResizedImage = async ({url, options, reporter, ...params}) => {
+const downloadResizedImage = async ({
+  url,
+  options,
+  reporter,
+  directory,
+  name,
+}) => {
   const resizedUrl = getImageUrl(url, options)
 
   if (resizedUrl === url) {
-    return downloadImage({url, ...params})
+    return downloadImage({url, directory, name})
   }
 
   try {
-    return await downloadImage({url: resizedUrl, ...params})
+    return await downloadImage({url: resizedUrl, directory, name})
   } catch (e) {
     if (e.status !== 400) throw e
 
@@ -62,7 +68,7 @@ const downloadResizedImage = async ({url, options, reporter, ...params}) => {
       `source-google-docs: ${e.message}, downloading it at its original size`
     )
 
-    return downloadImage({url, ...params})
+    return downloadImage({url, directory, name})
   }
 }
 
@@ -300,8 +306,4 @@ async function writeDocuments({
   return {writtenFiles, documents, imagesCount, downloadedImagesCount}
 }
 
-module.exports = {
-  writeDocuments,
-  getDocumentPath,
-  getImagesDirectory,
-}
+export {writeDocuments, getDocumentPath, getImagesDirectory}

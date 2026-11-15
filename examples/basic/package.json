@@ -23,5 +23,17 @@
   },
   "resolutions": {
     "sanitize-html": "2.13.1"
+  },
+  "allowScripts": {
+    "sharp": true,
+    "lmdb": false,
+    "@parcel/watcher": false,
+    "core-js": false,
+    "core-js-pure": false,
+    "es5-ext": false,
+    "gatsby": false,
+    "gatsby-cli": false,
+    "msgpackr-extract": false,
+    "fsevents": false
   }
 }

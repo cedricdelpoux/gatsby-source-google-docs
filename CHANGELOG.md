@@ -10,6 +10,9 @@
 -   Updated
 
     -   The conversion to Markdown and the Google authentication live in [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), so they can be used without Gatsby. The output and the `.env` variables are the same.
+    -   Node 22.12 or later and Gatsby 5.3 or later are required: the plugin is an ES module, which Gatsby loads from `gatsby-node.mjs`
+    -   One Google client is used for the whole build, so the access token is refreshed once instead of once per document
+    -   The types of the options are generated from the code
 
 ## 3.0.0
 

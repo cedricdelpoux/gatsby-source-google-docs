@@ -1,8 +1,10 @@
-const {mkdtemp, mkdir, readdir, rm, writeFile} = require("fs/promises")
-const {tmpdir} = require("os")
-const {join} = require("path")
+import {afterEach, beforeEach, describe, expect, test} from "vitest"
 
-const {createStore} = require("../utils/store")
+import {mkdtemp, mkdir, readdir, rm, writeFile} from "node:fs/promises"
+import {tmpdir} from "node:os"
+import {join} from "node:path"
+
+import {createStore} from "../utils/store.js"
 
 let dir
 let store

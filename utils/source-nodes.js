@@ -1,15 +1,15 @@
-const {readdir, rm} = require("fs/promises")
-const {join, resolve} = require("path")
+import {readdir, rm} from "node:fs/promises"
+import {join, resolve} from "node:path"
 
-const _merge = require("lodash/merge")
-const {createFileNode} = require("gatsby-source-filesystem/create-file-node")
-const {fetchDocument} = require("google-docs-to-markdown/google")
+import _merge from "lodash/merge.js"
+import {createFileNode} from "gatsby-source-filesystem/create-file-node.js"
+import {fetchDocument, getAuth} from "google-docs-to-markdown/google"
 
-const {fetchDocuments} = require("./google-docs")
-const {DEFAULT_OPTIONS} = require("./constants")
-const {getImageUrlParameters} = require("./get-image-url")
-const {createStore} = require("./store")
-const {writeDocuments} = require("./write-documents")
+import {fetchDocuments} from "./google-docs.js"
+import {DEFAULT_OPTIONS} from "./constants.js"
+import {getImageUrlParameters} from "./get-image-url.js"
+import {createStore} from "./store.js"
+import {writeDocuments} from "./write-documents.js"
 
 const SOURCE_INSTANCE_NAME = "google-docs"
 
@@ -75,7 +75,7 @@ async function listFiles(directory) {
   return files.flat()
 }
 
-exports.sourceNodes = async (
+export const sourceNodes = async (
   {actions: {createNode}, reporter, cache, createNodeId, store: gatsbyStore},
   pluginOptions
 ) => {
@@ -110,10 +110,13 @@ exports.sourceNodes = async (
 
     await store.init({imagesParams: getImageUrlParameters(options)})
 
+    // One client for the whole build, so the access token is refreshed once
+    const auth = await getAuth()
     const {documents: googleDocuments, fetchedCount} = await fetchDocuments({
       options,
       reporter,
       store,
+      auth,
     })
 
     timer.setStatus(`writing documents to "${options.outputDir}"`)
@@ -124,7 +127,7 @@ exports.sourceNodes = async (
         options,
         reporter,
         store,
-        refetchDocument: fetchDocument,
+        refetchDocument: (id) => fetchDocument(id, {auth}),
       })
 
     // An empty listing is far more often a folder the plugin could not read

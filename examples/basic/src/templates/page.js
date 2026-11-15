@@ -1,6 +1,5 @@
 import {Link, graphql} from "gatsby"
 import {GatsbyImage, getImage} from "gatsby-plugin-image"
-import React from "react"
 
 const TemplatePage = ({
   data: {

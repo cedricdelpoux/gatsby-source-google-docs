@@ -1,8 +1,10 @@
-const {mkdir, mkdtemp, rm, writeFile} = require("fs/promises")
-const {tmpdir} = require("os")
-const {join} = require("path")
+import {afterEach, beforeEach, expect, test, vi} from "vitest"
 
-const {createPages} = require("../utils/create-pages")
+import {mkdir, mkdtemp, rm, writeFile} from "node:fs/promises"
+import {tmpdir} from "node:os"
+import {join} from "node:path"
+
+import {createPages} from "../utils/create-pages.js"
 
 const OUTPUT_DIR = "content/google-docs"
 
@@ -36,10 +38,10 @@ const createApi = ({nodes, transformer = "remark"}) => {
   const plugin = isMdx ? "gatsby-plugin-mdx" : "gatsby-transformer-remark"
 
   return {
-    graphql: jest.fn().mockResolvedValue({data: {[allField]: {nodes}}}),
-    actions: {createPage: jest.fn()},
+    graphql: vi.fn().mockResolvedValue({data: {[allField]: {nodes}}}),
+    actions: {createPage: vi.fn()},
     store: {getState: () => ({flattenedPlugins: [{name: plugin}]})},
-    reporter: {panic: jest.fn()},
+    reporter: {panic: vi.fn()},
   }
 }
 

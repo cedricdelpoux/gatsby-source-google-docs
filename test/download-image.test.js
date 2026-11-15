@@ -1,8 +1,13 @@
-const {mkdtemp, readFile, readdir, rm} = require("fs/promises")
-const {tmpdir} = require("os")
-const {join} = require("path")
+import {afterEach, beforeEach, expect, test, vi} from "vitest"
 
-const {downloadImage} = require("../utils/download-image")
+import {mkdtemp, readFile, readdir, rm} from "node:fs/promises"
+import {tmpdir} from "node:os"
+import {join} from "node:path"
+
+import {downloadImage} from "../utils/download-image.js"
+
+// The retry delays resolve at once
+vi.mock("node:timers/promises", () => ({setTimeout: vi.fn(async () => {})}))
 
 const URL = "https://lh7-rt.googleusercontent.com/docsz/AD_4nXabc123?key=Ab12Cd"
 
@@ -15,50 +20,13 @@ let fetchOriginal
 beforeEach(async () => {
   directory = await mkdtemp(join(tmpdir(), "gsgd-images-"))
   fetchOriginal = global.fetch
-  global.fetch = jest.fn()
+  global.fetch = vi.fn()
 })
 
 afterEach(async () => {
   global.fetch = fetchOriginal
-  jest.useRealTimers()
   await rm(directory, {recursive: true, force: true})
 })
-
-/**
- * Fake the retry delays only: the file streams need their own scheduling to
- * keep running.
- */
-const useFakeRetryDelays = () =>
-  jest.useFakeTimers({
-    doNotFake: ["nextTick", "queueMicrotask", "setImmediate", "clearImmediate"],
-  })
-
-/**
- * Let the retry delays elapse without actually waiting for them: yield to the
- * real work of an attempt, then jump over the delay it asks for, until the
- * download settles. The outcome is captured up front, so a rejection is never
- * left unhandled in between.
- */
-const runWithoutDelays = async (promise) => {
-  let pending = true
-  const settled = promise.then(
-    (value) => () => value,
-    (error) => () => {
-      throw error
-    }
-  )
-
-  settled.then(() => {
-    pending = false
-  })
-
-  while (pending) {
-    await new Promise((resolve) => setImmediate(resolve))
-    await jest.advanceTimersByTimeAsync(10000)
-  }
-
-  return (await settled)()
-}
 
 test("writes the image and returns its file name", async () => {
   global.fetch.mockResolvedValue(image("image/png"))
@@ -80,25 +48,21 @@ test("takes the extension from the response, not from the URL", async () => {
 })
 
 test("retries a failed download", async () => {
-  useFakeRetryDelays()
   global.fetch
     .mockRejectedValueOnce(new Error("socket hang up"))
     .mockResolvedValueOnce(image("image/png"))
 
-  const fileName = await runWithoutDelays(
-    downloadImage({url: URL, directory, name: "cover"})
-  )
+  const fileName = await downloadImage({url: URL, directory, name: "cover"})
 
   expect(global.fetch).toHaveBeenCalledTimes(2)
   expect(fileName).toBe("cover.png")
 })
 
 test("gives up after three attempts, naming the image and the reason", async () => {
-  useFakeRetryDelays()
   global.fetch.mockResolvedValue(new Response("", {status: 503}))
 
   await expect(
-    runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
+    downloadImage({url: URL, directory, name: "cover"})
   ).rejects.toThrow(`Unable to download "${URL}": 503`)
 
   expect(global.fetch).toHaveBeenCalledTimes(3)
@@ -115,29 +79,26 @@ test("does not ask again for an image Google refuses", async () => {
 })
 
 test("asks again for an image Google rate limits", async () => {
-  useFakeRetryDelays()
   global.fetch
     .mockResolvedValueOnce(new Response("", {status: 429}))
     .mockResolvedValueOnce(image("image/png"))
 
-  await runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
+  await downloadImage({url: URL, directory, name: "cover"})
 
   expect(global.fetch).toHaveBeenCalledTimes(2)
 })
 
 test("refuses a response that is not an image", async () => {
   // An expired image URL answers with an HTML error page
-  useFakeRetryDelays()
   global.fetch.mockResolvedValue(image("text/html"))
 
   await expect(
-    runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
+    downloadImage({url: URL, directory, name: "cover"})
   ).rejects.toThrow(`unsupported image type "text/html"`)
 })
 
 test("leaves no half-written file behind", async () => {
   // Sharp would fail on it much later, with a far less obvious message
-  useFakeRetryDelays()
   global.fetch.mockImplementation(async () => {
     const body = new ReadableStream({
       start(controller) {
@@ -150,7 +111,7 @@ test("leaves no half-written file behind", async () => {
   })
 
   await expect(
-    runWithoutDelays(downloadImage({url: URL, directory, name: "cover"}))
+    downloadImage({url: URL, directory, name: "cover"})
   ).rejects.toThrow("connection reset")
 
   expect(await readdir(directory)).toEqual([])

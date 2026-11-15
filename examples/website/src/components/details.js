@@ -1,5 +1,3 @@
-import React from "react"
-
 export const Details = ({label, children}) => {
   return (
     <details>

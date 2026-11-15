@@ -1,10 +1,12 @@
-const {fetchDocument} = require("google-docs-to-markdown/google")
+import {beforeEach, expect, test, vi} from "vitest"
 
-const {fetchFiles} = require("../utils/google-drive")
-const {fetchDocuments} = require("../utils/google-docs")
+import {fetchDocument} from "google-docs-to-markdown/google"
 
-jest.mock("google-docs-to-markdown/google", () => ({fetchDocument: jest.fn()}))
-jest.mock("../utils/google-drive", () => ({fetchFiles: jest.fn()}))
+import {fetchFiles} from "../utils/google-drive.js"
+import {fetchDocuments} from "../utils/google-docs.js"
+
+vi.mock("google-docs-to-markdown/google", () => ({fetchDocument: vi.fn()}))
+vi.mock("../utils/google-drive.js", () => ({fetchFiles: vi.fn()}))
 
 const document = {
   title: "Home",
@@ -15,11 +17,11 @@ const document = {
 
 const reporter = {
   activityTimer: () => ({
-    start: jest.fn(),
-    setStatus: jest.fn(),
-    end: jest.fn(),
+    start: vi.fn(),
+    setStatus: vi.fn(),
+    end: vi.fn(),
   }),
-  warn: jest.fn(),
+  warn: vi.fn(),
 }
 
 /** The store, in memory: what it does with the filesystem is its own test. */
@@ -41,7 +43,7 @@ const properties = {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
   fetchDocument.mockResolvedValue(document)
   fetchFiles.mockResolvedValue([properties])
 })

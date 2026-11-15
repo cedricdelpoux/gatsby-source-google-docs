@@ -1,5 +1,7 @@
 CHANGELOG.md
-coverage
+types
 examples/*/.cache
 examples/*/public
-yarn.lock
+package-lock.json
+examples/*/package-lock.json
+.claude

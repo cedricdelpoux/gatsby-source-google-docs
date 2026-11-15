@@ -1,6 +1,5 @@
 import {Link, graphql} from "gatsby"
 import {GatsbyImage, getImage} from "gatsby-plugin-image"
-import React from "react"
 
 // Since gatsby-plugin-mdx v4 the compiled document is handed over as
 // `children`, which is why `createPages` appends "?__contentFilePath=" to the

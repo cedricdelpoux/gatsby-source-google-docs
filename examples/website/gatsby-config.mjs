@@ -11,6 +11,8 @@ dotenv.config({quiet: true})
 const DEV = process.env.NODE_ENV === "development"
 
 const config = {
+  jsxRuntime: "automatic",
+  jsxImportSource: "theme-ui",
   pathPrefix: "/gatsby-source-google-docs",
   plugins: [
     {
@@ -63,7 +65,6 @@ const config = {
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
-    "gatsby-plugin-mdx-embed",
     {
       resolve: `gatsby-plugin-mdx`,
       options: {

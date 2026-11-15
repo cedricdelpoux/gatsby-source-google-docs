@@ -1,4 +1,4 @@
-const {getTransformer, TRANSFORMERS} = require("./get-transformer")
+import {getTransformer, TRANSFORMERS} from "./get-transformer.js"
 
 /**
  * Describe the frontmatter this plugin writes.
@@ -12,7 +12,7 @@ const {getTransformer, TRANSFORMERS} = require("./get-transformer")
  * shared with any other markdown the site sources. They are all nullable on
  * purpose: for those other files they are simply absent.
  */
-exports.createSchema = ({actions, store, reporter}) => {
+export const createSchema = ({actions, store, reporter}) => {
   const {createTypes} = actions
   const transformer = getTransformer({store})
 

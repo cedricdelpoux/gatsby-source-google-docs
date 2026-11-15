@@ -61,12 +61,12 @@ Two runnable examples live in this repository, both sourcing the folder above:
 
 ## Installation
 
-Requires **Node 22 or 24**. Node 25 is not supported: it removed `SlowBuffer`, which a transitive dependency of `google-auth-library` still relies on.
+Requires **Node 22.12 or later** and **Gatsby 5.3 or later**. Gatsby 5 does not support Node 26 yet.
 
 Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby-plugin-mdx` for [advanced usage](/examples/website))
 
 ```shell
-yarn add gatsby-source-google-docs gatsby-transformer-remark
+npm install gatsby-source-google-docs gatsby-transformer-remark
 ```
 
 - `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), which you can also use without Gatsby
@@ -132,11 +132,11 @@ date: 2019-01-01
 > There are special metadata
 >
 > - For folders:
->     - `exclude: true`: Exclude the folder and its documents
->     - `skip: true`: Remove the folder from slug but keep its documents
+>   - `exclude: true`: Exclude the folder and its documents
+>   - `skip: true`: Remove the folder from slug but keep its documents
 > - For documents:
->     - `index:true`: Use document as the folder index
->     - `page: false`: Prevent page creation when `createPages` option is set to `true`
+>   - `index:true`: Use document as the folder index
+>   - `page: false`: Prevent page creation when `createPages` option is set to `true`
 
 - Spread metadata into the tree using folders metadata.
 
@@ -228,23 +228,23 @@ You also can add metadata (`locale`, `date`, `template`, ...) to your documents.
 
 ```js
 module.exports = {
-    plugins: [
-        {
-            resolve: "gatsby-source-google-docs",
-            options: {
-                // https://drive.google.com/drive/folders/FOLDER_ID
-                folder: "FOLDER_ID",
-                createPages: true,
-            },
-        },
-        "gatsby-transformer-remark",
-        //
-        // OR "gatsby-plugin-mdx" for advanced usage using MDX
-        //
-        // You need some transformations?
-        // Checkout https://www.gatsbyjs.com/plugins/?=gatsby-remark
-        // And pick-up some plugins
-    ],
+  plugins: [
+    {
+      resolve: "gatsby-source-google-docs",
+      options: {
+        // https://drive.google.com/drive/folders/FOLDER_ID
+        folder: "FOLDER_ID",
+        createPages: true,
+      },
+    },
+    "gatsby-transformer-remark",
+    //
+    // OR "gatsby-plugin-mdx" for advanced usage using MDX
+    //
+    // You need some transformations?
+    // Checkout https://www.gatsbyjs.com/plugins/?=gatsby-remark
+    // And pick-up some plugins
+  ],
 }
 ```
 
@@ -253,22 +253,22 @@ module.exports = {
 `gatsby-plugin-sharp`, `gatsby-transformer-sharp` and `gatsby-remark-images` are required if you want to take advantage of [gatsby-image blur-up technique](https://using-gatsby-image.gatsbyjs.org/blur-up/).
 
 ```shell
-yarn add gatsby-plugin-sharp gatsby-transformer-sharp gatsby-remark-images
+npm install gatsby-plugin-sharp gatsby-transformer-sharp gatsby-remark-images
 ```
 
 ```js
 module.exports = {
-    plugins: [
-        "gatsby-source-google-docs",
-        "gatsby-plugin-sharp",
-        "gatsby-transformer-sharp",
-        {
-            resolve: "gatsby-transformer-remark",
-            options: {
-                plugins: ["gatsby-remark-images"],
-            },
-        },
-    ],
+  plugins: [
+    "gatsby-source-google-docs",
+    "gatsby-plugin-sharp",
+    "gatsby-transformer-sharp",
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: ["gatsby-remark-images"],
+      },
+    },
+  ],
 }
 ```
 
@@ -283,22 +283,22 @@ To specify the lang, you need to add a fist line in your code block following th
 To get Syntax highlighting, I recommend using `prismjs` but it's not mandatory.
 
 ```shell
-yarn add gatsby-remark-prismjs prismjs
+npm install gatsby-remark-prismjs prismjs
 ```
 
 Add the `gatsby-remark-prismjs` plugin to your `gatsby-config.js`
 
 ```js
 module.exports = {
-    plugins: [
-        "gatsby-source-google-docs",
-        {
-            resolve: "gatsby-transformer-remark",
-            options: {
-                plugins: ["gatsby-remark-prismjs"],
-            },
-        },
-    ],
+  plugins: [
+    "gatsby-source-google-docs",
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: ["gatsby-remark-prismjs"],
+      },
+    },
+  ],
 }
 ```
 
@@ -362,19 +362,19 @@ author your documents as MDX.
 import remarkGfm from "remark-gfm"
 
 const config = {
-    plugins: [
-        {
-            resolve: "gatsby-source-google-docs",
-            options: {folder: "FOLDER_ID", extension: "mdx", createPages: true},
-        },
-        {
-            resolve: "gatsby-plugin-mdx",
-            options: {
-                mdxOptions: {remarkPlugins: [remarkGfm]},
-                gatsbyRemarkPlugins: ["gatsby-remark-images"],
-            },
-        },
-    ],
+  plugins: [
+    {
+      resolve: "gatsby-source-google-docs",
+      options: {folder: "FOLDER_ID", extension: "mdx", createPages: true},
+    },
+    {
+      resolve: "gatsby-plugin-mdx",
+      options: {
+        mdxOptions: {remarkPlugins: [remarkGfm]},
+        gatsbyRemarkPlugins: ["gatsby-remark-images"],
+      },
+    },
+  ],
 }
 
 export default config
@@ -430,25 +430,25 @@ Every field of your document metadata is available under `frontmatter`:
 
 ```js
 export const pageQuery = graphql`
-    query Page($slug: String!) {
-        page: markdownRemark(frontmatter: {slug: {eq: $slug}}) {
-            html
-            frontmatter {
-                name
-                breadcrumb {
-                    name
-                    slug
-                }
-                cover {
-                    image {
-                        childImageSharp {
-                            gatsbyImageData
-                        }
-                    }
-                }
-            }
+  query Page($slug: String!) {
+    page: markdownRemark(frontmatter: {slug: {eq: $slug}}) {
+      html
+      frontmatter {
+        name
+        breadcrumb {
+          name
+          slug
         }
+        cover {
+          image {
+            childImageSharp {
+              gatsbyImageData
+            }
+          }
+        }
+      }
     }
+  }
 `
 ```
 
@@ -531,6 +531,18 @@ Please add the link bellow:
 
 - ⇄ Pull/Merge requests and ★ Stars are always welcome.
 - For bugs and feature requests, please [create an issue][github-issue].
+
+```shell
+npm install
+npm run lint
+npm test
+```
+
+The examples are Gatsby sites that use the plugin of the repository: run `npm install` in one of them, then `npm run dev` or `npm run build`.
+
+The code is plain JavaScript. The types of the options are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
+
+To release a version, bump it in `package.json` and `CHANGELOG.md`, then publish a GitHub release: the `Publish` workflow publishes it to npm, with its provenance.
 
 [badge-paypal]: https://img.shields.io/badge/sponsor-PayPal-3b7bbf.svg?style=flat-square
 [badge-npm]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square

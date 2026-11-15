@@ -1,4 +1,4 @@
 node_modules
-coverage
+types
 examples/*/content
 examples/*/.google-docs

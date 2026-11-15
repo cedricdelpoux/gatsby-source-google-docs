@@ -1,3 +1,5 @@
 #! /usr/bin/env node
 
-require("google-docs-to-markdown/google").generateToken()
+import {generateToken} from "google-docs-to-markdown/google"
+
+await generateToken()

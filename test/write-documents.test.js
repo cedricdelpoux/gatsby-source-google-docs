@@ -1,7 +1,6 @@
-const {
-  getDocumentPath,
-  getImagesDirectory,
-} = require("../utils/write-documents")
+import {describe, expect, test} from "vitest"
+
+import {getDocumentPath, getImagesDirectory} from "../utils/write-documents.js"
 
 describe("getDocumentPath", () => {
   test("maps the root document to an index file", () => {

@@ -1,16 +1,23 @@
-const {mkdir, mkdtemp, readdir, rm, writeFile} = require("fs/promises")
-const {tmpdir} = require("os")
-const {join} = require("path")
+import {afterEach, beforeEach, expect, test, vi} from "vitest"
 
-const {fetchDocuments} = require("../utils/google-docs")
-const {sourceNodes} = require("../utils/source-nodes")
-const {createStore} = require("../utils/store")
-const {writeDocuments} = require("../utils/write-documents")
+import {mkdir, mkdtemp, readdir, rm, writeFile} from "node:fs/promises"
+import {tmpdir} from "node:os"
+import {join} from "node:path"
 
-jest.mock("google-docs-to-markdown/google", () => ({fetchDocument: jest.fn()}))
-jest.mock("../utils/google-docs", () => ({fetchDocuments: jest.fn()}))
-jest.mock("../utils/write-documents", () => ({writeDocuments: jest.fn()}))
-jest.mock("../utils/store", () => ({createStore: jest.fn()}))
+import {fetchDocument, getAuth} from "google-docs-to-markdown/google"
+
+import {fetchDocuments} from "../utils/google-docs.js"
+import {sourceNodes} from "../utils/source-nodes.js"
+import {createStore} from "../utils/store.js"
+import {writeDocuments} from "../utils/write-documents.js"
+
+vi.mock("google-docs-to-markdown/google", () => ({
+  fetchDocument: vi.fn(),
+  getAuth: vi.fn(),
+}))
+vi.mock("../utils/google-docs.js", () => ({fetchDocuments: vi.fn()}))
+vi.mock("../utils/write-documents.js", () => ({writeDocuments: vi.fn()}))
+vi.mock("../utils/store.js", () => ({createStore: vi.fn()}))
 
 const DOCUMENT_ID = "1Tn1dCbIc"
 const MARKDOWN = "---\nslug: /home\n---\n\n# Home\n"
@@ -20,18 +27,18 @@ let outputDir
 let store
 
 const createApi = () => ({
-  actions: {createNode: jest.fn()},
+  actions: {createNode: vi.fn()},
   createNodeId: (input) => `id-${input}`,
-  cache: {get: jest.fn(), set: jest.fn()},
+  cache: {get: vi.fn(), set: vi.fn()},
   store: {getState: () => ({program: {directory}})},
   reporter: {
     activityTimer: () => ({
-      start: jest.fn(),
-      setStatus: jest.fn(),
-      end: jest.fn(),
+      start: vi.fn(),
+      setStatus: vi.fn(),
+      end: vi.fn(),
     }),
-    warn: jest.fn(),
-    panic: jest.fn(),
+    warn: vi.fn(),
+    panic: vi.fn(),
   },
 })
 
@@ -51,16 +58,17 @@ const nodesByName = (createNode) =>
   )
 
 beforeEach(async () => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 
   directory = await mkdtemp(join(tmpdir(), "gsgd-source-"))
   outputDir = join(directory, "content/google-docs")
   store = {
-    init: jest.fn(),
-    prune: jest.fn(),
+    init: vi.fn(),
+    prune: vi.fn(),
   }
 
   createStore.mockReturnValue(store)
+  getAuth.mockResolvedValue("client")
   fetchDocuments.mockResolvedValue({
     documents: [{googleDocument: {frontmatter: {id: DOCUMENT_ID}}}],
     fetchedCount: 1,
@@ -192,6 +200,15 @@ test("falls back to the deprecated `folders` option", async () => {
 
   expect(api.reporter.warn.mock.calls[0][0]).toContain("will be deprecated")
   expect(fetchDocuments.mock.calls[0][0].options.folder).toBe("folder-id")
+})
+
+test("uses one Google client for the whole build", async () => {
+  await sourceNodes(createApi(), {folder: "folder-id", outputDir})
+  await writeDocuments.mock.calls[0][0].refetchDocument(DOCUMENT_ID)
+
+  expect(getAuth).toHaveBeenCalledTimes(1)
+  expect(fetchDocuments.mock.calls[0][0].auth).toBe("client")
+  expect(fetchDocument).toHaveBeenCalledWith(DOCUMENT_ID, {auth: "client"})
 })
 
 test("reports what went wrong instead of throwing", async () => {
