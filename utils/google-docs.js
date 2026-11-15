@@ -21,7 +21,7 @@ async function fetchDocuments({options, reporter, store, auth}) {
     timer.setStatus("fetching documents")
   }
 
-  const documentsProperties = await fetchFiles(options, auth)
+  const documentsProperties = await fetchFiles(options, {auth, reporter})
   const links = documentsProperties.reduce(
     (acc, properties) => ({...acc, [properties.id]: properties.slug}),
     {}

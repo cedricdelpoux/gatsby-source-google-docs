@@ -6,6 +6,7 @@
 
     -   Images are downloaded again: Google now serves them from `docs.google.com/docs-images-rt` URLs, which the plugin did not recognize
     -   An image Google cannot resize to `imagesOptions` is downloaded at its original size instead of not at all
+    -   The descriptions are read with [yaml](https://eemeli.org/yaml/) instead of yamljs, which could not read some valid YAML and dropped their metadata. A description that is not valid YAML is now reported instead of ignored silently.
 
 -   Updated
 
@@ -13,6 +14,7 @@
     -   Node 22.12 or later and Gatsby 5.3 or later are required: the plugin is an ES module, which Gatsby loads from `gatsby-node.mjs`
     -   One Google client is used for the whole build, so the access token is refreshed once instead of once per document
     -   The types of the options are generated from the code
+    -   A date written in a description, like `date: 2023-12-31`, stays as written instead of becoming midnight UTC. Gatsby still reads it as a date.
 
 ## 3.0.0
 

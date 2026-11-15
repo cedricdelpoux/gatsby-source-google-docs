@@ -1,7 +1,7 @@
 import {drive as googleDrive} from "@googleapis/drive"
 import _kebabCase from "lodash/kebabCase.js"
 import _chunk from "lodash/chunk.js"
-import yamljs from "yamljs"
+import YAML from "yaml"
 
 import {wait} from "./wait.js"
 
@@ -31,23 +31,21 @@ function evenlyChunk(arr, count) {
   return _chunk(arr, Math.ceil(arr.length / chunks))
 }
 
-const getMetadataFromDescription = (description) => {
-  const metadata = {}
+const getMetadataFromDescription = (description, name, warn) => {
+  if (!description) return {}
 
-  if (description) {
-    try {
-      // Try to convert description from YAML
-      const descriptionObject = yamljs.parse(description)
-      if (typeof descriptionObject !== "string") {
-        Object.assign(metadata, descriptionObject)
-      }
-    } catch {
-      // Description field is not valid YAML
-      // Do not throw an error
-    }
+  try {
+    const metadata = YAML.parse(description)
+
+    // A plain sentence is a valid YAML string, not metadata
+    return typeof metadata === "object" ? {...metadata} : {}
+  } catch (e) {
+    warn(
+      `the description of "${name}" is not valid YAML, so its metadata are ignored: ${e.message.split("\n")[0]}`
+    )
+
+    return {}
   }
-
-  return metadata
 }
 
 const getTreeMetadata = (tree, file) => {
@@ -106,7 +104,7 @@ const getTreeMetadata = (tree, file) => {
   }
 }
 
-const updateFile = ({file, folder}) => {
+const updateFile = ({file, folder, warn}) => {
   Object.assign(file, {
     exclude: false,
     page: true,
@@ -115,7 +113,10 @@ const updateFile = ({file, folder}) => {
     ...folder.metadata,
   })
 
-  Object.assign(file, getMetadataFromDescription(file.description))
+  Object.assign(
+    file,
+    getMetadataFromDescription(file.description, file.name, warn)
+  )
 
   // Breadcrumb, slug, path
   Object.assign(file, getTreeMetadata(folder.tree, file))
@@ -126,11 +127,11 @@ const updateFile = ({file, folder}) => {
 // 10 per 1.5 seconds.
 const rateLimit = wait(10, 1500)
 const BATCH_SIZE = 100
-async function fetchDocumentsFiles({drive, parents, options}) {
+async function fetchDocumentsFiles({drive, parents, options, warn}) {
   if (parents.length > BATCH_SIZE) {
     const batches = await Promise.all(
       evenlyChunk(parents, BATCH_SIZE).map((parents) =>
-        fetchDocumentsFiles({drive, parents, options})
+        fetchDocumentsFiles({drive, parents, options, warn})
       )
     )
 
@@ -167,7 +168,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       .map((file) => {
         const parentIds = file.parents && new Set(file.parents)
         const folder = parentIds && parents.find((p) => parentIds.has(p.id))
-        return updateFile({folder, file})
+        return updateFile({folder, file, warn})
       })
       .filter((file) => !file.exclude)
   let documents = collectDocuments(res.data.files)
@@ -178,7 +179,11 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       .map((folder) => {
         const parentIds = folder.parents && new Set(folder.parents)
         const parent = parentIds && parents.find((p) => parentIds.has(p.id))
-        const metadata = getMetadataFromDescription(folder.description)
+        const metadata = getMetadataFromDescription(
+          folder.description,
+          folder.name,
+          warn
+        )
         const tree = [
           ...parent.tree,
           {
@@ -213,6 +218,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       drive,
       parents: nextParents,
       options,
+      warn,
     })
     return [...documents, ...documentsInFolders]
   }
@@ -227,6 +233,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
       drive,
       parents: parentBatch,
       options,
+      warn,
     })
     documentsInFolders = [...documentsInFolders, ...results]
   }
@@ -248,6 +255,7 @@ async function fetchDocumentsFiles({drive, parents, options}) {
         drive,
         parents: nextParents,
         options,
+        warn,
       })
       return [...documents, ...documentsInFolders, ...finalDocumentsInFolders]
     }
@@ -262,12 +270,13 @@ async function fetchDocumentsFiles({drive, parents, options}) {
 }
 
 /** @param {import('./constants.js').Options} pluginOptions */
-async function fetchFiles({folder, ...options}, auth) {
+async function fetchFiles({folder, ...options}, {auth, reporter}) {
   const drive = googleDrive({version: "v3", auth})
+  const warn = (message) => reporter.warn(`source-google-docs: ${message}`)
 
   const res = await drive.files.get({
     fileId: folder,
-    fields: "description",
+    fields: "name, description",
     supportsAllDrives: true,
   })
 
@@ -277,10 +286,15 @@ async function fetchFiles({folder, ...options}, auth) {
       {
         id: folder,
         tree: [],
-        metadata: getMetadataFromDescription(res.data.description),
+        metadata: getMetadataFromDescription(
+          res.data.description,
+          res.data.name,
+          warn
+        ),
       },
     ],
     options,
+    warn,
   })
 
   return documentsFiles
