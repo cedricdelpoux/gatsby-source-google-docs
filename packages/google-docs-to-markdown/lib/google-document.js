@@ -252,9 +252,14 @@ export class GoogleDocument {
 
     const id = el.inlineObjectElement.inlineObjectId
     const {embeddedObject} = inlineObjects[id].inlineObjectProperties
+    const url = embeddedObject.imageProperties?.contentUri
+
+    // Google leaves out the URL of a broken image
+    if (!url) return
+
     const image = {
       id,
-      url: embeddedObject.imageProperties.contentUri,
+      url,
       title: embeddedObject.title || "",
       alt: embeddedObject.description || "",
     }

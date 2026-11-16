@@ -20,6 +20,12 @@ const createInlineObject = (url) => ({
   },
 })
 
+const brokenInlineObject = {
+  inlineObjectProperties: {
+    embeddedObject: {imageProperties: {cropProperties: {}}},
+  },
+}
+
 const createCell = (elements) => ({content: [{paragraph: {elements}}]})
 
 describe("GoogleDocument formatText special cases", () => {
@@ -142,5 +148,47 @@ describe("GoogleDocument formatText special cases", () => {
       },
     ])
     expect(googleDocument.images.map(({id}) => id)).toEqual(["i1", "i2", "i3"])
+  })
+
+  test("leaves out the images Google gives no URL for", () => {
+    const document = createDocument(
+      [
+        createParagraph([
+          createImage("i1"),
+          createImage("i2"),
+          createImage("i3"),
+        ]),
+      ],
+      {
+        inlineObjects: {
+          i1: createInlineObject("https://image.com/1"),
+          i2: brokenInlineObject,
+          i3: createInlineObject("https://image.com/3"),
+        },
+      }
+    )
+
+    const googleDocument = new GoogleDocument(document)
+
+    expect(googleDocument.images.map(({id}) => id)).toEqual(["i1", "i3"])
+    expect(googleDocument.toMarkdown()).not.toContain("undefined")
+  })
+
+  test("leaves out a cover Google gives no URL for", () => {
+    const document = createDocument([], {
+      documentStyle: {firstPageHeaderId: "h1"},
+      headers: {
+        h1: {content: [{paragraph: {elements: [createImage("i1")]}}]},
+      },
+      inlineObjects: {
+        i1: brokenInlineObject,
+      },
+    })
+
+    const googleDocument = new GoogleDocument(document)
+
+    expect(googleDocument.cover).toBeNull()
+    expect(googleDocument.images).toEqual([])
+    expect(googleDocument.toMarkdown()).not.toContain("undefined")
   })
 })

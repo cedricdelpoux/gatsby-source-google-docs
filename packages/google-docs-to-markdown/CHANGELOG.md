@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- An image that Google gives no URL for, such as a broken image, is no longer written as `![](undefined "")` or listed in `images`
+
 ## 1.0.0
 
 The conversion of [gatsby-source-google-docs](https://github.com/cedricdelpoux/gatsby-source-google-docs) v3, as a library of its own.
