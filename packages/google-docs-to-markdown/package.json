@@ -1,6 +1,6 @@
 {
   "name": "google-docs-to-markdown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert Google Docs to Markdown or MDX",
   "repository": {
     "type": "git",
