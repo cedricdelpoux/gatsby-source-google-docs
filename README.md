@@ -1,14 +1,15 @@
-# google-docs-to-markdown
+# google-docs-sync
 
 Use Google Docs as a content source. This monorepo holds the packages that read a Google Doc, convert it to Markdown or MDX, and handle the Google authentication they need.
 
-| Package                                                             | Description                                                    |
-| ------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [`gatsby-source-google-docs`](./packages/gatsby-source-google-docs) | Gatsby plugin that uses Google Docs as a data source           |
-| [`google-docs-to-markdown`](./packages/google-docs-to-markdown)     | Convert Google Docs to Markdown or MDX, with or without Gatsby |
-| [`google-oauth2-env-vars`](./packages/google-oauth2-env-vars)       | Generate and cache Google OAuth 2.0 tokens in `.env` files     |
+| Package                                                             | Description                                                              |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`gatsby-source-google-docs`](./packages/gatsby-source-google-docs) | Gatsby plugin that uses Google Docs as a data source                     |
+| [`google-docs-sync`](./packages/google-docs-sync)                   | Sync a Google Drive folder of Google Docs to local Markdown or MDX files |
+| [`google-docs-to-markdown`](./packages/google-docs-to-markdown)     | Convert a Google Docs API document to Markdown or MDX                    |
+| [`google-oauth2-env-vars`](./packages/google-oauth2-env-vars)       | Generate and cache Google OAuth 2.0 tokens in `.env` files               |
 
-`gatsby-source-google-docs` depends on `google-docs-to-markdown`, which depends on `google-oauth2-env-vars`. Each package has its own README and CHANGELOG.
+`gatsby-source-google-docs` is a thin adapter over `google-docs-sync`, which owns the Google APIs and the filesystem, so that other frameworks can reuse it. `google-docs-sync` depends on `google-docs-to-markdown` (the converter, which knows nothing about Google APIs) and on `google-oauth2-env-vars`. Each package has its own README and CHANGELOG.
 
 ## Development
 

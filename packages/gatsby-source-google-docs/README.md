@@ -69,25 +69,15 @@ Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby
 npm install gatsby-source-google-docs gatsby-transformer-remark
 ```
 
-- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown/tree/master/packages/google-docs-to-markdown), which you can also use without Gatsby
+- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-sync](https://github.com/cedricdelpoux/google-docs-sync/tree/master/packages/google-docs-sync), which you can also use without Gatsby
 - `gatsby-transformer-remark` transform **Markdown** to **HTML**
 - `gatsby-plugin-mdx` transform **Markdown** to **MDX**
 
 ## Token generation
 
-The package needs 3 `.env` variables.
+The plugin needs 3 `.env` variables (`GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` and `GOOGLE_DOCS_TOKEN`), described in the [`google-docs-sync` documentation](../google-docs-sync#token-generation).
 
-<p><details><summary>Preview variables</summary>
-
-```dotenv
-GOOGLE_OAUTH_CLIENT_ID=2...m.apps.googleusercontent.com
-GOOGLE_OAUTH_CLIENT_SECRET=Q...axL
-GOOGLE_DOCS_TOKEN={"access_token":"ya...J0","refresh_token":"1..mE","scope":"https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/documents.readonly","token_type":"Bearer","expiry_date":1598284554759}
-```
-
-</details></p>
-
-`gatsby-source-google-docs` expose a script to generate it.
+`gatsby-source-google-docs` exposes a script to generate them.
 
 - Open a terminal at the root of your project
 - Type the following command
@@ -100,110 +90,13 @@ npx gatsby-source-google-docs-token
 
 ### Organize your documents
 
-Go to your [Google Drive](https://drive.google.com/drive/), create a folder and put some documents inside it.
+Go to your [Google Drive](https://drive.google.com/drive/), create a folder and put some documents inside it. The folders tree gives the slugs and breadcrumbs, and the `description` of the folders and documents holds their `YAML` metadata (`template`, `locale`, `slug`, `date`, `exclude`, `skip`, ...): see [organize your documents](../google-docs-sync#organize-your-documents).
 
-```js
-↳ 🗂 Root folder `template: page`
-    ↳ 🗂 en `locale: en` `skip: true`
-        ↳ 📝 Home `template: home`
-        ↳ 📝 About
-        ↳ 🗂 Posts `template: post`
-            ↳ 🗂 Drafts `exclude: true`
-                ↳ 📝 Draft 1
-            ↳ 📝 My year 2020 `date: 2021-01-01`
-            ↳ 📝 Post 2 `slug: /custom/slug` `template: special-post`
-    ↳ 🗂 fr `locale: fr`
-        ↳ 📝 Accueil `template: home`
-```
-
-<p><details><summary>🤡 How to enhance documents with metadata?</summary>
-
-- Fill the document (or folder) `description` field in Google Drive with a `YAML` object
-
-```yaml
-locale: fr
-template: post
-category: Category Name
-tags: [tag1, tag2]
-slug: /custom-slug
-date: 2019-01-01
-```
-
-> There are special metadata
->
-> - For folders:
->   - `exclude: true`: Exclude the folder and its documents
->   - `skip: true`: Remove the folder from slug but keep its documents
-> - For documents:
->   - `index:true`: Use document as the folder index
->   - `page: false`: Prevent page creation when `createPages` option is set to `true`
-
-- Spread metadata into the tree using folders metadata.
-
-> ⬆️ For the tree example above:
->
-> - Every node will have `template: page` defined as default excepts if you redefine it later.
-> - You need to create 3 different templates: `page` (default), `home`, `post`. [Checkout the example template](./examples/basic/src/templates/page.js)
-> - "en" folder will be removed from slug because of `skip: true`
-
-- Exclude folders and documents using `exclude: true`. Perfect to keep drafts documents. One you want to publish a page, juste move the document one level up.
-
-> ⬆️ For the tree example above:
->
-> - Documents under `Drafts` will be exclude because of `exclude: true`.
-
-- Every metadata will be available in `GoogleDocs` nodes and you can use everywhere in you `Gatsby` site
-
-</details></p>
-
-<p><details><summary>🌄 How to add cover?</summary>
-
-Add an image in your [Google Document first page header](https://support.google.com/docs/answer/86629)
-
-</details></p>
-
-<p><details><summary>🍞 How to add slug and breadcrumb?</summary>
-
-`slug` and `breadcrumb` fields add automatically generated using the folders tree structure and transformed using `kebab-case`.
-
-> ⬆️ For the tree example above:
-> The `GoogleDocs` node for document `My year 2020`
->
-> ```js
-> {
->     path: "/en/posts/my-year-2020" // Original Google Drive path
->     slug: "/posts/my-year-2020" // `en` is out because of `skip: true`
->     breadcrumb: [
->         {name: "Posts", slug: "/posts"},
->         {name: "My year 2020", slug: "/posts/my-year-2020"},
->     ],
->     template: "post" ,// src/templates/post.js
->     locale: "fr",
->     date: "2021-01-01" // Fixed date !
-> }
-> ```
->
-> The `GoogleDocs` node for document `Post 2` will have a custom slug
->
-> ```js
-> {
->     path: "/en/posts/post-2"
->     slug: "/custom/slug"
->     breadcrumb: [
->         {name: "Posts", slug: "/posts"},
->         {name: "Post 2", slug: "/custom/slug"},
->     ],
->     template: "special-post",  // src/templates/special-post.js
->     locale: "en",
->     date: "2020-09-12" // Google Drive document creation date
-> }
-> ```
-
-You also can add metadata (`locale`, `date`, `template`, ...) to your documents.
-
-</details></p>
+Every metadata is available under `frontmatter` in the `File` nodes of the documents.
 
 ### Add the plugin to your `gatsby-config.js` file
+
+`folder`, `outputDir`, `cacheDir`, `extension`, `imagesOptions` and the conversion options are shared with [`google-docs-sync`](../google-docs-sync#options), which does the work. `createPages` and `pageContext` are specific to Gatsby.
 
 | Option           | Required | Type    | Default                 | Example         |
 | ---------------- | -------- | ------- | ----------------------- | --------------- |
@@ -382,42 +275,9 @@ export default config
 
 ### Only what changed is fetched
 
-Fetching a document is one request, and every image it holds is a download of
-its own: a folder of long documents full of images takes minutes to fetch. The
-plugin keeps them in a `.google-docs` directory next to your
-`gatsby-config.js`, and a build only fetches what changed since the previous
-one.
+A build only fetches the documents and images that changed since the previous one. They are kept in a `.google-docs` directory next to your `gatsby-config.js` (the `cacheDir` option), which is **not** the Gatsby cache, on purpose: Gatsby empties its own whenever a plugin version, `package.json`, `gatsby-config.js` or `gatsby-node.js` changes, and a continuous integration job never has one, so adding a dependency to your site would cost a complete refetch.
 
-```
-.google-docs
-├── documents
-│   └── 1Tn1dCbIc.json       # one file per document, as Google gave it
-├── images
-│   └── 1Tn1dCbIc            # the images it references, downloaded once
-│       └── kix.4dmdp8b4.png
-└── state.json
-```
-
-Google Drive gives the time a document was last modified while listing the
-folder, which the plugin already does: a document that has not been touched
-since it was stored is never fetched again, and neither are its images. Editing
-a document on Google Docs, renaming it, changing its description or moving it
-to another folder is picked up on the next build — its metadata always comes
-from the listing, fetched or not.
-
-The documents are stored as Google gave them, not as markdown: changing
-`demoteHeadings`, `extension` or any other option takes effect on the next
-build without fetching anything again. Changing `imagesOptions` downloads the
-images again, since their size is part of the URL they are downloaded from.
-
-> Add `.google-docs` to your `.gitignore`, or commit it to give your continuous
-> integration a folder it does not have to fetch. Delete it to fetch everything
-> again.
-
-This directory is **not** the Gatsby cache, on purpose: Gatsby empties its own
-whenever a plugin version, `package.json`, `gatsby-config.js` or
-`gatsby-node.js` changes, and a continuous integration job never has one, so
-adding a dependency to your site would cost a complete refetch.
+Add `.google-docs` to your `.gitignore`, or commit it to give your continuous integration a folder it does not have to fetch. See [how the cache works](../google-docs-sync#only-what-changed-is-fetched).
 
 ### Create templates and pages
 
@@ -542,16 +402,16 @@ The examples are Gatsby sites that use the plugin of the repository: run `npm in
 
 The code is plain JavaScript. The types of the options are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
 
-To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-to-markdown#releases).
+To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-sync#releases).
 
 [badge-paypal]: https://img.shields.io/badge/sponsor-PayPal-3b7bbf.svg?style=flat-square
 [badge-npm]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square
 [badge-downloads]: https://img.shields.io/npm/dt/gatsby-source-google-docs.svg?style=flat-square
-[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-to-markdown/ci.yml?branch=master&style=flat-square
-[badge-coverage]: https://img.shields.io/codecov/c/github/cedricdelpoux/google-docs-to-markdown/master.svg?style=flat-square
+[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-sync/ci.yml?branch=master&style=flat-square
+[badge-coverage]: https://img.shields.io/codecov/c/github/cedricdelpoux/google-docs-sync/master.svg?style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [badge-prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gatsby-source-google-docs
-[actions]: https://github.com/cedricdelpoux/google-docs-to-markdown/actions/workflows/ci.yml
-[codecov]: https://codecov.io/gh/cedricdelpoux/google-docs-to-markdown
-[github-issue]: https://github.com/cedricdelpoux/google-docs-to-markdown/issues/new
+[actions]: https://github.com/cedricdelpoux/google-docs-sync/actions/workflows/ci.yml
+[codecov]: https://codecov.io/gh/cedricdelpoux/google-docs-sync
+[github-issue]: https://github.com/cedricdelpoux/google-docs-sync/issues/new

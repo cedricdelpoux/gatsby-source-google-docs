@@ -6,7 +6,7 @@
 
 `google-docs-to-markdown` converts [Google Docs](https://docs.google.com/) to Markdown or MDX.
 
-It reads the document returned by the [Google Docs API](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents) and gives back a Markdown string with a frontmatter. It powers [gatsby-source-google-docs](https://github.com/cedricdelpoux/google-docs-to-markdown/tree/master/packages/gatsby-source-google-docs), and it works without Gatsby too, for any static site generator or script.
+It reads the document returned by the [Google Docs API](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents) and gives back a Markdown string with a frontmatter. It does not call Google: [google-docs-sync](https://github.com/cedricdelpoux/google-docs-sync/tree/master/packages/google-docs-sync) fetches the documents and writes the files, and it powers [gatsby-source-google-docs](https://github.com/cedricdelpoux/google-docs-sync/tree/master/packages/gatsby-source-google-docs). The converter works with any static site generator or script.
 
 Google Drive can export a document as Markdown itself, but that export turns code blocks into one-cell tables without line breaks, escapes MDX components, embeds every image as base64 and drops the colors, underlines and inline code. This library keeps all of them.
 
@@ -40,51 +40,23 @@ const markdown = toMarkdown(document, {
 })
 ```
 
-`document` is the response of [`documents.get`](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents/get). This entry point does not load any Google library.
+`document` is the response of [`documents.get`](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents/get).
 
 ### From a document id
 
-`google-docs-to-markdown/google` fetches the document for you:
+This package does not fetch anything. [`google-docs-sync`](https://github.com/cedricdelpoux/google-docs-sync/tree/master/packages/google-docs-sync) fetches the document, authenticates with Google and generates the token (`npx google-docs-sync-token`):
 
 ```js
-import {fetchMarkdown} from "google-docs-to-markdown/google"
+import {fetchDocument} from "google-docs-sync"
+import {toMarkdown} from "google-docs-to-markdown"
 
-const markdown = await fetchMarkdown(
+const document = await fetchDocument(
   "1ebPyAlYlGDpGhf37WbbjA6APqpCLDxKorMBv_mFojV0"
 )
+const markdown = toMarkdown(document, {mdx: true})
 ```
 
-It authenticates with the variables of the [next section](#token-generation). You can also pass your own [`google-auth-library`](https://github.com/googleapis/google-auth-library-nodejs) client:
-
-```js
-import {
-  fetchDocument,
-  fetchMarkdown,
-  getAuth,
-} from "google-docs-to-markdown/google"
-
-const auth = await getAuth()
-const document = await fetchDocument(id, {auth})
-const markdown = await fetchMarkdown(id, {auth, mdx: true})
-```
-
-### Token generation
-
-`getAuth`, `fetchDocument` and `fetchMarkdown` need 3 variables, in the environment or in a `.env` file:
-
-```dotenv
-GOOGLE_OAUTH_CLIENT_ID=2...m.apps.googleusercontent.com
-GOOGLE_OAUTH_CLIENT_SECRET=Q...axL
-GOOGLE_DOCS_TOKEN={"access_token":"ya...J0","refresh_token":"1..mE","scope":"https://www.googleapis.com/auth/documents.readonly https://www.googleapis.com/auth/drive.readonly","token_type":"Bearer","expiry_date":1598284554759}
-```
-
-Run the following command at the root of your project to generate them:
-
-```shell
-npx google-docs-to-markdown-token
-```
-
-The token can read Google Drive too, so the same variables work for `gatsby-source-google-docs`.
+To sync a whole Google Drive folder to Markdown files, use `syncGoogleDocs` from the same package.
 
 ### Links between documents
 
@@ -147,19 +119,19 @@ Google gives the images new URLs every time a document is fetched, and they expi
 - ⇄ Pull requests and ★ Stars are always welcome.
 - For bugs and feature requests, please [create an issue][github-issue].
 
-The tests convert the documents of [`test/documents`](./test/documents). To add one, write it in Google Docs and save its JSON:
+The tests convert the documents of [`test/documents`](./test/documents). To add one, write it in Google Docs and save its JSON with the `fixture` script of `google-docs-sync`:
 
 ```shell
-npm run fixture -- <document id>
+npm run fixture -w google-docs-sync -- <document id>
 ```
 
 The code is plain JavaScript. The types of the public API are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
 
-To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-to-markdown#releases).
+To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-sync#releases).
 
 [badge-npm]: https://img.shields.io/npm/v/google-docs-to-markdown.svg?style=flat-square
-[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-to-markdown/ci.yml?branch=master&style=flat-square
+[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-sync/ci.yml?branch=master&style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/google-docs-to-markdown
-[actions]: https://github.com/cedricdelpoux/google-docs-to-markdown/actions/workflows/ci.yml
-[github-issue]: https://github.com/cedricdelpoux/google-docs-to-markdown/issues/new
+[actions]: https://github.com/cedricdelpoux/google-docs-sync/actions/workflows/ci.yml
+[github-issue]: https://github.com/cedricdelpoux/google-docs-sync/issues/new

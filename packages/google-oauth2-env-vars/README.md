@@ -89,11 +89,11 @@ npm test
 
 The code is plain JavaScript. The types of the public API are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
 
-To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-to-markdown#releases).
+To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-sync#releases).
 
 [badge-npm]: https://img.shields.io/npm/v/google-oauth2-env-vars.svg?style=flat-square
 [badge-npm-dl]: https://img.shields.io/npm/dt/google-oauth2-env-vars.svg?style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [badge-prs-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/google-oauth2-env-vars
-[github-issue]: https://github.com/cedricdelpoux/google-docs-to-markdown/issues/new
+[github-issue]: https://github.com/cedricdelpoux/google-docs-sync/issues/new
