@@ -7,6 +7,14 @@ updates:
     groups:
       dev-dependencies:
         dependency-type: development
+    ignore:
+      # Gatsby 5 needs React 18, and the types follow the minimum supported Node
+      - dependency-name: react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-dom
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
