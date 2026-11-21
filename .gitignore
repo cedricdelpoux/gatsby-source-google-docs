@@ -1,4 +1,6 @@
 node_modules
 types
-examples/*/content
-examples/*/.google-docs
+*.log
+.env*
+**/examples/*/content
+**/examples/*/.google-docs

@@ -1,7 +1,6 @@
 CHANGELOG.md
 types
-examples/*/.cache
-examples/*/public
+.changeset/*.md
+**/examples/*/.cache
+**/examples/*/public
 package-lock.json
-examples/*/package-lock.json
-.claude
