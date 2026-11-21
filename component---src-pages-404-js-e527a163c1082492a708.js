@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkgatsby_source_google_docs_website=self.webpackChunkgatsby_source_google_docs_website||[]).push([[125],{3331:function(e,s,c){c.r(s);var o=c(4810),t=c(853);s.default=()=>(0,t.FD)("main",{children:[(0,t.Y)(o.N_,{to:"/",children:(0,t.Y)("button",{children:"Home"})}),(0,t.Y)("h1",{children:"404"})]})}}]);
+//# sourceMappingURL=component---src-pages-404-js-e527a163c1082492a708.js.map
