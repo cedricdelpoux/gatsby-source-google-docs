@@ -49,13 +49,13 @@
 
 To preview what you can do, please checkout [the documentation website](https://cedricdelpoux.github.io/gatsby-source-google-docs/).
 
-- 👨🏻‍💻 [Source code](/examples/website)
+- 👨🏻‍💻 [Source code](./examples/website)
 - 🗂 [Google Docs content](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
 
 Two runnable examples live in this repository, both sourcing the folder above:
 
-- [`examples/basic`](/examples/basic) — `gatsby-transformer-remark`
-- [`examples/mdx`](/examples/mdx) — `gatsby-plugin-mdx`
+- [`examples/basic`](./examples/basic) — `gatsby-transformer-remark`
+- [`examples/mdx`](./examples/mdx) — `gatsby-plugin-mdx`
 
 > 💯 100% content of the website is from Google Docs. Please suggest edits to improve it.
 
@@ -63,13 +63,13 @@ Two runnable examples live in this repository, both sourcing the folder above:
 
 Requires **Node 22.12 or later** and **Gatsby 5.3 or later**. Gatsby 5 does not support Node 26 yet.
 
-Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby-plugin-mdx` for [advanced usage](/examples/website))
+Download `gatsby-source-google-docs` and `gatsby-transformer-remark` (or `gatsby-plugin-mdx` for [advanced usage](./examples/website))
 
 ```shell
 npm install gatsby-source-google-docs gatsby-transformer-remark
 ```
 
-- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown), which you can also use without Gatsby
+- `gatsby-source-google-docs` transform **Google Docs** to **Markdown**, with [google-docs-to-markdown](https://github.com/cedricdelpoux/google-docs-to-markdown/tree/master/packages/google-docs-to-markdown), which you can also use without Gatsby
 - `gatsby-transformer-remark` transform **Markdown** to **HTML**
 - `gatsby-plugin-mdx` transform **Markdown** to **MDX**
 
@@ -143,7 +143,7 @@ date: 2019-01-01
 > ⬆️ For the tree example above:
 >
 > - Every node will have `template: page` defined as default excepts if you redefine it later.
-> - You need to create 3 different templates: `page` (default), `home`, `post`. [Checkout the example template](./example/src/templates/page.js)
+> - You need to create 3 different templates: `page` (default), `home`, `post`. [Checkout the example template](./examples/basic/src/templates/page.js)
 > - "en" folder will be removed from slug because of `skip: true`
 
 - Exclude folders and documents using `exclude: true`. Perfect to keep drafts documents. One you want to publish a page, juste move the document one level up.
@@ -345,7 +345,7 @@ author your documents as MDX.
 > generates GitHub Flavored Markdown: **without `remark-gfm`, tables and
 > `~~strikethrough~~` are rendered as raw text.** `remark-gfm` is ESM only, so
 > the config has to be a `gatsby-config.mjs` file — see
-> [`examples/mdx`](/examples/mdx/gatsby-config.mjs).
+> [`examples/mdx`](./examples/mdx/gatsby-config.mjs).
 
 > ⚠️ By default, a document's text is escaped before being written: a stray,
 > unmatched `<` or `{` (a `<placeholder>` convention, a generic `<T>`, ...)
@@ -458,7 +458,7 @@ Checkout the [example template](./examples/basic/src/templates/page.js) and adap
 
 <p><details><summary>How to create pages manualy?</summary>
 
-If you prefer to create pages manualy, checkout the [createPages API](./src/utils/create-pages.js) et adapt it to your needs.
+If you prefer to create pages manualy, checkout the [createPages API](./utils/create-pages.js) et adapt it to your needs.
 
 </details></p>
 
@@ -542,16 +542,16 @@ The examples are Gatsby sites that use the plugin of the repository: run `npm in
 
 The code is plain JavaScript. The types of the options are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
 
-To release a version, bump it in `package.json` and `CHANGELOG.md`, then publish a GitHub release: the `Publish` workflow publishes it to npm, with its provenance.
+To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-to-markdown#releases).
 
 [badge-paypal]: https://img.shields.io/badge/sponsor-PayPal-3b7bbf.svg?style=flat-square
 [badge-npm]: https://img.shields.io/npm/v/gatsby-source-google-docs.svg?style=flat-square
 [badge-downloads]: https://img.shields.io/npm/dt/gatsby-source-google-docs.svg?style=flat-square
-[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/gatsby-source-google-docs/ci.yml?branch=master&style=flat-square
-[badge-coverage]: https://img.shields.io/codecov/c/github/cedricdelpoux/gatsby-source-google-docs/master.svg?style=flat-square
+[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-to-markdown/ci.yml?branch=master&style=flat-square
+[badge-coverage]: https://img.shields.io/codecov/c/github/cedricdelpoux/google-docs-to-markdown/master.svg?style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [badge-prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gatsby-source-google-docs
-[actions]: https://github.com/cedricdelpoux/gatsby-source-google-docs/actions/workflows/ci.yml
-[codecov]: https://codecov.io/gh/cedricdelpoux/gatsby-source-google-docs
-[github-issue]: https://github.com/cedricdelpoux/gatsby-source-google-docs/issues/new
+[actions]: https://github.com/cedricdelpoux/google-docs-to-markdown/actions/workflows/ci.yml
+[codecov]: https://codecov.io/gh/cedricdelpoux/google-docs-to-markdown
+[github-issue]: https://github.com/cedricdelpoux/google-docs-to-markdown/issues/new

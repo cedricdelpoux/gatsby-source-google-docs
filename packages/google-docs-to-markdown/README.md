@@ -6,7 +6,7 @@
 
 `google-docs-to-markdown` converts [Google Docs](https://docs.google.com/) to Markdown or MDX.
 
-It reads the document returned by the [Google Docs API](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents) and gives back a Markdown string with a frontmatter. It powers [gatsby-source-google-docs](https://github.com/cedricdelpoux/gatsby-source-google-docs), and it works without Gatsby too, for any static site generator or script.
+It reads the document returned by the [Google Docs API](https://developers.google.com/workspace/docs/api/reference/rest/v1/documents) and gives back a Markdown string with a frontmatter. It powers [gatsby-source-google-docs](https://github.com/cedricdelpoux/google-docs-to-markdown/tree/master/packages/gatsby-source-google-docs), and it works without Gatsby too, for any static site generator or script.
 
 Google Drive can export a document as Markdown itself, but that export turns code blocks into one-cell tables without line breaks, escapes MDX components, embeds every image as base64 and drops the colors, underlines and inline code. This library keeps all of them.
 
@@ -147,7 +147,7 @@ Google gives the images new URLs every time a document is fetched, and they expi
 - ⇄ Pull requests and ★ Stars are always welcome.
 - For bugs and feature requests, please [create an issue][github-issue].
 
-The tests convert the documents of [`__tests__/documents`](./__tests__/documents). To add one, write it in Google Docs and save its JSON:
+The tests convert the documents of [`test/documents`](./test/documents). To add one, write it in Google Docs and save its JSON:
 
 ```shell
 npm run fixture -- <document id>
@@ -155,10 +155,10 @@ npm run fixture -- <document id>
 
 The code is plain JavaScript. The types of the public API are written as [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) comments: `npm run lint` checks them with TypeScript, and `npm pack` turns them into the `.d.ts` files of the package.
 
-To release a version, bump it in `package.json` and `CHANGELOG.md`, then publish a GitHub release: the `Publish` workflow publishes it to npm, with its provenance.
+To release a version, describe the change with `npm run changeset` and commit the generated file with your pull request. Once it is merged, the `Release` workflow opens a "Version packages" pull request, and merging it publishes the packages to npm with their provenance. See the [monorepo README](https://github.com/cedricdelpoux/google-docs-to-markdown#releases).
 
 [badge-npm]: https://img.shields.io/npm/v/google-docs-to-markdown.svg?style=flat-square
-[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-to-markdown/ci.yml?branch=main&style=flat-square
+[badge-build]: https://img.shields.io/github/actions/workflow/status/cedricdelpoux/google-docs-to-markdown/ci.yml?branch=master&style=flat-square
 [badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/google-docs-to-markdown
 [actions]: https://github.com/cedricdelpoux/google-docs-to-markdown/actions/workflows/ci.yml
