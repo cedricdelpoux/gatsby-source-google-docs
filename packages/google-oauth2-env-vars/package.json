@@ -4,7 +4,7 @@
   "description": "Generate and cache Google OAuth 2.0 tokens in .env files",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git",
+    "url": "git+https://github.com/cedricdelpoux/google-docs-sync.git",
     "directory": "packages/google-oauth2-env-vars"
   },
   "author": {

@@ -2,8 +2,8 @@ const numberMax = 16384
 const isSizeValid = (number) =>
   number && Number.isInteger(number) && number > 0 && number < numberMax
 
-const getImageUrlParameters = (pluginOptions) => {
-  const {imagesOptions} = pluginOptions
+const getImageUrlParameters = (options) => {
+  const {imagesOptions} = options
 
   if (!imagesOptions) return ""
 
@@ -28,9 +28,9 @@ const stripGoogleImageSizeParams = (googleImageUrl) => {
   return googleImageUrl
 }
 
-const getImageUrl = (urlWithParams, pluginOptions) => {
+const getImageUrl = (urlWithParams, options) => {
   const [googleImageUrl, googleImageParams] = urlWithParams.split("?")
-  const imageUrlParams = getImageUrlParameters(pluginOptions)
+  const imageUrlParams = getImageUrlParameters(options)
   const cleanedGoogleImageUrl = imageUrlParams
     ? stripGoogleImageSizeParams(googleImageUrl)
     : googleImageUrl

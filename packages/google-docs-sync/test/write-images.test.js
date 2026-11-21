@@ -14,11 +14,11 @@ import {setTimeout as delay} from "node:timers/promises"
 
 import {GoogleDocument} from "google-docs-to-markdown"
 
-import {downloadImage} from "../utils/download-image.js"
-import {createStore} from "../utils/store.js"
-import {writeDocuments} from "../utils/write-documents.js"
+import {downloadImage} from "../lib/download-image.js"
+import {createStore} from "../lib/store.js"
+import {writeDocuments} from "../lib/write-documents.js"
 
-vi.mock("../utils/download-image.js", () => ({downloadImage: vi.fn()}))
+vi.mock("../lib/download-image.js", () => ({downloadImage: vi.fn()}))
 
 const IMAGE_ID = "kix.abc123"
 const IMAGE_URL =
@@ -55,7 +55,7 @@ const createGoogleDocument = (document = createDocument()) =>
     frontmatter: {id: "1Tn1dCbIc", name: "Home", slug: "/home"},
   })
 
-const reporter = {warn: vi.fn()}
+const logger = {warn: vi.fn()}
 
 let dir
 let outputDir
@@ -69,7 +69,7 @@ const write = async ({
   writeDocuments({
     documents: [{googleDocument, fromStore}],
     options: {outputDir, extension: "md", ...options},
-    reporter,
+    logger,
     store,
     refetchDocument: vi.fn(),
   })
@@ -187,7 +187,7 @@ test("downloads an image at its original size when it cannot be resized", async 
     "https://docs.google.com/docs-images-rt/AIpPl2Dabc123=w800?key=Ab12Cd",
     IMAGE_URL,
   ])
-  expect(reporter.warn).toHaveBeenCalledWith(
+  expect(logger.warn).toHaveBeenCalledWith(
     expect.stringContaining("original size")
   )
   expect(documents[0].markdown).toContain("images/home/alt-text.png")
@@ -201,7 +201,7 @@ test("does not fall back to the original size on another error", async () => {
   await write({fromStore: false, options: {imagesOptions: {width: 800}}})
 
   expect(downloadImage).toHaveBeenCalledTimes(1)
-  expect(reporter.warn).toHaveBeenCalledWith(
+  expect(logger.warn).toHaveBeenCalledWith(
     expect.not.stringContaining("original size")
   )
 })
@@ -243,7 +243,7 @@ test("fetches a stored document again for an image the store lost", async () => 
   await writeDocuments({
     documents: [{googleDocument: createGoogleDocument(), fromStore: true}],
     options: {outputDir, extension: "md"},
-    reporter,
+    logger,
     store,
     refetchDocument,
   })
@@ -264,7 +264,7 @@ test("fetches a document again when its image URLs expired", async () => {
   const {documents} = await writeDocuments({
     documents: [{googleDocument: createGoogleDocument(), fromStore: false}],
     options: {outputDir, extension: "md"},
-    reporter,
+    logger,
     store,
     refetchDocument,
   })
@@ -302,7 +302,7 @@ test("downloads the images of several documents at once", async () => {
   const {documents, imagesCount} = await writeDocuments({
     documents: googleDocuments,
     options: {outputDir, extension: "md"},
-    reporter,
+    logger,
     store,
     refetchDocument: vi.fn(),
   })
@@ -359,6 +359,6 @@ test("keeps the markdown usable when an image cannot be downloaded", async () =>
   const {documents, imagesCount} = await write({fromStore: false})
 
   expect(imagesCount).toBe(0)
-  expect(reporter.warn).toHaveBeenCalled()
+  expect(logger.warn).toHaveBeenCalled()
   expect(documents[0].markdown).toContain(IMAGE_URL)
 })

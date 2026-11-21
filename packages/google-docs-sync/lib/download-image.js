@@ -6,8 +6,8 @@ import {pipeline} from "node:stream/promises"
 import {setTimeout as delay} from "node:timers/promises"
 
 // Google serves document images without a file extension, so the extension has
-// to come from the response. Sharp needs it to be right: `gatsby-plugin-sharp`
-// dispatches on the File node's `extension` field, not on the file's content.
+// to come from the response. Image tools dispatch on the extension, not on the
+// content of the file, so it has to be right.
 const EXTENSIONS_BY_MIME_TYPE = {
   "image/png": "png",
   "image/jpeg": "jpg",
@@ -60,12 +60,12 @@ async function downloadImage({url, directory, name}) {
 
       try {
         await pipeline(
-          Readable.fromWeb(response.body),
+          Readable.fromWeb(/** @type {any} */ (response.body)),
           createWriteStream(filePath)
         )
       } catch (e) {
-        // A half-written file would still produce a File node, and sharp would
-        // fail on it much later with a far less obvious message.
+        // A half-written file would be picked up as an image and fail much
+        // later with a far less obvious message.
         await rm(filePath, {force: true})
         throw e
       }

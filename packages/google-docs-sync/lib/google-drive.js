@@ -128,11 +128,13 @@ const updateFile = ({file, folder, warn}) => {
 // 10 per 1.5 seconds.
 const rateLimit = wait(10, 1500)
 const BATCH_SIZE = 100
-async function fetchDocumentsFiles({drive, parents, options, warn}) {
+async function fetchDocumentsFiles({drive, parents, options, logger}) {
+  const warn = (message) => logger.warn(message)
+
   if (parents.length > BATCH_SIZE) {
     const batches = await Promise.all(
       evenlyChunk(parents, BATCH_SIZE).map((parents) =>
-        fetchDocumentsFiles({drive, parents, options, warn})
+        fetchDocumentsFiles({drive, parents, options, logger})
       )
     )
 
@@ -142,9 +144,7 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
   const waited = await rateLimit()
   if (options.debug && waited > 1000) {
     const waitingTime = (waited / 1000).toFixed(1)
-    console.info(
-      `source-google-docs: rate limit reach. waiting ${waitingTime}s`
-    )
+    logger.info(`rate limit reached, waiting ${waitingTime}s`)
   }
 
   const parentQuery =
@@ -219,7 +219,7 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
       drive,
       parents: nextParents,
       options,
-      warn,
+      logger,
     })
     return [...documents, ...documentsInFolders]
   }
@@ -234,7 +234,7 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
       drive,
       parents: parentBatch,
       options,
-      warn,
+      logger,
     })
     documentsInFolders = [...documentsInFolders, ...results]
   }
@@ -256,7 +256,7 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
         drive,
         parents: nextParents,
         options,
-        warn,
+        logger,
       })
       return [...documents, ...documentsInFolders, ...finalDocumentsInFolders]
     }
@@ -270,10 +270,10 @@ async function fetchDocumentsFiles({drive, parents, options, warn}) {
   return fetchNextPage(res.data.nextPageToken)
 }
 
-/** @param {import('./constants.js').Options} pluginOptions */
-async function fetchFiles({folder, ...options}, {auth, reporter}) {
+/** @param {import("./options.js").SyncOptions} options */
+async function fetchFiles({folder, ...options}, {auth, logger}) {
   const drive = googleDrive({version: "v3", auth})
-  const warn = (message) => reporter.warn(`source-google-docs: ${message}`)
+  const warn = (message) => logger.warn(message)
 
   const res = await drive.files.get({
     fileId: folder,
@@ -295,7 +295,7 @@ async function fetchFiles({folder, ...options}, {auth, reporter}) {
       },
     ],
     options,
-    warn,
+    logger,
   })
 
   return documentsFiles

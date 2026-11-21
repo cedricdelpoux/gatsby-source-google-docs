@@ -1,12 +1,12 @@
 import {mkdir, readdir, readFile, rename, rm, writeFile} from "node:fs/promises"
 import {basename, dirname, extname, join} from "node:path"
 
-// Documents and images are kept next to `gatsby-config.js` rather than in the
-// Gatsby cache. Gatsby empties its own cache whenever a plugin version,
-// `package.json`, `gatsby-config.js` or `gatsby-node.js` changes, and a
-// continuous integration job never has one: a site would fetch every document
-// and download every image again after adding a dependency. This directory is
-// only emptied by hand, or by the plugin when what it holds cannot be reused.
+// Documents and images are kept in a directory of their own rather than in the
+// cache of a framework, which empties it whenever its configuration or its
+// dependencies change, and a continuous integration job never has one: a site
+// would fetch every document and download every image again after adding a
+// dependency. This directory is only emptied by hand, or when what it holds
+// cannot be reused.
 const VERSION = 1
 
 const DOCUMENTS_DIRECTORY = "documents"
@@ -74,7 +74,7 @@ const createStore = ({dir}) => {
 
     /**
      * Drop what a previous run left behind and cannot be reused: a store
-     * written by another version of the plugin, and images downloaded with
+     * written by another version of the package, and images downloaded with
      * other `imagesOptions` — the size is part of the URL, so the files on
      * disk are not the ones the site asks for anymore.
      */

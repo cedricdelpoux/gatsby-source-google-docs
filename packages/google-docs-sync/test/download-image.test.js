@@ -4,7 +4,7 @@ import {mkdtemp, readFile, readdir, rm} from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
 
-import {downloadImage} from "../utils/download-image.js"
+import {downloadImage} from "../lib/download-image.js"
 
 // The retry delays resolve at once
 vi.mock("node:timers/promises", () => ({setTimeout: vi.fn(async () => {})}))

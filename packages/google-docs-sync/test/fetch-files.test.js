@@ -1,6 +1,6 @@
 import {beforeEach, expect, test, vi} from "vitest"
 
-import {fetchFiles} from "../utils/google-drive.js"
+import {fetchFiles} from "../lib/google-drive.js"
 
 const {mockList, mockGet} = vi.hoisted(() => ({
   mockList: vi.fn(),
@@ -43,7 +43,7 @@ const drive = (childrenByParent, {rootDescription} = {}) => {
   })
 }
 
-const reporter = {warn: vi.fn()}
+const logger = {warn: vi.fn()}
 
 const bySlug = (files) =>
   Object.fromEntries(files.map((file) => [file.slug, file]))
@@ -55,7 +55,7 @@ beforeEach(() => {
 test("names, slugs and paths a document of the root folder", async () => {
   drive({[ROOT]: [document({name: "My Home Page"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.name).toBe("My Home Page")
   expect(file.slug).toBe("/my-home-page")
@@ -71,7 +71,7 @@ test("walks into folders and builds the breadcrumb", async () => {
     f1: [document({name: "My Post", parents: ["f1"]})],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/blog/my-post")
   expect(file.path).toBe("/blog/my-post")
@@ -87,7 +87,7 @@ test("gives a folder's index document the folder's name and slug", async () => {
     f1: [document({name: "index", parents: ["f1"]})],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.name).toBe("Blog")
   expect(file.slug).toBe("/blog")
@@ -97,7 +97,7 @@ test("gives a folder's index document the folder's name and slug", async () => {
 test("serves the root index document at /", async () => {
   drive({[ROOT]: [document({name: "index"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/")
 })
@@ -109,7 +109,7 @@ test("reads metadata from a YAML document description", async () => {
     ],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/welcome")
   expect(file.template).toBe("hero")
@@ -121,10 +121,10 @@ test("reads metadata from a YAML document description", async () => {
 test("ignores a description that is not YAML", async () => {
   drive({[ROOT]: [document({name: "Home", description: "Just a note"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/home")
-  expect(reporter.warn).not.toHaveBeenCalled()
+  expect(logger.warn).not.toHaveBeenCalled()
 })
 
 test("warns about a description that is not valid YAML", async () => {
@@ -134,10 +134,10 @@ test("warns about a description that is not valid YAML", async () => {
     ],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/home")
-  expect(reporter.warn).toHaveBeenCalledWith(
+  expect(logger.warn).toHaveBeenCalledWith(
     expect.stringContaining('the description of "Home" is not valid YAML')
   )
 })
@@ -145,7 +145,7 @@ test("warns about a description that is not valid YAML", async () => {
 test("keeps the dates of a description as written", async () => {
   drive({[ROOT]: [document({name: "Home", description: "date: 2023-12-31"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.date).toBe("2023-12-31")
 })
@@ -158,7 +158,7 @@ test("passes folder metadata down to the documents it holds", async () => {
     f1: [document({name: "My Post", parents: ["f1"]})],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.template).toBe("article")
 })
@@ -177,7 +177,7 @@ test("lets a document override the metadata of its folder", async () => {
     ],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.template).toBe("full-width")
 })
@@ -185,7 +185,7 @@ test("lets a document override the metadata of its folder", async () => {
 test("passes the root folder metadata down as well", async () => {
   drive({[ROOT]: [document({name: "Home"})]}, {rootDescription: "locale: fr"})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.locale).toBe("fr")
 })
@@ -197,7 +197,7 @@ test("keeps a `skip` folder out of the slug but not out of the path", async () =
     f1: [document({name: "My Post", parents: ["f1"]})],
   })
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.slug).toBe("/my-post")
   expect(file.path).toBe("/drafts/my-post")
@@ -214,7 +214,7 @@ test("drops a document excluded from its description", async () => {
     ],
   })
 
-  const files = await fetchFiles({folder: ROOT}, {reporter})
+  const files = await fetchFiles({folder: ROOT}, {logger})
 
   expect(Object.keys(bySlug(files))).toEqual(["/home"])
 })
@@ -225,7 +225,7 @@ test("does not walk into an excluded folder", async () => {
     f1: [document({name: "Draft", parents: ["f1"]})],
   })
 
-  const files = await fetchFiles({folder: ROOT}, {reporter})
+  const files = await fetchFiles({folder: ROOT}, {logger})
 
   expect(files).toEqual([])
   expect(mockList).toHaveBeenCalledTimes(1)
@@ -234,16 +234,16 @@ test("does not walk into an excluded folder", async () => {
 test("ignores a description that is a YAML list", async () => {
   drive({[ROOT]: [document({name: "Home", description: "- running\n- bike"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file).not.toHaveProperty("0")
-  expect(reporter.warn).not.toHaveBeenCalled()
+  expect(logger.warn).not.toHaveBeenCalled()
 })
 
 test("defaults every document to a page dated from its creation", async () => {
   drive({[ROOT]: [document({name: "Home"})]})
 
-  const [file] = await fetchFiles({folder: ROOT}, {reporter})
+  const [file] = await fetchFiles({folder: ROOT}, {logger})
 
   expect(file.page).toBe(true)
   expect(file.date).toBe("2026-09-01T10:00:00.000Z")
@@ -257,7 +257,7 @@ test("follows the pages of a long listing", async () => {
     })
     .mockResolvedValueOnce({data: {files: [document({name: "Second"})]}})
 
-  const files = await fetchFiles({folder: ROOT}, {reporter})
+  const files = await fetchFiles({folder: ROOT}, {logger})
 
   expect(mockList).toHaveBeenCalledTimes(2)
   expect(mockList.mock.calls[1][0].pageToken).toBe("page-2")

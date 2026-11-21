@@ -1,5 +1,5 @@
 {
-  "name": "google-docs-to-markdown-monorepo",
+  "name": "google-docs-sync-monorepo",
   "private": true,
   "type": "module",
   "workspaces": [

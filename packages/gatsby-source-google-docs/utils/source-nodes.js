@@ -1,79 +1,18 @@
-import {readdir, rm} from "node:fs/promises"
-import {join, resolve} from "node:path"
+import {resolve} from "node:path"
 
 import _merge from "lodash/merge.js"
 import {createFileNode} from "gatsby-source-filesystem/create-file-node.js"
-import {fetchDocument, getAuth} from "google-docs-to-markdown/google"
+import {syncGoogleDocs} from "google-docs-sync"
 
-import {fetchDocuments} from "./google-docs.js"
 import {DEFAULT_OPTIONS} from "./constants.js"
-import {getImageUrlParameters} from "./get-image-url.js"
-import {createStore} from "./store.js"
-import {writeDocuments} from "./write-documents.js"
 
 const SOURCE_INSTANCE_NAME = "google-docs"
 
-/** Every file under `outputDir` that this run did not write is stale. */
-async function removeStaleFiles({outputDir, writtenFiles}) {
-  const kept = new Set(writtenFiles.map((file) => resolve(file)))
-
-  const walk = async (directory) => {
-    let entries
-
-    try {
-      entries = await readdir(directory, {withFileTypes: true})
-    } catch (e) {
-      if (e.code === "ENOENT") return true
-      throw e
-    }
-
-    let empty = true
-
-    for (const entry of entries) {
-      const entryPath = join(directory, entry.name)
-
-      if (entry.isDirectory()) {
-        const childEmpty = await walk(entryPath)
-
-        if (childEmpty) {
-          await rm(entryPath, {recursive: true, force: true})
-        } else {
-          empty = false
-        }
-      } else if (kept.has(resolve(entryPath))) {
-        empty = false
-      } else {
-        await rm(entryPath, {force: true})
-      }
-    }
-
-    return empty
-  }
-
-  await walk(outputDir)
-}
-
-/** List every file currently living under `outputDir`. */
-async function listFiles(directory) {
-  let entries
-
-  try {
-    entries = await readdir(directory, {withFileTypes: true})
-  } catch (e) {
-    if (e.code === "ENOENT") return []
-    throw e
-  }
-
-  const files = await Promise.all(
-    entries.map(async (entry) => {
-      const entryPath = join(directory, entry.name)
-
-      return entry.isDirectory() ? listFiles(entryPath) : [entryPath]
-    })
-  )
-
-  return files.flat()
-}
+const createLogger = (reporter) => ({
+  info: (message) => reporter.info(`source-google-docs: ${message}`),
+  warn: (message) => reporter.warn(`source-google-docs: ${message}`),
+  error: (message) => reporter.error(`source-google-docs: ${message}`),
+})
 
 export const sourceNodes = async (
   {actions: {createNode}, reporter, cache, createNodeId, store: gatsbyStore},
@@ -104,48 +43,19 @@ export const sourceNodes = async (
     const siteDirectory = gatsbyStore
       ? gatsbyStore.getState().program.directory
       : process.cwd()
-    const store = createStore({
-      dir: resolve(siteDirectory, options.cacheDir),
-    })
 
-    await store.init({imagesParams: getImageUrlParameters(options)})
-
-    // One client for the whole build, so the access token is refreshed once
-    const auth = await getAuth()
-    const {documents: googleDocuments, fetchedCount} = await fetchDocuments({
-      options,
-      reporter,
-      store,
-      auth,
-    })
-
-    timer.setStatus(`writing documents to "${options.outputDir}"`)
-
-    const {writtenFiles, documents, imagesCount, downloadedImagesCount} =
-      await writeDocuments({
-        documents: googleDocuments,
-        options,
-        reporter,
-        store,
-        refetchDocument: (id) => fetchDocument(id, {auth}),
+    const {documents, files, fetchedCount, imagesCount, downloadedImagesCount} =
+      await syncGoogleDocs({
+        ...options,
+        cacheDir: resolve(siteDirectory, options.cacheDir),
+        logger: createLogger(reporter),
       })
-
-    // An empty listing is far more often a folder the plugin could not read
-    // than a folder that was emptied, and pruning on one would throw away
-    // everything the store holds
-    if (googleDocuments.length > 0) {
-      await store.prune(
-        googleDocuments.map(({googleDocument}) => googleDocument.frontmatter.id)
-      )
-    }
-    await removeStaleFiles({outputDir: options.outputDir, writtenFiles})
 
     // The documents and their images are plain files now, so they are sourced
     // like any other local file. Creating the `File` nodes here rather than
     // asking the user to add a `gatsby-source-filesystem` instance keeps the
     // configuration to a single plugin, and guarantees the nodes exist by the
     // time the transformers run.
-    const files = await listFiles(options.outputDir)
     const contents = new Map(
       documents.map(({filePath, markdown}) => [resolve(filePath), markdown])
     )
@@ -176,7 +86,7 @@ export const sourceNodes = async (
     }
 
     timer.setStatus(
-      `${googleDocuments.length} documents (${fetchedCount} fetched) ` +
+      `${documents.length} documents (${fetchedCount} fetched) ` +
         `and ${imagesCount} images (${downloadedImagesCount} downloaded)`
     )
 

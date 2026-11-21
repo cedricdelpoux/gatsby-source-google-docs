@@ -1,5 +1,5 @@
 #! /usr/bin/env node
 
-import {generateToken} from "../google.js"
+import {generateToken} from "../index.js"
 
 await generateToken()

@@ -1,30 +1,19 @@
 import {afterEach, beforeEach, expect, test, vi} from "vitest"
 
-import {mkdir, mkdtemp, readdir, rm, writeFile} from "node:fs/promises"
+import {mkdir, mkdtemp, rm, writeFile} from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
 
-import {fetchDocument, getAuth} from "google-docs-to-markdown/google"
+import {syncGoogleDocs} from "google-docs-sync"
 
-import {fetchDocuments} from "../utils/google-docs.js"
 import {sourceNodes} from "../utils/source-nodes.js"
-import {createStore} from "../utils/store.js"
-import {writeDocuments} from "../utils/write-documents.js"
 
-vi.mock("google-docs-to-markdown/google", () => ({
-  fetchDocument: vi.fn(),
-  getAuth: vi.fn(),
-}))
-vi.mock("../utils/google-docs.js", () => ({fetchDocuments: vi.fn()}))
-vi.mock("../utils/write-documents.js", () => ({writeDocuments: vi.fn()}))
-vi.mock("../utils/store.js", () => ({createStore: vi.fn()}))
+vi.mock("google-docs-sync", () => ({syncGoogleDocs: vi.fn()}))
 
-const DOCUMENT_ID = "1Tn1dCbIc"
 const MARKDOWN = "---\nslug: /home\n---\n\n# Home\n"
 
 let directory
 let outputDir
-let store
 
 const createApi = () => ({
   actions: {createNode: vi.fn()},
@@ -37,7 +26,9 @@ const createApi = () => ({
       setStatus: vi.fn(),
       end: vi.fn(),
     }),
+    info: vi.fn(),
     warn: vi.fn(),
+    error: vi.fn(),
     panic: vi.fn(),
   },
 })
@@ -62,20 +53,10 @@ beforeEach(async () => {
 
   directory = await mkdtemp(join(tmpdir(), "gsgd-source-"))
   outputDir = join(directory, "content/google-docs")
-  store = {
-    init: vi.fn(),
-    prune: vi.fn(),
-  }
-
-  createStore.mockReturnValue(store)
-  getAuth.mockResolvedValue("client")
-  fetchDocuments.mockResolvedValue({
-    documents: [{googleDocument: {frontmatter: {id: DOCUMENT_ID}}}],
-    fetchedCount: 1,
-  })
-  writeDocuments.mockResolvedValue({
-    writtenFiles: [],
+  syncGoogleDocs.mockResolvedValue({
     documents: [],
+    files: [],
+    fetchedCount: 0,
     imagesCount: 0,
     downloadedImagesCount: 0,
   })
@@ -88,9 +69,10 @@ afterEach(async () => {
 test("creates a File node for every written document", async () => {
   const filePath = await writeOutputFile("home.md")
 
-  writeDocuments.mockResolvedValue({
-    writtenFiles: [filePath],
+  syncGoogleDocs.mockResolvedValue({
+    files: [filePath],
     documents: [{filePath, markdown: MARKDOWN}],
+    fetchedCount: 1,
     imagesCount: 0,
     downloadedImagesCount: 0,
   })
@@ -112,9 +94,10 @@ test("declares the File nodes as owned by gatsby-source-filesystem", async () =>
   // a site running its own `gatsby-source-filesystem` instance has claimed it
   const filePath = await writeOutputFile("home.md")
 
-  writeDocuments.mockResolvedValue({
-    writtenFiles: [filePath],
+  syncGoogleDocs.mockResolvedValue({
+    files: [filePath],
     documents: [{filePath, markdown: MARKDOWN}],
+    fetchedCount: 1,
     imagesCount: 0,
     downloadedImagesCount: 0,
   })
@@ -131,9 +114,10 @@ test("creates File nodes for the images too", async () => {
   const filePath = await writeOutputFile("home.md")
   const imagePath = await writeOutputFile("home/cover.png", "png-bytes")
 
-  writeDocuments.mockResolvedValue({
-    writtenFiles: [filePath, imagePath],
+  syncGoogleDocs.mockResolvedValue({
+    files: [filePath, imagePath],
     documents: [{filePath, markdown: MARKDOWN}],
+    fetchedCount: 1,
     imagesCount: 1,
     downloadedImagesCount: 1,
   })
@@ -149,47 +133,12 @@ test("creates File nodes for the images too", async () => {
   expect(cover.node.internal.content).toBeUndefined()
 })
 
-test("sweeps the files left by a previous run", async () => {
-  const filePath = await writeOutputFile("home.md")
-  await writeOutputFile("renamed.md")
-  await mkdir(join(outputDir, "empty-folder"), {recursive: true})
-
-  writeDocuments.mockResolvedValue({
-    writtenFiles: [filePath],
-    documents: [{filePath, markdown: MARKDOWN}],
-    imagesCount: 0,
-    downloadedImagesCount: 0,
-  })
-
-  const api = createApi()
-  await sourceNodes(api, {folder: "folder-id", outputDir})
-
-  expect(await readdir(outputDir)).toEqual(["home.md"])
-  expect(Object.keys(nodesByName(api.actions.createNode))).toEqual(["home.md"])
-})
-
-test("keeps the store when Google Drive lists nothing", async () => {
-  // An empty listing is far more often a folder that could not be read than a
-  // folder that was emptied, and pruning on one throws everything away
-  fetchDocuments.mockResolvedValue({documents: [], fetchedCount: 0})
-
-  await sourceNodes(createApi(), {folder: "folder-id", outputDir})
-
-  expect(store.prune).not.toHaveBeenCalled()
-})
-
-test("prunes the store of the documents that are gone", async () => {
-  await sourceNodes(createApi(), {folder: "folder-id", outputDir})
-
-  expect(store.prune).toHaveBeenCalledWith([DOCUMENT_ID])
-})
-
 test("does nothing without a folder", async () => {
   const api = createApi()
 
   await sourceNodes(api, {})
 
-  expect(fetchDocuments).not.toHaveBeenCalled()
+  expect(syncGoogleDocs).not.toHaveBeenCalled()
   expect(api.reporter.warn.mock.calls[0][0]).toContain(`Missing "folder"`)
 })
 
@@ -199,20 +148,11 @@ test("falls back to the deprecated `folders` option", async () => {
   await sourceNodes(api, {folders: ["folder-id"], outputDir})
 
   expect(api.reporter.warn.mock.calls[0][0]).toContain("will be deprecated")
-  expect(fetchDocuments.mock.calls[0][0].options.folder).toBe("folder-id")
-})
-
-test("uses one Google client for the whole build", async () => {
-  await sourceNodes(createApi(), {folder: "folder-id", outputDir})
-  await writeDocuments.mock.calls[0][0].refetchDocument(DOCUMENT_ID)
-
-  expect(getAuth).toHaveBeenCalledTimes(1)
-  expect(fetchDocuments.mock.calls[0][0].auth).toBe("client")
-  expect(fetchDocument).toHaveBeenCalledWith(DOCUMENT_ID, {auth: "client"})
+  expect(syncGoogleDocs.mock.calls[0][0].folder).toBe("folder-id")
 })
 
 test("reports what went wrong instead of throwing", async () => {
-  fetchDocuments.mockRejectedValue(new Error("Method doesn't allow callers"))
+  syncGoogleDocs.mockRejectedValue(new Error("Method doesn't allow callers"))
 
   const api = createApi()
   await sourceNodes(api, {folder: "folder-id", outputDir})
@@ -220,4 +160,27 @@ test("reports what went wrong instead of throwing", async () => {
   expect(api.reporter.panic).toHaveBeenCalledWith(
     "source-google-docs: Method doesn't allow callers"
   )
+})
+
+test("keeps the cache directory next to the site, outside the Gatsby cache", async () => {
+  await sourceNodes(createApi(), {folder: "folder-id", outputDir})
+
+  expect(syncGoogleDocs.mock.calls[0][0].cacheDir).toBe(
+    join(directory, ".google-docs")
+  )
+})
+
+test("reports the messages of the sync through the Gatsby reporter", async () => {
+  const api = createApi()
+  await sourceNodes(api, {folder: "folder-id", outputDir})
+
+  const {logger} = syncGoogleDocs.mock.calls[0][0]
+
+  logger.info("one")
+  logger.warn("two")
+  logger.error("three")
+
+  expect(api.reporter.info).toHaveBeenCalledWith("source-google-docs: one")
+  expect(api.reporter.warn).toHaveBeenCalledWith("source-google-docs: two")
+  expect(api.reporter.error).toHaveBeenCalledWith("source-google-docs: three")
 })

@@ -2,7 +2,7 @@ import {expect, test} from "vitest"
 
 import {setTimeout as delay} from "node:timers/promises"
 
-import {createLimit} from "../utils/create-limit.js"
+import {createLimit} from "../lib/create-limit.js"
 
 test("runs no more tasks at once than its count", async () => {
   const limit = createLimit(2)

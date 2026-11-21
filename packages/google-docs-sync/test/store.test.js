@@ -4,7 +4,7 @@ import {mkdtemp, mkdir, readdir, rm, writeFile} from "node:fs/promises"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
 
-import {createStore} from "../utils/store.js"
+import {createStore} from "../lib/store.js"
 
 let dir
 let store

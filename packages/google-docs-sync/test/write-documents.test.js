@@ -1,6 +1,6 @@
 import {describe, expect, test} from "vitest"
 
-import {getDocumentPath, getImagesDirectory} from "../utils/write-documents.js"
+import {getDocumentPath, getImagesDirectory} from "../lib/write-documents.js"
 
 describe("getDocumentPath", () => {
   test("maps the root document to an index file", () => {

@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 
-import {fetchDocument} from "../google.js"
+import {fetchDocument} from "../lib/fetch-document.js"
 
 const toKebabCase = (text) =>
   text
@@ -14,6 +14,8 @@ const document = await fetchDocument(process.argv[2])
 const file = path.join(
   import.meta.dirname,
   "..",
+  "..",
+  "google-docs-to-markdown",
   "test",
   "documents",
   `${toKebabCase(document.title)}.json`

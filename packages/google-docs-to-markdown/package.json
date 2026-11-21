@@ -4,7 +4,7 @@
   "description": "Convert Google Docs to Markdown or MDX",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git",
+    "url": "git+https://github.com/cedricdelpoux/google-docs-sync.git",
     "directory": "packages/google-docs-to-markdown"
   },
   "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
@@ -23,35 +23,22 @@
       "types": "./types/index.d.ts",
       "default": "./index.js"
     },
-    "./google": {
-      "types": "./types/google.d.ts",
-      "default": "./google.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [
     "index.js",
-    "google.js",
-    "bin",
     "lib",
     "types"
   ],
-  "bin": {
-    "google-docs-to-markdown-token": "bin/generate-token.js"
-  },
   "engines": {
     "node": ">=22.12"
   },
   "dependencies": {
-    "@googleapis/docs": "^14.1.1",
-    "google-auth-library": "^11.3.4",
-    "google-oauth2-env-vars": "^2.0.0",
     "json2md": "^2.0.3",
     "yaml": "^2.9.1"
   },
   "scripts": {
     "build": "tsc",
-    "fixture": "node scripts/write-fixture.js",
     "lint": "eslint . && tsc --noEmit",
     "test": "vitest run --coverage",
     "prepack": "npm run build",

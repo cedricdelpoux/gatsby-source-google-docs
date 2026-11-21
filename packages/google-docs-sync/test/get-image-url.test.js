@@ -1,6 +1,6 @@
 import {describe, expect, test} from "vitest"
 
-import {getImageUrl, getImageUrlParameters} from "../utils/get-image-url.js"
+import {getImageUrl, getImageUrlParameters} from "../lib/get-image-url.js"
 
 describe("getImageUrl", () => {
   test("preserves existing params when no image options are set", () => {

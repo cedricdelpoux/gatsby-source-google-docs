@@ -52,7 +52,7 @@ const toPosix = (path) => path.split(sep).join("/")
 const downloadResizedImage = async ({
   url,
   options,
-  reporter,
+  logger,
   directory,
   name,
 }) => {
@@ -67,9 +67,7 @@ const downloadResizedImage = async ({
   } catch (e) {
     if (e.status !== 400) throw e
 
-    reporter.warn(
-      `source-google-docs: ${e.message}, downloading it at its original size`
-    )
+    logger.warn(`${e.message}, downloading it at its original size`)
 
     return downloadImage({url, directory, name})
   }
@@ -80,8 +78,7 @@ const downloadResizedImage = async ({
  * already there and up to date.
  *
  * `outputDir` holds a copy rather than a link because it is the directory the
- * transformers and `gatsby-plugin-sharp` read, and it is swept clean of what a
- * build did not write. On a site with hundreds of images, copying them all on
+ * site reads, and it is swept clean of what a sync did not write. On a site with hundreds of images, copying them all on
  * every build costs more than looking at them first.
  */
 const copyImage = async (source, destination) => {
@@ -110,10 +107,8 @@ const copyImage = async (source, destination) => {
 /**
  * Write a document, unless the same one is already there.
  *
- * `gatsby-source-filesystem` hashes a file again as soon as its modification
- * time moves, and Gatsby reprocesses everything downstream of the `File` node
- * when the hash it ends up with is a new one. A document that did not change
- * has no reason to go through any of it.
+ * File watchers and incremental builds react to the modification time of a
+ * file, so a document that did not change must not be touched.
  */
 const writeIfChanged = async (filePath, content) => {
   try {
@@ -130,9 +125,9 @@ const writeIfChanged = async (filePath, content) => {
  * Download every image of a document, then rewrite the URLs it contains into
  * paths relative to the document file.
  *
- * `gatsby-remark-images` joins the image path with the directory of the file
- * the markdown came from, and `@fileByRelativePath` resolves the cover the same
- * way, so both only need the markdown to hold a correct relative path.
+ * Frameworks resolve image paths and the cover against the directory of the
+ * file the markdown came from, so both only need the markdown to hold a
+ * correct relative path.
  *
  * Images are downloaded to the store, under the id of the object holding them,
  * and copied from there: it is what makes a second build on a document full of
@@ -145,7 +140,7 @@ async function writeImages({
   outputDir,
   documentPath,
   options,
-  reporter,
+  logger,
   store,
   refetchDocument,
   limit,
@@ -189,7 +184,7 @@ async function writeImages({
     downloadResizedImage({
       url,
       options,
-      reporter,
+      logger,
       directory: storeDirectory,
       name: image.id,
     })
@@ -221,7 +216,7 @@ async function writeImages({
 
         return fileName
       } catch (e) {
-        reporter.warn(`source-google-docs: ${e.message}`)
+        logger.warn(e.message)
 
         return null
       }
@@ -254,7 +249,7 @@ async function writeImages({
       updatedMarkdown = updatedMarkdown.split(url).join(relativePath)
       imageFiles.push(imagePath)
     } catch (e) {
-      reporter.warn(`source-google-docs: ${e.message}`)
+      logger.warn(e.message)
     }
   }
 
@@ -272,18 +267,11 @@ async function writeImages({
   return {markdown: updatedMarkdown, imageFiles, downloadedCount}
 }
 
-/**
- * Write every fetched document to `outputDir` and return the files written.
- *
- * The plugin used to keep the markdown in memory on a `GoogleDocs` node. It has
- * to reach the filesystem now: since v4, `gatsby-plugin-mdx` only creates nodes
- * from `File` nodes and compiles them through webpack from their absolute path,
- * so a document that never becomes a file can never become MDX.
- */
+/** Write every fetched document and its images to `outputDir`. */
 async function writeDocuments({
   documents: googleDocuments,
   options,
-  reporter,
+  logger,
   store,
   refetchDocument,
 }) {
@@ -309,7 +297,7 @@ async function writeDocuments({
           outputDir,
           documentPath,
           options,
-          reporter,
+          logger,
           store,
           refetchDocument,
           limit,
@@ -319,18 +307,27 @@ async function writeDocuments({
 
       await writeIfChanged(filePath, markdown)
 
-      return {filePath, markdown, ...writtenImages}
+      return {
+        filePath,
+        markdown,
+        metadata: googleDocument.frontmatter,
+        ...writtenImages,
+      }
     })
   )
 
   return {
-    // Images count as written files too, otherwise the stale-file sweep in
-    // `sourceNodes` would delete every one of them right after writing.
+    // Images count as written files too, otherwise the stale-file sweep would
+    // delete every one of them right after writing.
     writtenFiles: results.flatMap(({filePath, imageFiles}) => [
       ...imageFiles,
       filePath,
     ]),
-    documents: results.map(({filePath, markdown}) => ({filePath, markdown})),
+    documents: results.map(({filePath, markdown, metadata}) => ({
+      filePath,
+      markdown,
+      metadata,
+    })),
     imagesCount: _sumBy(results, ({imageFiles}) => imageFiles.length),
     downloadedImagesCount: _sumBy(results, "downloadedCount"),
   }

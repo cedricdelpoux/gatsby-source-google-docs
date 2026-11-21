@@ -1,7 +1,7 @@
 import {beforeEach, expect, test, vi} from "vitest"
 
-import {fetchDocument, fetchMarkdown} from "../google.js"
 import {getAuth} from "../lib/auth.js"
+import {fetchDocument} from "../lib/fetch-document.js"
 
 const {mockGet, mockDocs} = vi.hoisted(() => {
   const mockGet = vi.fn()
@@ -50,10 +50,4 @@ test("throws on an empty response", async () => {
   mockGet.mockResolvedValue({})
 
   await expect(fetchDocument("1Tn1dCbIc")).rejects.toThrow("Empty Data")
-})
-
-test("fetches a document as markdown", async () => {
-  await expect(
-    fetchMarkdown("1Tn1dCbIc", {frontmatter: {title: "Home"}})
-  ).resolves.toBe("---\ntitle: Home\n---\n\nHello\n")
 })
