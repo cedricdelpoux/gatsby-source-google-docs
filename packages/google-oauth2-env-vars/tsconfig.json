@@ -1,0 +1,15 @@
+{
+  "include": ["index.js"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "strict": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "module": "nodenext",
+    "target": "es2023",
+    "types": ["node"],
+    "skipLibCheck": true
+  }
+}
