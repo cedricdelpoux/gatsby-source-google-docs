@@ -1,4 +1,4 @@
-import {graphql, useStaticQuery} from "gatsby"
+import {graphql, useStaticQuery, withPrefix} from "gatsby"
 
 export const Menu = ({open, onClose}) => {
   const data = useStaticQuery(graphql`
@@ -75,7 +75,12 @@ export const Menu = ({open, onClose}) => {
           // The "Menu" document is plain CommonMark (no JSX in it), compiled
           // to static HTML by this site's own `gatsby-node.mjs` -- see the
           // comment on its `staticHtml` resolver for why.
-          dangerouslySetInnerHTML={{__html: data.menu.staticHtml}}
+          dangerouslySetInnerHTML={{
+            __html: data.menu.staticHtml.replaceAll(
+              'href="/',
+              `href="${withPrefix("/")}`
+            ),
+          }}
         />
       </div>
     </>

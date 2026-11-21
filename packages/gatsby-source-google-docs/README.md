@@ -47,7 +47,7 @@
 
 ## Documentation
 
-To preview what you can do, please checkout [the documentation website](https://cedricdelpoux.github.io/gatsby-source-google-docs/).
+To preview what you can do, please checkout [the documentation website](https://cedricdelpoux.github.io/google-docs-sync/).
 
 - 👨🏻‍💻 [Source code](./examples/website)
 - 🗂 [Google Docs content](https://drive.google.com/drive/folders/1YJWX_FRoVusp-51ztedm6HSZqpbJA3ag)
@@ -384,7 +384,7 @@ Other things to know:
 You are using `gatsby-source-google-docs` for your website? Thank you!
 Please add the link bellow:
 
-- [documentation](https://cedricdelpoux.github.io/gatsby-source-google-docs/)
+- [documentation](https://cedricdelpoux.github.io/google-docs-sync/)
 - [cedricdelpoux](https://cedricdelpoux.fr/en)
 
 ## Contributing

@@ -142,7 +142,7 @@ const LayoutIndex = ({children, location}) => {
         </div>
         <div>
           Source code available on{" "}
-          <a href="https://github.com/cedricdelpoux/gatsby-source-google-docs">
+          <a href="https://github.com/cedricdelpoux/google-docs-sync">
             Github
           </a>
         </div>

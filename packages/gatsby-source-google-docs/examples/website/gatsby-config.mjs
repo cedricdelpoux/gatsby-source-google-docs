@@ -13,7 +13,7 @@ const DEV = process.env.NODE_ENV === "development"
 const config = {
   jsxRuntime: "automatic",
   jsxImportSource: "theme-ui",
-  pathPrefix: "/gatsby-source-google-docs",
+  pathPrefix: "/google-docs-sync",
   plugins: [
     {
       // resolve: "gatsby-source-google-docs",
