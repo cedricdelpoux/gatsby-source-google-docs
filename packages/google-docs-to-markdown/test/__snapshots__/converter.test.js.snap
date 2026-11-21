@@ -1,0 +1,590 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Document "Breaks" to Markdown 1`] = `""`;
+
+exports[`Document "Breaks" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [],
+}
+`;
+
+exports[`Document "Codes" to Markdown 1`] = `
+"
+Type \`gatsby-source-google-docs-token\` to generate a token
+
+\`\`\`js
+
+const foo = "bar"
+
+module.exports = {
+    plugins: [
+        "gatsby-source-google-docs",
+    ],
+}
+\`\`\`
+
+\`\`\`
+module.exports = {
+    plugins: [
+        "gatsby-source-google-docs",
+    ],
+}
+\`\`\`
+"
+`;
+
+exports[`Document "Codes" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "Type \`gatsby-source-google-docs-token\` to generate a token",
+    },
+    {
+      "type": "code",
+      "value": {
+        "content": [
+          "",
+          "const foo = "bar"",
+          "",
+          "module.exports = {",
+          "    plugins: [",
+          "        "gatsby-source-google-docs",",
+          "    ],",
+          "}",
+        ],
+        "language": "js",
+      },
+    },
+    {
+      "type": "code",
+      "value": {
+        "content": [
+          "module.exports = {",
+          "    plugins: [",
+          "        "gatsby-source-google-docs",",
+          "    ],",
+          "}",
+        ],
+        "language": null,
+      },
+    },
+  ],
+}
+`;
+
+exports[`Document "Cover" to Markdown 1`] = `
+"---
+cover:
+  image: https://lh3.googleusercontent.com/nDkE8IlmeehGxZUwGXvxn_dMEnZGZBFAp0i3p_07UC9Lj_V_wfNCBh3FbcHiknyR_aNXue63CmGPi9dTykd9gqobAu88AgHq1af0ag81US_ykXwb-gm04enjY_feYOfPTD3Biq1fk03IKvZ8RA
+  title: Cover title
+  alt: Cover description
+---
+"
+`;
+
+exports[`Document "Cover" to Object 1`] = `
+{
+  "cover": {
+    "alt": "Cover description",
+    "image": "https://lh3.googleusercontent.com/nDkE8IlmeehGxZUwGXvxn_dMEnZGZBFAp0i3p_07UC9Lj_V_wfNCBh3FbcHiknyR_aNXue63CmGPi9dTykd9gqobAu88AgHq1af0ag81US_ykXwb-gm04enjY_feYOfPTD3Biq1fk03IKvZ8RA",
+    "title": "Cover title",
+  },
+  "elements": [],
+}
+`;
+
+exports[`Document "Empty" to Markdown 1`] = `""`;
+
+exports[`Document "Empty" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [],
+}
+`;
+
+exports[`Document "Footnotes" to Markdown 1`] = `
+"
+Text with a footnote[^1] and an other one[^2]
+
+[^1]: Footnote 1 description
+
+[^2]: Footnote 2 description
+"
+`;
+
+exports[`Document "Footnotes" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "Text with a footnote[^1] and an other one[^2]",
+    },
+    {
+      "type": "footnote",
+      "value": {
+        "number": "1",
+        "text": " Footnote 1 description",
+      },
+    },
+    {
+      "type": "footnote",
+      "value": {
+        "number": "2",
+        "text": " Footnote 2 description",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Document "French" to Markdown 1`] = `
+"
+Je m'appelle **Cédric**, j'habite à Toulouse _(France)_ 🇫🇷
+"
+`;
+
+exports[`Document "French" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "Je m'appelle **Cédric**, j'habite à Toulouse _(France)_ 🇫🇷",
+    },
+  ],
+}
+`;
+
+exports[`Document "Horizontal rule" to Markdown 1`] = `
+"
+Text followed by horizontal rule 
+
+
+<hr/>
+
+
+and some other text
+"
+`;
+
+exports[`Document "Horizontal rule" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "Text followed by horizontal rule ",
+    },
+    {
+      "type": "p",
+      "value": "<hr/>",
+    },
+    {
+      "type": "p",
+      "value": "and some other text",
+    },
+  ],
+}
+`;
+
+exports[`Document "Images" to Markdown 1`] = `
+"![](https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw "")
+"
+`;
+
+exports[`Document "Images" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "img",
+      "value": {
+        "alt": "",
+        "source": "https://lh6.googleusercontent.com/pZBSuNhNbnEaBQZSfpSZPp8k2Obc7TSMFrhUx5pvcMP9v3EkBnn7EQsnKftFH6HaFWKDZR_zUlusaPQ6DULiSTIsUHd1PW5hdmuNaF1cVifWwB3reUL2spqfO7qyWGjT6x4J1MkwtmDKayvKgw",
+        "title": "",
+      },
+    },
+  ],
+}
+`;
+
+exports[`Document "Links" to Markdown 1`] = `
+"
+[to self](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)
+
+
+[to self with user id](https://docs.google.com/document/u/1/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)
+
+
+[to self with edit](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/edit)
+
+
+[to self with preview](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/preview)
+
+
+[unknown url](https://docs.google.com/document/d/unknown)
+"
+`;
+
+exports[`Document "Links" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "[to self](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)",
+    },
+    {
+      "type": "p",
+      "value": "[to self with user id](https://docs.google.com/document/u/1/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ)",
+    },
+    {
+      "type": "p",
+      "value": "[to self with edit](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/edit)",
+    },
+    {
+      "type": "p",
+      "value": "[to self with preview](https://docs.google.com/document/d/1UuBxtIEEVh98wyBR9fMmLqzJEkmNlAMMoC4SEhprHfQ/preview)",
+    },
+    {
+      "type": "p",
+      "value": "[unknown url](https://docs.google.com/document/d/unknown)",
+    },
+  ],
+}
+`;
+
+exports[`Document "Lists" to Markdown 1`] = `
+"
+ - List **item** 1
+     1. Sublist item 1
+     2. Sublist item 2
+     3. Sublist item 3
+    
+ - <ins>List</ins> item 2
+ - List item 3
+     1. Sub list item 1
+         1. Sub sub list item 1
+         2. Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA "")image
+        
+     2. Sub list item 2
+     3. Sub list item 3
+    
+ - List item 4
+ - List item 5
+"
+`;
+
+exports[`Document "Lists" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "ul",
+      "value": [
+        "List **item** 1",
+        {
+          "type": "ol",
+          "value": [
+            "Sublist item 1",
+            "Sublist item 2",
+            "Sublist item 3",
+          ],
+        },
+        "<ins>List</ins> item 2",
+        "List item 3",
+        {
+          "type": "ol",
+          "value": [
+            "Sub list item 1",
+            {
+              "type": "ol",
+              "value": [
+                "Sub sub list item 1",
+                "Sub sub list item 2 with ![](https://lh4.googleusercontent.com/IqgS1qr6oFq7jaAsQbCkfJsuwBg5DnKfnjTuB49VbHQr0ZN8T1UjgRDoiQzPws-hWgJcRDyujobZmOEF7BAHwceM6kTrXC_2dj-E38kNxmz8EW59q1ZvsM0C9cUxytASTReIN13NA8fcFA8zIA "")image",
+              ],
+            },
+            "Sub list item 2",
+            "Sub list item 3",
+          ],
+        },
+        "List item 4",
+        "List item 5",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Document "Poem" to Markdown 1`] = `
+"
+The poem
+
+
+    may            have
+
+
+              strange whitespace
+
+
+patterns.
+"
+`;
+
+exports[`Document "Poem" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "The poem",
+    },
+    {
+      "type": "p",
+      "value": "    may            have",
+    },
+    {
+      "type": "p",
+      "value": "              strange whitespace",
+    },
+    {
+      "type": "p",
+      "value": "patterns.",
+    },
+  ],
+}
+`;
+
+exports[`Document "Quotes" to Markdown 1`] = `
+"> "The way to get started is to quit talking and begin doing."
+"
+`;
+
+exports[`Document "Quotes" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "blockquote",
+      "value": ""The way to get started is to quit talking and begin doing."",
+    },
+  ],
+}
+`;
+
+exports[`Document "Special characters" to Markdown 1`] = `
+"
+<span style='color:rgb(51, 51, 51);background-color:rgb(255, 255, 255)'>19980006564 - 0081</span>
+"
+`;
+
+exports[`Document "Special characters" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "p",
+      "value": "<span style='color:rgb(51, 51, 51);background-color:rgb(255, 255, 255)'>19980006564 - 0081</span>",
+    },
+  ],
+}
+`;
+
+exports[`Document "Tables" to Markdown 1`] = `
+"| Col 1 | Col 2 | Col 3 |
+| ----- | ----- | ----- |
+| Col 1 line 1 | Col 2 line 1 | Col 3 line 1 |
+| Col 1 line 2 | Col 2 line 2 | Col 3 line 2 |
+"
+`;
+
+exports[`Document "Tables" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "table",
+      "value": {
+        "headers": [
+          "Col 1",
+          "Col 2",
+          "Col 3",
+        ],
+        "rows": [
+          [
+            "Col 1 line 1",
+            "Col 2 line 1",
+            "Col 3 line 1",
+          ],
+          [
+            "Col 1 line 2",
+            "Col 2 line 2",
+            "Col 3 line 2",
+          ],
+        ],
+      },
+    },
+  ],
+}
+`;
+
+exports[`Document "Texts" to Markdown 1`] = `
+"# Title level 1
+
+## Title level 2
+
+### Title level 3
+
+#### Title level 4
+
+##### Title level 5
+
+###### Title level 6
+
+# Title
+
+## Subtitle
+
+
+**bold**
+
+
+_italic_
+
+
+<ins>underline</ins>
+
+
+~~strikethrough~~
+
+
+<sup>superscript</sup>
+
+
+<sub>subscript</sub>
+
+
+**_boldItalic_**
+
+
+text with **space bold after** and _space italic before_.
+
+
+		indented text
+
+
+vertical<br/>indent
+
+
+[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)
+
+
+<span style='font-size:1.09em'>Text bigger</span>
+
+
+<span style='color:rgb(106, 168, 79)'>Text Colored</span><span style='color:rgb(255, 0, 0)'>red</span><span style='color:rgb(0, 255, 0)'>green</span><span style='color:rgb(0, 0, 255)'>blue</span>
+
+
+<span style='background-color:rgb(147, 196, 125)'>Text with background color</span><span style='background-color:rgb(255, 0, 0)'>red</span><span style='background-color:rgb(0, 255, 0)'>green</span><span style='background-color:rgb(0, 0, 255)'>blue</span>
+"
+`;
+
+exports[`Document "Texts" to Object 1`] = `
+{
+  "cover": null,
+  "elements": [
+    {
+      "type": "h1",
+      "value": "Title level 1",
+    },
+    {
+      "type": "h2",
+      "value": "Title level 2",
+    },
+    {
+      "type": "h3",
+      "value": "Title level 3",
+    },
+    {
+      "type": "h4",
+      "value": "Title level 4",
+    },
+    {
+      "type": "h5",
+      "value": "Title level 5",
+    },
+    {
+      "type": "h6",
+      "value": "Title level 6",
+    },
+    {
+      "type": "h1",
+      "value": "Title",
+    },
+    {
+      "type": "h2",
+      "value": "Subtitle",
+    },
+    {
+      "type": "p",
+      "value": "**bold**",
+    },
+    {
+      "type": "p",
+      "value": "_italic_",
+    },
+    {
+      "type": "p",
+      "value": "<ins>underline</ins>",
+    },
+    {
+      "type": "p",
+      "value": "~~strikethrough~~",
+    },
+    {
+      "type": "p",
+      "value": "<sup>superscript</sup>",
+    },
+    {
+      "type": "p",
+      "value": "<sub>subscript</sub>",
+    },
+    {
+      "type": "p",
+      "value": "**_boldItalic_**",
+    },
+    {
+      "type": "p",
+      "value": "text with **space bold after** and _space italic before_.",
+    },
+    {
+      "type": "p",
+      "value": "		indented text",
+    },
+    {
+      "type": "p",
+      "value": "vertical<br/>indent",
+    },
+    {
+      "type": "p",
+      "value": "[Link](https://github.com/cedricdelpoux/gatsby-source-google-docs)",
+    },
+    {
+      "type": "p",
+      "value": "<span style='font-size:1.09em'>Text bigger</span>",
+    },
+    {
+      "type": "p",
+      "value": "<span style='color:rgb(106, 168, 79)'>Text Colored</span><span style='color:rgb(255, 0, 0)'>red</span><span style='color:rgb(0, 255, 0)'>green</span><span style='color:rgb(0, 0, 255)'>blue</span>",
+    },
+    {
+      "type": "p",
+      "value": "<span style='background-color:rgb(147, 196, 125)'>Text with background color</span><span style='background-color:rgb(255, 0, 0)'>red</span><span style='background-color:rgb(0, 255, 0)'>green</span><span style='background-color:rgb(0, 0, 255)'>blue</span>",
+    },
+  ],
+}
+`;
