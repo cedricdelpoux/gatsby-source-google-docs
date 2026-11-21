@@ -4,7 +4,8 @@
   "description": "Gatsby plugin to use Google Docs as a data source",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cedricdelpoux/gatsby-source-google-docs.git"
+    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git",
+    "directory": "packages/gatsby-source-google-docs"
   },
   "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
   "license": "MIT",
@@ -46,21 +47,13 @@
     "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^22.20.5",
-    "@vitest/coverage-v8": "^5.1.0",
-    "eslint": "^10.14.0",
-    "globals": "^17.14.0",
-    "prettier": "^3.10.1",
     "react": "^18.3.1",
-    "typescript": "^7.0.2",
-    "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "react-dom": "^18.3.1",
+    "vite": "^8.3.8"
   },
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write .",
-    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit",
     "test": "vitest run --coverage",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test"

@@ -4,7 +4,8 @@
   "description": "Convert Google Docs to Markdown or MDX",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git"
+    "url": "git+https://github.com/cedricdelpoux/google-docs-to-markdown.git",
+    "directory": "packages/google-docs-to-markdown"
   },
   "author": "Cédric Delpoux <cedric.delpoux@gmail.com>",
   "license": "MIT",
@@ -48,20 +49,10 @@
     "json2md": "^2.0.3",
     "yaml": "^2.9.1"
   },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@vitest/coverage-v8": "^5.1.0",
-    "eslint": "^10.14.0",
-    "globals": "^17.14.0",
-    "prettier": "^3.10.1",
-    "typescript": "^7.0.2",
-    "vitest": "^5.1.0"
-  },
   "scripts": {
     "build": "tsc",
     "fixture": "node scripts/write-fixture.js",
-    "format": "prettier --write .",
-    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit",
     "test": "vitest run --coverage",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test"
