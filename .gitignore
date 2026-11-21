@@ -4,3 +4,4 @@ types
 .env*
 **/examples/*/content
 **/examples/*/.google-docs
+packages/*/examples/*/package-lock.json

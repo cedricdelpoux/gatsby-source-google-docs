@@ -2,7 +2,7 @@
   <h1>gatsby-source-google-docs</h1>
   <br/>
   <p>
-    <img src="./logo.png" alt="gatsby-source-google-docs" height="100px">
+    <img src="./logo.svg" alt="gatsby-source-google-docs" height="100px">
   </p>
   <br/>
 
