@@ -1,6 +1,6 @@
 {
   "name": "google-docs-sync",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Sync a Google Drive folder of Google Docs to local Markdown or MDX files",
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "@googleapis/docs": "^14.1.1",
     "@googleapis/drive": "^27.1.0",
     "google-auth-library": "^11.3.4",
-    "google-docs-to-markdown": "^1.0.1",
+    "google-docs-to-markdown": "^2.0.0",
     "google-oauth2-env-vars": "^2.0.0",
     "lodash": "^4.18.1",
     "yaml": "^2.9.1"
