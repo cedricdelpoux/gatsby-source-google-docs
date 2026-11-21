@@ -27,11 +27,9 @@ jobs:
 
       - run: npm ci --ignore-scripts
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         with:
-          version: npm run version-packages
-          publish: npm run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          version-script: npm run version-packages
+          publish-script: npm run release
+          pr-title: "chore: version packages"
+          commit-message: "chore: version packages"
